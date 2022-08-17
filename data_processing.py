@@ -2,10 +2,14 @@ import os
 import numpy as np
 import h5py
 import pandas as pd
+from collections import namedtuple
+import math
 
 from typing import List, Optional, Sequence, Tuple, Union
 from joblib import dump, load
 from torch.utils.data import DataLoader, Dataset
+from torch.utils.data import WeightedRandomSampler, sampler
+
 from typing import Dict, Optional, Tuple
 import pytorch_lightning as pl
 import torch
@@ -23,11 +27,11 @@ class MultiDataset(Dataset):
         # read csv file with filenames
         self.split_csv_file = Path(split_csv_file)
         assert self.split_csv_file.is_file()
-
         self.metadata = pd.read_csv(self.split_csv_file)
         if dev_mode:
-            self.metadata = self.metadata.iloc[:150]
-
+            self.metadata = self.metadata.iloc[:1500]
+        else:
+            print("came out of dev mode")
         assert "data_split" in self.metadata.columns
         assert "location" in self.metadata.columns
 
@@ -76,6 +80,9 @@ class KneeDataset(MultiDataset):
             "max_value",
         ]
 
+        self.sample_template = namedtuple(
+            "Sample", fields, defaults=(math.nan,) * len(fields)
+        )
         self.coil_type = coil_type
         assert self.coil_type in {"sc", "mc"}
         self.label_type = label_type
@@ -111,6 +118,7 @@ class KneeDataset(MultiDataset):
 
     def __getitem__(self, index):
         assert self.mode in self.metadata_by_mode
+        print("index number is {}".format(index))
         loc = self.get_metadata_value(index, "location")
 
         info = self.metadata_by_mode[self.mode].iloc[index]
@@ -158,7 +166,7 @@ class KneeDataModule(pl.LightningDataModule):
             sampler_filename: Optional[str] = None,
             combine_class_recon: bool = False,
             dev_mode: bool = False,
-            num_workers: int = 8,
+            num_workers: int = 0,
     ):
         super().__init__()
 

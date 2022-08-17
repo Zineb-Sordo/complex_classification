@@ -57,8 +57,8 @@ class ComplexPreActBlock(nn.Module):
 
 
 def complex_dropout2d(input, p=0.5, training=True):
-    mask = torch.ones(*input.shape, dtype = torch.float32, device=torch.device('cuda'))
-    # mask = torch.ones(*input.shape, dtype = torch.float32)
+    #mask = torch.ones(*input.shape, dtype = torch.float32, device=torch.device('cuda'))
+    mask = torch.ones(*input.shape, dtype = torch.float32)
 
     mask = dropout2d(mask, p, training ) * 1 /( 1 -p)
     mask.type(input.dtype)
@@ -87,6 +87,7 @@ class ComplexPreActResNetFFTKnee(nn.Module):
             num_classes=4,
             drop_prob=0.5,
             return_features=False,
+
     ):
         super(ComplexPreActResNetFFTKnee, self).__init__()
         self.in_planes = 64
@@ -128,9 +129,10 @@ class ComplexPreActResNetFFTKnee(nn.Module):
         return nn.Sequential(*layers)
 
     def forward(self, kspace):
-        print(kspace.shape) # torch.size([8, 1, 640, 400])
+        print("the kspace shape is {}".format(kspace.shape)) # torch.size([8, 1, 640, 400])
         if self.data_space == 'complex_input':
-            out = torch.complex(kspace.real, kspace.imag).cuda().type(torch.complex64)
+            #out = torch.complex(kspace.real, kspace.imag).cuda().type(torch.complex64)
+            out = torch.complex(kspace.real, kspace.imag).type(torch.complex64)
             out = center_crop(out, self.image_shape)
             out = self.conv_comp(out)
 
@@ -141,19 +143,20 @@ class ComplexPreActResNetFFTKnee(nn.Module):
 
         layer_3_out = self.layer3(layer_2_out)
         layer_4_out = self.layer4(layer_3_out)
-        print(layer_4_out.shape)
+        print("The shape of layer 4 is {}".format(layer_4_out.shape))
         out = complex_avg_pool2d(layer_4_out, 4)
-        print(out.shape)
+        print("The shape after layer 4 and complex avg pool is {}".format(out.shape))
         out = out.view(out.size(0), -1)
-        print(out.shape)
+        print("The shape after view is {}".format(out.shape))
         out = self.dropout(out)
         out = complex_relu(out)
 
-        # First approach: output is magnitude
         out_mtear = self.Clinear_mtear(out)
         out_acl = self.Clinear_acl(out)
         out_cartilage = self.Clinear_cartilage(out)
         out_abnormal = self.Clinear_abnormal(out)
+
+        # First approach: output is magnitude
 
         # out_mtear = out_mtear.abs()
         # out_acl = out_acl.abs()
@@ -181,7 +184,7 @@ class ComplexPreActResNetFFTKnee(nn.Module):
 
         # Third approach is use a convolution of the magnitude and phase channels
 
-        print("outputs = {}, {}, {}, {}".format(out_abnormal, out_mtear, out_acl, out_cartilage))
+        #print("outputs = {}, {}, {}, {}".format(out_abnormal, out_mtear, out_acl, out_cartilage))
         return out_abnormal, out_mtear, out_acl, out_cartilage
 
 

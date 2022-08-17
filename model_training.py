@@ -137,7 +137,8 @@ def train_model(
         os.makedirs(str(model_dir))
 
     csv_logger = CSVLogger(save_dir=log_dir, name="Trained_Complex_CNN", version=f"{args.n_seed}")
-    wandb_logger = WandbLogger(name=f"{args.data_space}-{args.n_seed}")
+    #wandb_logger = WandbLogger(name=f"{args.data_space}-{args.n_seed}")
+    wandb_logger = WandbLogger()
     lr_monitor = LearningRateMonitor(logging_interval='step')
 
     model_checkpoint = ModelCheckpoint(monitor='val_auc_mean', dirpath=model_dir, filename="{epoch:02d}-{val_auc_mean:.2f}" ,save_top_k=1, mode='max')
@@ -146,7 +147,8 @@ def train_model(
     trainer: pl.Trainer = pl.Trainer(
         gpus=1 if str(device).startswith("cuda") else 0,
         max_epochs=args.n_epochs,
-        logger=[wandb_logger, csv_logger],
+        #logger=[wandb_logger, csv_logger],
+        logger=wandb_logger,
         callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
         auto_lr_find=True,
     )
@@ -156,7 +158,8 @@ def train_model(
     trainer: pl.Trainer = pl.Trainer(
         gpus=1 if str(device).startswith("cuda") else 0,
         max_epochs=args.n_epochs,
-        logger=[wandb_logger, csv_logger],
+        #logger=[wandb_logger, csv_logger],
+        logger=wandb_logger,
         callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
     )
     trainer.fit(model, datamodule)
@@ -181,9 +184,9 @@ def test_model(
     )
 
     csv_logger = CSVLogger(save_dir=log_dir, name="Test_Complex_CNN", version=f"{args.n_seed}")
-
+    wandb_logger = WandbLogger()
     model = RSS.load_from_checkpoint(model_dir + '/' + checkpoint_filename)
-    trainer = pl.Trainer(gpus=1 if str(device).startswith("cuda") else 0, logger=csv_logger)
+    trainer = pl.Trainer(gpus=1 if str(device).startswith("cuda") else 0,logger=wandb_logger,)
     with torch.inference_mode():
         model.eval()
         M_val = trainer.validate(model, datamodule.val_dataloader())
@@ -199,10 +202,10 @@ def run_experiment(args):
     datamodule = get_data(args)
     model = get_model(args, device)
     if args.mode == "train":
-        model = train_model(args=args, model=model, datamodule=datamodule, device=device ,)
+        model = train_model(args=args, model=model, datamodule=datamodule, device=device,)
     else:
         datamodule.setup()
-        test_model(args=args, model=model, datamodule=datamodule, device=device ,)
+        test_model(args=args, model=model, datamodule=datamodule, device=device,)
 
 
 def main(sweep_step=None):

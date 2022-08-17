@@ -50,7 +50,7 @@ def get_operating_point(preds, labels, operating_point=None, threshold=0.1):
     )
     balanced_acc = metrics.balanced_accuracy_score(labels.numpy(), test_predictions)
 
-    print(f"b acc = {balanced_acc}, specificity = {specificity}, sensitivity = {sensitivity}")
+    # print(f"b acc = {balanced_acc}, specificity = {specificity}, sensitivity = {sensitivity}")
     return balanced_acc, specificity, sensitivity, operating_point
 
 
@@ -129,7 +129,7 @@ def get_bootstrap_estimates(
     std_specificity = np.array(arr_specificity).std()
     std_balanced_accuracy = np.array(arr_balanced_accuracy).std()
 
-    print(operating_point)
+    print("operating point {}".format(operating_point))
 
     return dict(
         auc=auc,
@@ -238,6 +238,7 @@ class RSS(pl.LightningModule):
             sequences=self.sequences,
             data_space=self.data_space,
             return_features=self.return_features,
+
         )
 
         self.val_operating_point = None
@@ -245,7 +246,7 @@ class RSS(pl.LightningModule):
 
     def forward(self, batch):
         kspace = batch.sc_kspace
-        kspace = kspace.cuda().type(torch.complex64)
+        kspace = kspace.to(self.device).type(torch.complex64)
         return self.model(kspace.unsqueeze(1))
 
     def loss_fn(self, preds: torch.Tensor, labels: torch.Tensor) -> torch.Tensor:
