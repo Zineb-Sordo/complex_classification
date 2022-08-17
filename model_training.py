@@ -12,9 +12,8 @@ from pytorch_lightning.loggers import CSVLogger, WandbLogger
 from pathlib import Path
 import fire
 
-from .model_setup import RSS
-from .data_processing import KneeDataModule
-
+from model_setup import RSS
+from data_processing import KneeDataModule
 
 # get the data
 def get_data(args: argparse.ArgumentParser) -> pl.LightningDataModule:
