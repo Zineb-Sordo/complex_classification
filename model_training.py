@@ -15,6 +15,7 @@ import fire
 from model_setup import RSS
 from data_processing import KneeDataModule
 
+
 # get the data
 def get_data(args: argparse.ArgumentParser) -> pl.LightningDataModule:
     # get datamodule

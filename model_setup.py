@@ -15,7 +15,7 @@ from sklearn import metrics
 import torch
 from torchmetrics import functional
 import numpy as np
-from .complex_cnn_model import complex_resnet18_knee
+from complex_cnn_model import complex_resnet18_knee
 
 
 def compute_auc(preds, labels):
