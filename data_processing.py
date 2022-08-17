@@ -13,6 +13,8 @@ import torch
 from pathlib import Path
 
 from fastmri.fftc import ifft2c_new
+import fastmri
+from fastmri.data import transforms as T
 
 
 class MultiDataset(Dataset):
@@ -120,7 +122,7 @@ class KneeDataset(MultiDataset):
             target_data = f[target_key][:]
 
             image_data = torch.from_numpy(kspace_data)
-            image_data = ifft2c_new(image_data)
+            image_data = fastmri.ifft2c(T.to_tensor(image_data))
             kspace_data = torch.view_as_complex(image_data)
 
             parameters = {
@@ -156,7 +158,7 @@ class KneeDataModule(pl.LightningDataModule):
             sampler_filename: Optional[str] = None,
             combine_class_recon: bool = False,
             dev_mode: bool = False,
-            num_workers: int = 0,
+            num_workers: int = 8,
     ):
         super().__init__()
 
@@ -204,14 +206,9 @@ class KneeDataModule(pl.LightningDataModule):
         assert Path(self.sampler_filename).is_file()
         # load the sampler
         self.train_sampler = load(self.sampler_filename)
-        print(len(self.train_sampler))
 
     def train_dataloader(self) -> DataLoader:
-        return DataLoader(
-            self.train_dataset,
-            batch_size=self.batch_size,
-            sampler=self.train_sampler,
-        )
+        return DataLoader(self.train_dataset, batch_size=self.batch_size, sampler=self.train_sampler)
 
     def val_dataloader(self) -> Union[DataLoader, List[DataLoader]]:
         return DataLoader(self.val_dataset, batch_size=self.batch_size)
