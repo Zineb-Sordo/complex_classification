@@ -4,6 +4,7 @@ import h5py
 import pandas as pd
 from collections import namedtuple
 import math
+from tqdm import tqdm
 
 from typing import List, Optional, Sequence, Tuple, Union
 from joblib import dump, load
@@ -22,7 +23,7 @@ from fastmri.data import transforms as T
 
 
 class MultiDataset(Dataset):
-    def __init__(self, split_csv_file: str, mode: str, dev_mode: bool = True):
+    def __init__(self, split_csv_file: str, mode: str, dev_mode: bool = False):
         super().__init__()
         # read csv file with filenames
         self.split_csv_file = Path(split_csv_file)
@@ -30,8 +31,6 @@ class MultiDataset(Dataset):
         self.metadata = pd.read_csv(self.split_csv_file)
         if dev_mode:
             self.metadata = self.metadata.iloc[:1500]
-        else:
-            print("came out of dev mode")
         assert "data_split" in self.metadata.columns
         assert "location" in self.metadata.columns
 
@@ -118,7 +117,6 @@ class KneeDataset(MultiDataset):
 
     def __getitem__(self, index):
         assert self.mode in self.metadata_by_mode
-        print("index number is {}".format(index))
         loc = self.get_metadata_value(index, "location")
 
         info = self.metadata_by_mode[self.mode].iloc[index]
@@ -153,6 +151,29 @@ class KneeDataset(MultiDataset):
 
         sample = self.sample_template(**parameters)
         return sample
+
+
+def get_sampler_weights(dataset, save_filename="./sampler_knee_tr.p"):
+    Y_tr = []
+
+    for i in tqdm(range(len(dataset))):
+        label = dataset[i].label.sum().item()
+        Y_tr.append(label)
+
+    Y_tr = np.array(Y_tr).astype(int)
+
+    class_sample_count = np.array(
+        [len(np.where(Y_tr == t)[0]) for t in np.unique(Y_tr)]
+    )
+
+    weight = 1.0 / class_sample_count
+    samples_weight = np.array([weight[t] for t in Y_tr])
+
+    samples_weight = torch.from_numpy(samples_weight)
+    samples_weight = samples_weight.double()
+    sampler = WeightedRandomSampler(samples_weight, len(samples_weight))
+
+    dump(sampler, save_filename)
 
 
 class KneeDataModule(pl.LightningDataModule):
@@ -208,8 +229,11 @@ class KneeDataModule(pl.LightningDataModule):
             label_type=self.label_type,
             data_space=self.data_space,
         )
-
-        if not os.path.exists(self.sampler_filename):
+        if self.sampler_filename is None:
+            print("Creating sampler weights...")
+            self.sampler_filename = "./sampler_knee_tr.p"
+            get_sampler_weights(self.train_dataset, self.sampler_filename)
+        elif not os.path.exists(self.sampler_filename):
             raise ValueError("Weighted sampler does not exist")
         assert Path(self.sampler_filename).is_file()
         # load the sampler

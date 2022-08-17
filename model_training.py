@@ -87,7 +87,7 @@ def get_args():
     parser.add_argument("--center_fraction", type=float, default=0.08)
     parser.add_argument("--coil_type", type=str, default="sc", choices=["sc", "mc"])
 
-    parser.add_argument("--sampler_filename", type=str, default="./sampler_knee_tr.p")
+    parser.add_argument("--sampler_filename", type=str, default=None)
     parser.add_argument(
         "--model_type",
         type=str,
@@ -98,16 +98,16 @@ def get_args():
     )
 
     # training parameters
-    parser.add_argument("--n_epochs", type=int, default=200)
+    parser.add_argument("--n_epochs", type=int, default=2)
     parser.add_argument("--n_seed", type=int, default=1)
-    parser.add_argument("--batch_size", type=int, default=32)
+    parser.add_argument("--batch_size", type=int, default=8)
     parser.add_argument("--lr", type=float, default=1e-5)
     parser.add_argument("--drop_prob", type=float, default=0.5)
     parser.add_argument("--lr_gamma", type=float, default=0.5)
     parser.add_argument("--weight_decay", type=float, default=1e-4)
     parser.add_argument("--lr_step_size", type=int, default=5)
 
-    parser.add_argument("--n_masks", type=int, default=100)
+    parser.add_argument("--n_masks", type=int, default=10)
 
     parser.add_argument("--seed", type=int, default=420)
     parser.add_argument("--sweep_step", type=int)
