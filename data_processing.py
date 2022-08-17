@@ -22,7 +22,7 @@ from fastmri.data import transforms as T
 
 
 class MultiDataset(Dataset):
-    def __init__(self, split_csv_file: str, mode: str, dev_mode: bool = False):
+    def __init__(self, split_csv_file: str, mode: str, dev_mode: bool = True):
         super().__init__()
         # read csv file with filenames
         self.split_csv_file = Path(split_csv_file)
@@ -165,7 +165,7 @@ class KneeDataModule(pl.LightningDataModule):
             data_space: str,
             sampler_filename: Optional[str] = None,
             combine_class_recon: bool = False,
-            dev_mode: bool = False,
+            dev_mode: bool = True,
             num_workers: int = 0,
     ):
         super().__init__()

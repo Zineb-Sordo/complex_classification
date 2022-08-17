@@ -66,7 +66,7 @@ def get_args():
     parser.add_argument("--model_dir", type=str, default="../trained_models")
     parser.add_argument("--log_dir", type=str, default="../trained_logs")
     parser.add_argument("--mode", type=str, default="train")
-    parser.add_argument("--dev_mode", action="store_true")
+    parser.add_argument("--dev_mode", type=bool, default="True")
 
     # data parameters
     parser.add_argument("--data_type", type=str, default="knee" ,)
