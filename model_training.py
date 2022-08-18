@@ -107,7 +107,7 @@ def get_args():
     parser.add_argument("--weight_decay", type=float, default=1e-4)
     parser.add_argument("--lr_step_size", type=int, default=5)
 
-    parser.add_argument("--n_masks", type=int, default=10)
+    parser.add_argument("--n_masks", type=int, default=100)
 
     parser.add_argument("--seed", type=int, default=420)
     parser.add_argument("--sweep_step", type=int)
