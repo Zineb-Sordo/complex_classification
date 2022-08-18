@@ -8,7 +8,7 @@ import os
 import pytorch_lightning as pl
 import torch
 from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint, LearningRateMonitor
-from pytorch_lightning.loggers import CSVLogger, WandbLogger
+from pytorch_lightning.loggers import CSVLogger#, WandbLogger
 from pathlib import Path
 import fire
 
@@ -69,7 +69,7 @@ def get_args():
     parser.add_argument("--dev_mode", type=bool, default="True")
 
     # data parameters
-    parser.add_argument("--data_type", type=str, default="knee" ,)
+    parser.add_argument("--data_type", type=str, default="knee",)
     parser.add_argument("--data_space", type=str, default="complex_input")
     # parser.add_argument("--task", type=str, default="classification")
     parser.add_argument("--image_shape", type=int, default=[320, 320], nargs=2, required=False)
@@ -87,7 +87,7 @@ def get_args():
     parser.add_argument("--center_fraction", type=float, default=0.08)
     parser.add_argument("--coil_type", type=str, default="sc", choices=["sc", "mc"])
 
-    parser.add_argument("--sampler_filename", type=str, default=None)
+    parser.add_argument("--sampler_filename", type=str, default='./sampler_knee_tr.p')
     parser.add_argument(
         "--model_type",
         type=str,
@@ -137,18 +137,18 @@ def train_model(
         os.makedirs(str(model_dir))
 
     csv_logger = CSVLogger(save_dir=log_dir, name="Trained_Complex_CNN", version=f"{args.n_seed}")
-    #wandb_logger = WandbLogger(name=f"{args.data_space}-{args.n_seed}")
-    wandb_logger = WandbLogger()
+    # wandb_logger = WandbLogger(name=f"{args.data_space}-{args.n_seed}")
     lr_monitor = LearningRateMonitor(logging_interval='step')
-
     model_checkpoint = ModelCheckpoint(monitor='val_auc_mean', dirpath=model_dir, filename="{epoch:02d}-{val_auc_mean:.2f}" ,save_top_k=1, mode='max')
     early_stop_callback = EarlyStopping(monitor='val_auc_mean', patience=5, mode='max')
 
     trainer: pl.Trainer = pl.Trainer(
-        gpus=1 if str(device).startswith("cuda") else 0,
+        accelerator="gpu",
+        devices=3,
+        strategy="ddp",
         max_epochs=args.n_epochs,
-        #logger=[wandb_logger, csv_logger],
-        logger=wandb_logger,
+        logger=csv_logger,
+        #logger=wandb_logger,
         callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
         auto_lr_find=True,
     )
@@ -156,10 +156,13 @@ def train_model(
     trainer.tune(model, datamodule)
     print("In train_model and {}".format(str(device).startswith("cuda")))
     trainer: pl.Trainer = pl.Trainer(
-        gpus=1 if str(device).startswith("cuda") else 0,
+        accelerator="gpu",
+        devices=3,
+        strategy="ddp",
         max_epochs=args.n_epochs,
-        #logger=[wandb_logger, csv_logger],
-        logger=wandb_logger,
+        logger=csv_logger,
+        # logger=[wandb_logger, csv_logger],
+        # logger=wandb_logger,
         callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
     )
     trainer.fit(model, datamodule)
@@ -184,9 +187,11 @@ def test_model(
     )
 
     csv_logger = CSVLogger(save_dir=log_dir, name="Test_Complex_CNN", version=f"{args.n_seed}")
-    wandb_logger = WandbLogger()
+    # wandb_logger = WandbLogger()
     model = RSS.load_from_checkpoint(model_dir + '/' + checkpoint_filename)
-    trainer = pl.Trainer(gpus=1 if str(device).startswith("cuda") else 0,logger=wandb_logger,)
+    # trainer = pl.Trainer(logger=wandb_logger, accelerator="gpu", devices=3, strategy="ddp")
+    trainer = pl.Trainer(logger=csv_logger, accelerator="gpu", devices=3, strategy="ddp")
+
     with torch.inference_mode():
         model.eval()
         M_val = trainer.validate(model, datamodule.val_dataloader())
@@ -196,9 +201,16 @@ def test_model(
 def run_experiment(args):
 
     print(args, flush=True)
+
     if torch.cuda.is_available():
         print("Found CUDA device, running job on GPU.")
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    if device.type == 'cuda':
+        print(torch.cuda.get_device_name(0))
+        print('Memory Usage:')
+        print('Allocated:', round(torch.cuda.memory_allocated(0) / 1024 ** 3, 1), 'GB')
+        print('Cached:   ', round(torch.cuda.memory_reserved(0) / 1024 ** 3, 1), 'GB')
+
     datamodule = get_data(args)
     model = get_model(args, device)
     if args.mode == "train":

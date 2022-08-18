@@ -57,8 +57,8 @@ class ComplexPreActBlock(nn.Module):
 
 
 def complex_dropout2d(input, p=0.5, training=True):
-    #mask = torch.ones(*input.shape, dtype = torch.float32, device=torch.device('cuda'))
-    mask = torch.ones(*input.shape, dtype = torch.float32)
+    mask = torch.ones(*input.shape, dtype = torch.float32, device=torch.device('cuda'))
+    #mask = torch.ones(*input.shape, dtype = torch.float32)
 
     mask = dropout2d(mask, p, training ) * 1 / (1-p)
     mask.type(input.dtype)
@@ -107,12 +107,12 @@ class ComplexPreActResNetFFTKnee(nn.Module):
         in_dim = 512 * block.expansion * 100
 
         self.linear_mtear = nn.Linear(8, num_classes)
-        self.linear_acl = nn.Linear(8 ,num_classes)
+        self.linear_acl = nn.Linear(8, num_classes)
         self.linear_abnormal = nn.Linear(8, num_classes)
         self.linear_cartilage = nn.Linear(8, num_classes)
 
         self.Clinear_mtear = ComplexLinear(in_dim, num_classes)
-        self.Clinear_acl = ComplexLinear(in_dim ,num_classes)
+        self.Clinear_acl = ComplexLinear(in_dim, num_classes)
         self.Clinear_abnormal = ComplexLinear(in_dim, num_classes)
         self.Clinear_cartilage = ComplexLinear(in_dim, num_classes)
 
@@ -131,8 +131,8 @@ class ComplexPreActResNetFFTKnee(nn.Module):
     def forward(self, kspace):
         print("the kspace shape is {}".format(kspace.shape)) # torch.size([8, 1, 640, 400])
         if self.data_space == 'complex_input':
-            #out = torch.complex(kspace.real, kspace.imag).cuda().type(torch.complex64)
-            out = torch.complex(kspace.real, kspace.imag).type(torch.complex64)
+            out = torch.complex(kspace.real, kspace.imag).cuda().type(torch.complex64)
+            #out = torch.complex(kspace.real, kspace.imag).type(torch.complex64)
             out = center_crop(out, self.image_shape)
             out = self.conv_comp(out)
 
@@ -140,16 +140,12 @@ class ComplexPreActResNetFFTKnee(nn.Module):
 
         layer_1_out = self.layer1(out)
         layer_2_out = self.layer2(layer_1_out)
-
         layer_3_out = self.layer3(layer_2_out)
         layer_4_out = self.layer4(layer_3_out)
-        print("The shape of layer 4 is {}".format(layer_4_out.shape))
         out = complex_avg_pool2d(layer_4_out, 4)
-        print("The shape after layer 4 and complex avg pool is {}".format(out.shape))
         out = out.view(out.size(0), -1)
-        print("The shape after view is {}".format(out.shape))
-        out = self.dropout(out)
-        out = complex_relu(out)
+        #out = self.dropout(out)
+        #out = complex_relu(out)
 
         out_mtear = self.Clinear_mtear(out)
         out_acl = self.Clinear_acl(out)
@@ -158,29 +154,29 @@ class ComplexPreActResNetFFTKnee(nn.Module):
 
         # First approach: output is magnitude
 
-        # out_mtear = out_mtear.abs()
-        # out_acl = out_acl.abs()
-        # out_cartilage = out_cartilage.abs()
-        # out_abnormal = out_abnormal.abs()
+        out_mtear = out_mtear.abs()
+        out_acl = out_acl.abs()
+        out_cartilage = out_cartilage.abs()
+        out_abnormal = out_abnormal.abs()
 
         # Second approach: output the stacked magnitude and phase
 
-        out_mtear = torch.stack((out_mtear.abs(), out_mtear.angle()), axis=1).float()
-        out_mtear = out_mtear.view(out_mtear.size(0),-1)
-
-        out_acl = torch.stack((out_acl.abs(), out_acl.angle()), axis=1).float()
-        out_acl = out_acl.view(out_acl.size(0),-1)
-
-        out_cartilage = torch.stack((out_cartilage.abs(), out_cartilage.angle()), axis=1).float()
-        out_cartilage = out_cartilage.view(out_cartilage.size(0),-1)
-
-        out_abnormal = torch.stack((out_abnormal.abs(), out_abnormal.angle()), axis=1).float()
-        out_abnormal = out_abnormal.view(out_abnormal.size(0),-1)
-
-        out_mtear = self.linear_mtear(out_mtear)
-        out_acl = self.linear_acl(out_acl)
-        out_cartilage = self.linear_cartilage(out_cartilage)
-        out_abnormal = self.linear_abnormal(out_abnormal)
+        # out_mtear = torch.stack((out_mtear.abs(), out_mtear.angle()), axis=1).float()
+        # out_mtear = out_mtear.view(out_mtear.size(0), -1)
+        #
+        # out_acl = torch.stack((out_acl.abs(), out_acl.angle()), axis=1).float()
+        # out_acl = out_acl.view(out_acl.size(0), -1)
+        #
+        # out_cartilage = torch.stack((out_cartilage.abs(), out_cartilage.angle()), axis=1).float()
+        # out_cartilage = out_cartilage.view(out_cartilage.size(0), -1)
+        #
+        # out_abnormal = torch.stack((out_abnormal.abs(), out_abnormal.angle()), axis=1).float()
+        # out_abnormal = out_abnormal.view(out_abnormal.size(0), -1)
+        #
+        # out_mtear = self.linear_mtear(out_mtear)
+        # out_acl = self.linear_acl(out_acl)
+        # out_cartilage = self.linear_cartilage(out_cartilage)
+        # out_abnormal = self.linear_abnormal(out_abnormal)
 
         # Third approach is use a convolution of the magnitude and phase channels
 

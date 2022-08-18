@@ -30,7 +30,8 @@ class MultiDataset(Dataset):
         assert self.split_csv_file.is_file()
         self.metadata = pd.read_csv(self.split_csv_file)
         if dev_mode:
-            self.metadata = self.metadata.iloc[:1500]
+            self.metadata = self.metadata.iloc[:50]
+
         assert "data_split" in self.metadata.columns
         assert "location" in self.metadata.columns
 
@@ -127,8 +128,12 @@ class KneeDataset(MultiDataset):
             kspace_data = f[kspace_key][:]
             target_data = f[target_key][:]
 
-            image_data = torch.from_numpy(kspace_data)
-            image_data = fastmri.ifft2c(T.to_tensor(image_data))
+            # image_data = torch.from_numpy(kspace_data)
+            # image_data = fastmri.ifft2c(T.to_tensor(image_data))
+            # kspace_data = torch.view_as_complex(image_data)
+
+            image_data = torch.view_as_real(torch.from_numpy(kspace_data))
+            image_data = ifft2c_new(image_data)
             kspace_data = torch.view_as_complex(image_data)
 
             parameters = {
@@ -186,8 +191,8 @@ class KneeDataModule(pl.LightningDataModule):
             data_space: str,
             sampler_filename: Optional[str] = None,
             combine_class_recon: bool = False,
-            dev_mode: bool = True,
-            num_workers: int = 0,
+            dev_mode: bool = False,
+            num_workers: int = 8,
     ):
         super().__init__()
 
@@ -240,10 +245,10 @@ class KneeDataModule(pl.LightningDataModule):
         self.train_sampler = load(self.sampler_filename)
 
     def train_dataloader(self) -> DataLoader:
-        return DataLoader(self.train_dataset, batch_size=self.batch_size, sampler=self.train_sampler)
+        return DataLoader(self.train_dataset, batch_size=self.batch_size, sampler=self.train_sampler, num_workers=self.num_workers)
 
     def val_dataloader(self) -> Union[DataLoader, List[DataLoader]]:
-        return DataLoader(self.val_dataset, batch_size=self.batch_size)
+        return DataLoader(self.val_dataset, batch_size=self.batch_size, num_workers=self.num_workers)
 
     def test_dataloader(self) -> Union[DataLoader, List[DataLoader]]:
-        return DataLoader(self.test_dataset, batch_size=self.batch_size)
+        return DataLoader(self.test_dataset, batch_size=self.batch_size, num_workers=self.num_workers)
