@@ -162,6 +162,7 @@ def train_model(
         max_epochs=args.n_epochs,
         # logger=[wandb_logger, csv_logger],
         #logger=wandb_logger,
+        logger=csv_logger,
         callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
     )
     trainer.fit(model, datamodule)
