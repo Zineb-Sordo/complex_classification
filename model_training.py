@@ -8,7 +8,7 @@ import os
 import pytorch_lightning as pl
 import torch
 from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint, LearningRateMonitor
-from pytorch_lightning.loggers import CSVLogger#, WandbLogger
+from pytorch_lightning.loggers import CSVLogger, WandbLogger
 from pathlib import Path
 import fire
 
@@ -102,10 +102,10 @@ def get_args():
     parser.add_argument("--n_seed", type=int, default=1)
     parser.add_argument("--batch_size", type=int, default=32)
     parser.add_argument("--lr", type=float, default=1e-5)
-    parser.add_argument("--drop_prob", type=float, default=0.5)
+    parser.add_argument("--drop_prob", type=float, default=0.3)
     parser.add_argument("--lr_gamma", type=float, default=0.5)
     parser.add_argument("--weight_decay", type=float, default=1e-4)
-    parser.add_argument("--lr_step_size", type=int, default=5)
+    parser.add_argument("--lr_step_size", type=int, default=2)
 
     parser.add_argument("--n_masks", type=int, default=100)
 
@@ -137,7 +137,7 @@ def train_model(
         os.makedirs(str(model_dir))
 
     csv_logger = CSVLogger(save_dir=log_dir, name="Trained_Complex_CNN", version=f"{args.n_seed}")
-    # wandb_logger = WandbLogger(name=f"{args.data_space}-{args.n_seed}")
+    wandb_logger = WandbLogger(name=f"{args.data_space}-{args.n_seed}")
     lr_monitor = LearningRateMonitor(logging_interval='step')
     model_checkpoint = ModelCheckpoint(monitor='val_auc_mean', dirpath=model_dir, filename="{epoch:02d}-{val_auc_mean:.2f}" ,save_top_k=1, mode='max')
     early_stop_callback = EarlyStopping(monitor='val_auc_mean', patience=5, mode='max')
@@ -147,8 +147,7 @@ def train_model(
         devices=3,
         strategy="ddp",
         max_epochs=args.n_epochs,
-        logger=csv_logger,
-        #logger=wandb_logger,
+        logger=wandb_logger,
         callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
         auto_lr_find=True,
     )
@@ -160,9 +159,8 @@ def train_model(
         devices=3,
         strategy="ddp",
         max_epochs=args.n_epochs,
-        logger=csv_logger,
         # logger=[wandb_logger, csv_logger],
-        # logger=wandb_logger,
+        logger=wandb_logger,
         callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
     )
     trainer.fit(model, datamodule)
@@ -187,10 +185,10 @@ def test_model(
     )
 
     csv_logger = CSVLogger(save_dir=log_dir, name="Test_Complex_CNN", version=f"{args.n_seed}")
-    # wandb_logger = WandbLogger()
+    wandb_logger = WandbLogger()
     model = RSS.load_from_checkpoint(model_dir + '/' + checkpoint_filename)
-    # trainer = pl.Trainer(logger=wandb_logger, accelerator="gpu", devices=3, strategy="ddp")
-    trainer = pl.Trainer(logger=csv_logger, accelerator="gpu", devices=3, strategy="ddp")
+    trainer = pl.Trainer(logger=wandb_logger, accelerator="gpu", devices=3, strategy="ddp")
+    #trainer = pl.Trainer(logger=csv_logger, accelerator="gpu", devices=3, strategy="ddp")
 
     with torch.inference_mode():
         model.eval()

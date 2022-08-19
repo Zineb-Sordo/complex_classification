@@ -184,7 +184,7 @@ class ComplexPreActResNetFFTKnee(nn.Module):
         return out_abnormal, out_mtear, out_acl, out_cartilage
 
 
-def complex_resnet18_knee(image_shape, data_space, drop_prob=0.5, return_features=False):
+def complex_resnet18_knee(image_shape, data_space, drop_prob=0.3, return_features=False):
     return ComplexPreActResNetFFTKnee(
         ComplexPreActBlock,
         [2, 2, 2, 2],
