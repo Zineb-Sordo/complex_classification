@@ -66,7 +66,7 @@ def get_args():
     parser.add_argument("--model_dir", type=str, default="./trained_models")
     parser.add_argument("--log_dir", type=str, default="./trained_logs")
     parser.add_argument("--mode", type=str, default="train")
-    parser.add_argument("--dev_mode", type=bool, default="True")
+    parser.add_argument("--dev_mode", action="store_true")
 
     # data parameters
     parser.add_argument("--data_type", type=str, default="knee",)
@@ -118,6 +118,7 @@ def get_args():
     return args
 
 
+
 def train_model(
         args: argparse.Namespace,
         model: pl.LightningModule,
@@ -137,10 +138,10 @@ def train_model(
         os.makedirs(str(model_dir))
 
     csv_logger = CSVLogger(save_dir=log_dir, name=f"train-{args.n_seed}", version=f"{args.n_seed}")
-    wandb_logger = WandbLogger(name=f"{args.data_space}-{args.n_seed}")
+    #wandb_logger = WandbLogger(name=f"{args.data_space}-{args.n_seed}")
     lr_monitor = LearningRateMonitor(logging_interval='step')
     model_checkpoint = ModelCheckpoint(monitor='val_auc_mean', dirpath=model_dir, filename="{epoch:02d}-{val_auc_mean:.2f}" ,save_top_k=1, mode='max')
-    early_stop_callback = EarlyStopping(monitor='val_auc_mean', patience=5, mode='max')
+    early_stop_callback = EarlyStopping(monitor='val_auc_mean', patience=10, mode='max')
 
     trainer: pl.Trainer = pl.Trainer(
         accelerator="gpu",
@@ -148,7 +149,8 @@ def train_model(
         strategy="ddp",
         max_epochs=args.n_epochs,
         #logger=wandb_logger,
-        logger=[wandb_logger, csv_logger],
+        logger=csv_logger,
+        #logger=[wandb_logger, csv_logger],
         callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
         auto_lr_find=True,
     )
@@ -160,9 +162,9 @@ def train_model(
         devices=3,
         strategy="ddp",
         max_epochs=args.n_epochs,
-        logger=[wandb_logger, csv_logger],
+        #logger=[wandb_logger, csv_logger],
         #logger=wandb_logger,
-        #logger=csv_logger,
+        logger=csv_logger,
         callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
     )
     trainer.fit(model, datamodule)
