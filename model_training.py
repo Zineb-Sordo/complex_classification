@@ -136,7 +136,7 @@ def train_model(
     if not os.path.isdir(str(model_dir)):
         os.makedirs(str(model_dir))
 
-    csv_logger = CSVLogger(save_dir=log_dir, name="Trained_Complex_CNN", version=f"{args.n_seed}")
+    csv_logger = CSVLogger(save_dir=log_dir, name=f"train_noise-{args.noise_percent}", version=f"{args.n_seed}")
     #wandb_logger = WandbLogger(name=f"{args.data_space}-{args.n_seed}")
     lr_monitor = LearningRateMonitor(logging_interval='step')
     model_checkpoint = ModelCheckpoint(monitor='val_auc_mean', dirpath=model_dir, filename="{epoch:02d}-{val_auc_mean:.2f}" ,save_top_k=1, mode='max')
@@ -186,7 +186,7 @@ def test_model(
             / args.data_space
     )
 
-    csv_logger = CSVLogger(save_dir=log_dir, name="Test_Complex_CNN", version=f"{args.n_seed}")
+    csv_logger = CSVLogger(save_dir=log_dir,name=f"test_noise-{args.noise_percent}", version=f"{args.n_seed}")
     #wandb_logger = WandbLogger()
     model = RSS.load_from_checkpoint(model_dir + '/' + checkpoint_filename)
     #trainer = pl.Trainer(logger=wandb_logger, accelerator="gpu", devices=3, strategy="ddp")
