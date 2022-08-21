@@ -78,7 +78,7 @@ def get_args():
     # parser.add_argument("--split_csv_file", type=str, default='..//metadata_knee.csv', required=False)
     parser.add_argument("--split_csv_file",
                         type=str,
-                        default='./metadata_knee.csv',
+                        default='../data_processing/knee/metadata_knee.csv',
                         required=False)
     parser.add_argument("--recon_model_ckpt", type=str)
     parser.add_argument("--recon_model_type", type=str, default=["rss"], required=False, choices=["rss"])
@@ -87,7 +87,7 @@ def get_args():
     parser.add_argument("--center_fraction", type=float, default=0.08)
     parser.add_argument("--coil_type", type=str, default="sc", choices=["sc", "mc"])
 
-    parser.add_argument("--sampler_filename", type=str, default='./sampler_knee_tr.p')
+    parser.add_argument("--sampler_filename", type=str, default='../data_processing/knee/sampler_knee_tr.p')
     parser.add_argument(
         "--model_type",
         type=str,
@@ -138,7 +138,7 @@ def train_model(
         os.makedirs(str(model_dir))
 
     csv_logger = CSVLogger(save_dir=log_dir, name=f"train-{args.n_seed}", version=f"{args.n_seed}")
-    #wandb_logger = WandbLogger(name=f"{args.data_space}-{args.n_seed}")
+    wandb_logger = WandbLogger(name=f"{args.data_space}-{args.n_seed}")
     lr_monitor = LearningRateMonitor(logging_interval='step')
     model_checkpoint = ModelCheckpoint(monitor='val_auc_mean', dirpath=model_dir, filename="{epoch:02d}-{val_auc_mean:.2f}" ,save_top_k=1, mode='max')
     early_stop_callback = EarlyStopping(monitor='val_auc_mean', patience=10, mode='max')
@@ -149,8 +149,8 @@ def train_model(
         strategy="ddp",
         max_epochs=args.n_epochs,
         #logger=wandb_logger,
-        logger=csv_logger,
-        #logger=[wandb_logger, csv_logger],
+        #logger=csv_logger,
+        logger=[wandb_logger, csv_logger],
         callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
         auto_lr_find=True,
     )
@@ -162,9 +162,9 @@ def train_model(
         devices=3,
         strategy="ddp",
         max_epochs=args.n_epochs,
-        #logger=[wandb_logger, csv_logger],
+        logger=[wandb_logger, csv_logger],
         #logger=wandb_logger,
-        logger=csv_logger,
+        #logger=csv_logger,
         callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
     )
     trainer.fit(model, datamodule)
@@ -189,9 +189,7 @@ def test_model(
     )
 
     csv_logger = CSVLogger(save_dir=log_dir,name=f"test-{args.n_seed}", version=f"{args.n_seed}")
-    #wandb_logger = WandbLogger()
     model = RSS.load_from_checkpoint(model_dir + '/' + checkpoint_filename)
-    #trainer = pl.Trainer(logger=wandb_logger, accelerator="gpu", devices=3, strategy="ddp")
     trainer = pl.Trainer(logger=csv_logger, accelerator="gpu", devices=3, strategy="ddp")
 
     with torch.inference_mode():
