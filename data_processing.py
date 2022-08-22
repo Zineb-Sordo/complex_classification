@@ -216,7 +216,7 @@ class KneeDataModule(pl.LightningDataModule):
         sampler_filename: Optional[str] = None,
         combine_class_recon: bool = False,
         dev_mode: bool = False,
-        num_workers: int = 0,
+        num_workers: int = 4,
     ):
         super().__init__()
 
@@ -228,6 +228,7 @@ class KneeDataModule(pl.LightningDataModule):
         self.num_workers = num_workers
         self.data_space = data_space
         self.label_type = label_type
+        self.num_workers = num_workers
 
     def setup(self, stage: Optional[str] = None):
         # get data split names
@@ -269,7 +270,7 @@ class KneeDataModule(pl.LightningDataModule):
         self.train_sampler = load(self.sampler_filename)
 
     def train_dataloader(self) -> DataLoader:
-        return DataLoader(self.train_dataset, batch_size=self.batch_size, sampler=self.train_sampler)
+        return DataLoader(self.train_dataset, batch_size=self.batch_size, sampler=self.train_sampler, num_workers=self.num_workers)
 
     def val_dataloader(self) -> Union[DataLoader, List[DataLoader]]:
         return DataLoader(self.val_dataset, batch_size=self.batch_size, num_workers=self.num_workers)
