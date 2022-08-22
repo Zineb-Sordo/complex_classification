@@ -63,7 +63,9 @@ class KneeDataset(MultiDataset):
             mode: str,
             label_type: str,
             data_space: str,
-            coil_type='sc'
+            coil_type='sc',
+            image_only: bool = False,
+
     ):
         super().__init__(split_csv_file=split_csv_file, mode=mode)
         fields = [
@@ -77,7 +79,7 @@ class KneeDataset(MultiDataset):
             "data_split",
             "dataset",
             "location",
-            "max_value",
+            "max_value"
         ]
 
         self.sample_template = namedtuple(
@@ -128,13 +130,35 @@ class KneeDataset(MultiDataset):
             kspace_data = f[kspace_key][:]
             target_data = f[target_key][:]
 
-            # image_data = torch.from_numpy(kspace_data)
-            # image_data = fastmri.ifft2c(T.to_tensor(image_data))
-            # kspace_data = torch.view_as_complex(image_data)
-
             image_data = torch.view_as_real(torch.from_numpy(kspace_data))
             image_data = ifft2c_new(image_data)
             kspace_data = torch.view_as_complex(image_data)
+
+            # Add scaling option
+            #if scaling:
+            # get mean
+            mr, mi = kspace_data.real.mean([0, 1]).type(torch.complex64), kspace_data.imag.mean([0, 1]).type(torch.complex64)
+            mean = mr + 1j * mi
+            out = kspace_data - mean
+            # get covariance
+            eps = 0
+            n = out.numel() / out.size(1)
+            Crr = 1. / n * out.real.pow(2).sum([0, 1]) + eps
+            Cii = 1. / n * out.imag.pow(2).sum([0, 1]) + eps
+            Cri = (out.real.mul(out.imag)).mean([0, 1])
+
+            # calculate the inverse square root the covariance matrix
+            det = Crr * Cii - Cri.pow(2)
+            s = torch.sqrt(det)
+            t = torch.sqrt(Cii + Crr + 2 * s)
+            inverse_st = 1.0 / (s * t)
+            Rrr = (Cii + s) * inverse_st
+            Rii = (Crr + s) * inverse_st
+            Rri = -Cri * inverse_st
+
+            out_scaled = (Rrr[None, None] * out.real + Rri[None, None] * out.imag).type(torch.complex64) \
+                         + 1j * (Rii[None, None] * out.imag + Rri[None, None] * out.real).type(torch.complex64)
+            kspace_data = out_scaled
 
             parameters = {
                 kspace_key: kspace_data,
@@ -183,16 +207,16 @@ def get_sampler_weights(dataset, save_filename="./sampler_knee_tr.p"):
 
 class KneeDataModule(pl.LightningDataModule):
     def __init__(
-            self,
-            split_csv_file: str,
-            label_type: str,
-            coil_type: str,
-            batch_size: int,
-            data_space: str,
-            sampler_filename: Optional[str] = None,
-            combine_class_recon: bool = False,
-            dev_mode: bool = False,
-            num_workers: int = 8,
+        self,
+        split_csv_file: str,
+        label_type: str,
+        coil_type: str,
+        batch_size: int,
+        data_space: str,
+        sampler_filename: Optional[str] = None,
+        combine_class_recon: bool = False,
+        dev_mode: bool = False,
+        num_workers: int = 0,
     ):
         super().__init__()
 

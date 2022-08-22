@@ -78,7 +78,7 @@ def get_args():
     # parser.add_argument("--split_csv_file", type=str, default='..//metadata_knee.csv', required=False)
     parser.add_argument("--split_csv_file",
                         type=str,
-                        default='../data_processing/knee/metadata_knee.csv',
+                        default='./knee/metadata_knee.csv',
                         required=False)
     parser.add_argument("--recon_model_ckpt", type=str)
     parser.add_argument("--recon_model_type", type=str, default=["rss"], required=False, choices=["rss"])
@@ -87,7 +87,7 @@ def get_args():
     parser.add_argument("--center_fraction", type=float, default=0.08)
     parser.add_argument("--coil_type", type=str, default="sc", choices=["sc", "mc"])
 
-    parser.add_argument("--sampler_filename", type=str, default='../data_processing/knee/sampler_knee_tr.p')
+    parser.add_argument("--sampler_filename", type=str, default=None)
     parser.add_argument(
         "--model_type",
         type=str,
@@ -100,7 +100,7 @@ def get_args():
     # training parameters
     parser.add_argument("--n_epochs", type=int, default=100)
     parser.add_argument("--n_seed", type=int, default=1)
-    parser.add_argument("--batch_size", type=int, default=32)
+    parser.add_argument("--batch_size", type=int, default=8)
     parser.add_argument("--lr", type=float, default=1e-5)
     parser.add_argument("--drop_prob", type=float, default=0.3)
     parser.add_argument("--lr_gamma", type=float, default=0.5)
@@ -116,7 +116,6 @@ def get_args():
     args, unkown = parser.parse_known_args()
 
     return args
-
 
 
 def train_model(
@@ -154,6 +153,16 @@ def train_model(
         callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
         auto_lr_find=True,
     )
+
+    # trainer: pl.Trainer = pl.Trainer(
+    #     gpus=1 if str(device).startswith("cuda") else 0,
+    #     max_epochs=args.n_epochs,
+    #     # logger=wandb_logger,
+    #     # logger=csv_logger,
+    #     logger=[wandb_logger, csv_logger],
+    #     callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
+    #     auto_lr_find=True,
+    # )
     # Runs a learning rate finder algorithm when calling trainer.tune() to find optimate lr
     trainer.tune(model, datamodule)
     print("In train_model and {}".format(str(device).startswith("cuda")))
@@ -168,6 +177,16 @@ def train_model(
         callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
     )
     trainer.fit(model, datamodule)
+
+    # trainer: pl.Trainer = pl.Trainer(
+    #     gpus=1 if str(device).startswith("cuda") else 0,
+    #     max_epochs=args.n_epochs,
+    #     logger=[wandb_logger, csv_logger],
+    #     # logger=wandb_logger,
+    #     # logger=csv_logger,
+    #     callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
+    # )
+    # trainer.fit(model, datamodule)
 
     return model
 
@@ -188,9 +207,10 @@ def test_model(
             / args.data_space
     )
 
-    csv_logger = CSVLogger(save_dir=log_dir,name=f"test-{args.n_seed}", version=f"{args.n_seed}")
+    csv_logger = CSVLogger(save_dir=log_dir, name=f"test-{args.n_seed}", version=f"{args.n_seed}")
     model = RSS.load_from_checkpoint(model_dir + '/' + checkpoint_filename)
     trainer = pl.Trainer(logger=csv_logger, accelerator="gpu", devices=3, strategy="ddp")
+    # trainer = pl.Trainer(logger=csv_logger, gpus=1 if str(device).startswith("cuda") else 0)
 
     with torch.inference_mode():
         model.eval()
