@@ -58,66 +58,6 @@ def get_model(
     return model
 
 
-def get_args():
-
-    parser = argparse.ArgumentParser(description="Indirect MR Screener training")
-
-    # logging parameters
-    parser.add_argument("--model_dir", type=str, default="./trained_models")
-    parser.add_argument("--log_dir", type=str, default="./trained_logs")
-    parser.add_argument("--mode", type=str, default="train")
-    parser.add_argument("--dev_mode", action="store_true")
-
-    # data parameters
-    parser.add_argument("--data_type", type=str, default="knee",)
-    parser.add_argument("--data_space", type=str, default="complex_input")
-    # parser.add_argument("--task", type=str, default="classification")
-    parser.add_argument("--image_shape", type=int, default=[320, 320], nargs=2, required=False)
-    parser.add_argument("--image_type", type=str, default='orig', required=False, choices=["orig"])
-
-    # parser.add_argument("--split_csv_file", type=str, default='..//metadata_knee.csv', required=False)
-    parser.add_argument("--split_csv_file",
-                        type=str,
-                        default='./knee/metadata_knee.csv',
-                        required=False)
-    parser.add_argument("--recon_model_ckpt", type=str)
-    parser.add_argument("--recon_model_type", type=str, default=["rss"], required=False, choices=["rss"])
-    parser.add_argument("--mask_type", type=str, default="none")
-    parser.add_argument("--k_fraction", type=float, default=0.25)
-    parser.add_argument("--center_fraction", type=float, default=0.08)
-    parser.add_argument("--coil_type", type=str, default="sc", choices=["sc", "mc"])
-
-    parser.add_argument("--sampler_filename", type=str, default=None)
-    parser.add_argument(
-        "--model_type",
-        type=str,
-        default="complex_preact_resnet18",
-        choices=["complex_preact_resnet18",
-                 "complex_preact_resnet50"
-                 ],
-    )
-
-    # training parameters
-    parser.add_argument("--n_epochs", type=int, default=100)
-    parser.add_argument("--n_seed", type=int, default=1)
-    parser.add_argument("--batch_size", type=int, default=8)
-    parser.add_argument("--lr", type=float, default=1e-5)
-    parser.add_argument("--drop_prob", type=float, default=0.5)
-    parser.add_argument("--lr_gamma", type=float, default=0.5)
-    parser.add_argument("--weight_decay", type=float, default=1e-4)
-    parser.add_argument("--lr_step_size", type=int, default=5)
-
-    parser.add_argument("--n_masks", type=int, default=100)
-
-    parser.add_argument("--seed", type=int, default=420)
-    parser.add_argument("--sweep_step", type=int)
-    parser.add_argument('--debug',  default=True)
-
-    args, unkown = parser.parse_known_args()
-
-    return args
-
-
 def train_model(
         args: argparse.Namespace,
         model: pl.LightningModule,
@@ -142,52 +82,50 @@ def train_model(
     model_checkpoint = ModelCheckpoint(monitor='val_auc_mean', dirpath=model_dir, filename="{epoch:02d}-{val_auc_mean:.2f}" ,save_top_k=1, mode='max')
     early_stop_callback = EarlyStopping(monitor='val_auc_mean', patience=10, mode='max')
 
-    # trainer: pl.Trainer = pl.Trainer(
-    #     accelerator="gpu",
-    #     devices=3,
-    #     strategy="ddp",
-    #     replace_ddp_sampler=False,
-    #     max_epochs=args.n_epochs,
-    #     #logger=wandb_logger,
-    #     logger=csv_logger,
-    #     #logger=[wandb_logger, csv_logger],
-    #     callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
-    #     auto_lr_find=True,
-    # )
-
     trainer: pl.Trainer = pl.Trainer(
-        gpus=1 if str(device).startswith("cuda") else 0,
+        accelerator="gpu",
+        devices=3,
+        strategy="ddp",
         max_epochs=args.n_epochs,
-        # logger=wandb_logger,
+        #logger=wandb_logger,
         logger=csv_logger,
-        # logger=[wandb_logger, csv_logger],
+        #logger=[wandb_logger, csv_logger],
         callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
         auto_lr_find=True,
     )
+
+    # trainer: pl.Trainer = pl.Trainer(
+    #     gpus=1 if str(device).startswith("cuda") else 0,
+    #     max_epochs=args.n_epochs,
+    #     # logger=wandb_logger,
+    #     logger=csv_logger,
+    #     # logger=[wandb_logger, csv_logger],
+    #     callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
+    #     auto_lr_find=True,
+    # )
     # Runs a learning rate finder algorithm when calling trainer.tune() to find optimate lr
     trainer.tune(model, datamodule)
-    print("In train_model and {}".format(str(device).startswith("cuda")))
-    # trainer: pl.Trainer = pl.Trainer(
-    #     accelerator="gpu",
-    #     devices=3,
-    #     strategy="ddp",
-    #     replace_ddp_sampler=False,
-    #     max_epochs=args.n_epochs,
-    #     #logger=[wandb_logger, csv_logger],
-    #     #logger=wandb_logger,
-    #     logger=csv_logger,
-    #     callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
-    # )
-    # trainer.fit(model, datamodule)
 
+    print("In train_model and {}".format(str(device).startswith("cuda")))
     trainer: pl.Trainer = pl.Trainer(
-        gpus=1 if str(device).startswith("cuda") else 0,
+        accelerator="gpu",
+        devices=3,
+        strategy="ddp",
         max_epochs=args.n_epochs,
         #logger=[wandb_logger, csv_logger],
-        # logger=wandb_logger,
+        #logger=wandb_logger,
         logger=csv_logger,
         callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
     )
+
+    # trainer: pl.Trainer = pl.Trainer(
+    #     gpus=1 if str(device).startswith("cuda") else 0,
+    #     max_epochs=args.n_epochs,
+    #     #logger=[wandb_logger, csv_logger],
+    #     # logger=wandb_logger,
+    #     logger=csv_logger,
+    #     callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
+    # )
     trainer.fit(model, datamodule)
 
     return model
@@ -234,6 +172,66 @@ def run_experiment(args):
     else:
         datamodule.setup()
         test_model(args=args, model=model, datamodule=datamodule, device=device,)
+
+
+def get_args():
+
+    parser = argparse.ArgumentParser(description="Indirect MR Screener training")
+
+    # logging parameters
+    parser.add_argument("--model_dir", type=str, default="./trained_models")
+    parser.add_argument("--log_dir", type=str, default="./trained_logs")
+    parser.add_argument("--mode", type=str, default="train")
+    parser.add_argument("--dev_mode", action="store_true")
+
+    # data parameters
+    parser.add_argument("--data_type", type=str, default="knee",)
+    parser.add_argument("--data_space", type=str, default="complex_input")
+    # parser.add_argument("--task", type=str, default="classification")
+    parser.add_argument("--image_shape", type=int, default=[320, 320], nargs=2, required=False)
+    parser.add_argument("--image_type", type=str, default='orig', required=False, choices=["orig"])
+
+    # parser.add_argument("--split_csv_file", type=str, default='..//metadata_knee.csv', required=False)
+    parser.add_argument("--split_csv_file",
+                        type=str,
+                        default='./metadata_knee.csv',
+                        required=False)
+    parser.add_argument("--recon_model_ckpt", type=str)
+    parser.add_argument("--recon_model_type", type=str, default=["rss"], required=False, choices=["rss"])
+    parser.add_argument("--mask_type", type=str, default="none")
+    parser.add_argument("--k_fraction", type=float, default=0.25)
+    parser.add_argument("--center_fraction", type=float, default=0.08)
+    parser.add_argument("--coil_type", type=str, default="sc", choices=["sc", "mc"])
+
+    parser.add_argument("--sampler_filename", type=str, default=None)
+    parser.add_argument(
+        "--model_type",
+        type=str,
+        default="complex_preact_resnet18",
+        choices=["complex_preact_resnet18",
+                 "complex_preact_resnet50"
+                 ],
+    )
+
+    # training parameters
+    parser.add_argument("--n_epochs", type=int, default=100)
+    parser.add_argument("--n_seed", type=int, default=1)
+    parser.add_argument("--batch_size", type=int, default=32)
+    parser.add_argument("--lr", type=float, default=1e-5)
+    parser.add_argument("--drop_prob", type=float, default=0.5)
+    parser.add_argument("--lr_gamma", type=float, default=0.5)
+    parser.add_argument("--weight_decay", type=float, default=1e-4)
+    parser.add_argument("--lr_step_size", type=int, default=5)
+
+    parser.add_argument("--n_masks", type=int, default=100)
+
+    parser.add_argument("--seed", type=int, default=420)
+    parser.add_argument("--sweep_step", type=int)
+    parser.add_argument('--debug',  default=True)
+
+    args, unkown = parser.parse_known_args()
+
+    return args
 
 
 def main(sweep_step=None):

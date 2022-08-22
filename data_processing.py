@@ -9,7 +9,7 @@ from tqdm import tqdm
 from typing import List, Optional, Sequence, Tuple, Union
 from joblib import dump, load
 from torch.utils.data import DataLoader, Dataset
-from torch.utils.data import WeightedRandomSampler, sampler
+from torch.utils.data import WeightedRandomSampler
 
 from typing import Dict, Optional, Tuple
 import pytorch_lightning as pl
@@ -82,9 +82,9 @@ class KneeDataset(MultiDataset):
             "max_value"
         ]
 
-        self.sample_template = namedtuple(
-            "Sample", fields, defaults=(math.nan,) * len(fields)
-        )
+        # self.sample_template = namedtuple(
+        #     "Sample", fields, defaults=(math.nan,) * len(fields)
+        # )
         self.coil_type = coil_type
         assert self.coil_type in {"sc", "mc"}
         self.label_type = label_type
