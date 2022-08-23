@@ -84,6 +84,8 @@ def train_model(
     print("In train_model tune and {}".format(str(device).startswith("cuda")))
 
     trainer: pl.Trainer = pl.Trainer(
+        auto_scale_batch_size=True,
+        strategy=args.strategy,
         accelerator=args.accelerator,
         devices=args.n_devices,
         max_epochs=args.n_epochs,
@@ -106,17 +108,18 @@ def train_model(
 
     trainer.tune(model, datamodule)
     print("In train_model fit and {}".format(str(device).startswith("cuda")))
-    trainer: pl.Trainer = pl.Trainer(
-        accelerator=args.accelerator,
-        devices=args.n_devices,
-        strategy=args.strategy,
-        max_epochs=args.n_epochs,
-        replace_sampler_ddp=False,
-        logger=[wandb_logger, csv_logger],
-        #logger=wandb_logger,
-        #logger=csv_logger,
-        callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
-    )
+    # trainer: pl.Trainer = pl.Trainer(
+    #     accelerator=args.accelerator,
+    #     devices=args.n_devices,
+    #     strategy=args.strategy,
+    #     max_epochs=args.n_epochs,
+    #     replace_sampler_ddp=False,
+    #
+    #     logger=[wandb_logger, csv_logger],
+    #     #logger=wandb_logger,
+    #     #logger=csv_logger,
+    #     callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
+    # )
 
     # trainer: pl.Trainer = pl.Trainer(
     #     gpus=1 if str(device).startswith("cuda") else 0,
