@@ -376,7 +376,7 @@ class RSS(pl.LightningModule):
 
     def validation_epoch_end(self, val_logs):
         preds, labels, loss = self.collate_results(val_logs)
-        self.log("val_loss", loss, prog_bar=True)
+        self.log("val_loss", loss, prog_bar=True, sync_dist=True)
 
         if self.data_type == "knee":
             labels_abnormal, labels_mtear, labels_acl, labels_cartilage = labels
@@ -396,17 +396,18 @@ class RSS(pl.LightningModule):
             keys = ["abnormal", "mtear", "acl", "cartilage"]
             for key in keys:
                 key_score = eval_metrics[key]["auc"]
-                self.log(f"val_auc_{key}", key_score, prog_bar=True)
+                self.log(f"val_auc_{key}", key_score, prog_bar=True, sync_dist=True)
                 self.log(
                     f"val_bac_{key}",
                     eval_metrics[key]["balanced_accuracy"],
                     prog_bar=True,
+                    sync_dist = True
                 )
                 avg_auc += key_score / len(keys)
 
                 self.val_operating_point[key] = eval_metrics[key]["operating_point"]
 
-            self.log(f"val_auc_mean", avg_auc, prog_bar=True)
+            self.log(f"val_auc_mean", avg_auc, prog_bar=True, sync_dist=True)
 
     def test_step(self, batch, batch_idx):
         labels = batch.label.long()
@@ -438,7 +439,7 @@ class RSS(pl.LightningModule):
     def test_epoch_end(self, test_logs):
 
         preds, labels, loss = self.collate_results(test_logs)
-        self.log("test_loss", loss, prog_bar=True)
+        self.log("test_loss", loss, prog_bar=True, sync_dist=True)
 
         if self.data_type == "knee":
             labels_abnormal, labels_mtear, labels_acl, labels_cartilage = labels

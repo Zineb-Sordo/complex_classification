@@ -82,9 +82,9 @@ class KneeDataset(MultiDataset):
             "max_value"
         ]
 
-        # self.sample_template = namedtuple(
-        #     "Sample", fields, defaults=(math.nan,) * len(fields)
-        # )
+        self.sample_template = namedtuple(
+            "Sample", fields, defaults=(math.nan,) * len(fields)
+        )
         self.coil_type = coil_type
         assert self.coil_type in {"sc", "mc"}
         self.label_type = label_type
@@ -270,10 +270,11 @@ class KneeDataModule(pl.LightningDataModule):
         self.train_sampler = load(self.sampler_filename)
 
     def train_dataloader(self) -> DataLoader:
-        return DataLoader(self.train_dataset, batch_size=self.batch_size, sampler=self.train_sampler, num_workers=self.num_workers)
+        return DataLoader(self.train_dataset, batch_size=self.batch_size, sampler=self.train_sampler, num_workers=self.num_workers,)
 
     def val_dataloader(self) -> Union[DataLoader, List[DataLoader]]:
         return DataLoader(self.val_dataset, batch_size=self.batch_size, num_workers=self.num_workers)
 
     def test_dataloader(self) -> Union[DataLoader, List[DataLoader]]:
         return DataLoader(self.test_dataset, batch_size=self.batch_size, num_workers=self.num_workers)
+
