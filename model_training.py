@@ -187,8 +187,8 @@ def get_args():
     parser = argparse.ArgumentParser(description="Indirect MR Screener training")
 
     # logging parameters
-    parser.add_argument("--model_dir", type=str, default="./trained_models")
-    parser.add_argument("--log_dir", type=str, default="./trained_logs")
+    parser.add_argument("--model_dir", type=str, default="./trained_models_ddp")
+    parser.add_argument("--log_dir", type=str, default="./trained_logs_ddp")
     parser.add_argument("--mode", type=str, default="train")
     parser.add_argument("--dev_mode", action="store_true")
 
@@ -222,9 +222,9 @@ def get_args():
     )
 
     # training parameters
-    parser.add_argument("--n_devices", type=int, default=1)
-    parser.add_argument("--strategy", type=str, default="dp")
-    parser.add_argument("--accelerator", type=str, default='cpu')
+    parser.add_argument("--n_devices", type=int, default=3)
+    parser.add_argument("--strategy", type=str, default="ddp")
+    parser.add_argument("--accelerator", type=str, default='gpu')
     parser.add_argument("--n_epochs", type=int, default=100)
     parser.add_argument("--n_seed", type=int, default=1)
     parser.add_argument("--batch_size", type=int, default=8)
