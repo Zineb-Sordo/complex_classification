@@ -81,6 +81,7 @@ def train_model(
     lr_monitor = LearningRateMonitor(logging_interval='step')
     model_checkpoint = ModelCheckpoint(monitor='val_auc_mean', dirpath=model_dir, filename="{epoch:02d}-{val_auc_mean:.2f}" ,save_top_k=1, mode='max')
     early_stop_callback = EarlyStopping(monitor='val_auc_mean', patience=10, mode='max')
+    print("In train_model tune and {}".format(str(device).startswith("cuda")))
 
     trainer: pl.Trainer = pl.Trainer(
         gpus='0,1,2',
@@ -105,10 +106,10 @@ def train_model(
     # )
     # Runs a learning rate finder algorithm when calling trainer.tune() to find optimate lr
     trainer.tune(model, datamodule)
-
-    print("In train_model and {}".format(str(device).startswith("cuda")))
+    print("Finish tuning")
+    print("In train_model fit and {}".format(str(device).startswith("cuda")))
     trainer: pl.Trainer = pl.Trainer(
-        gpus=3,
+        gpus='0,1,2',
         accelerator="ddp",
         max_epochs=args.n_epochs,
         replace_sampler_ddp=False,
@@ -149,7 +150,7 @@ def test_model(
 
     csv_logger = CSVLogger(save_dir=log_dir, name=f"test-{args.n_seed}", version=f"{args.n_seed}")
     model = RSS.load_from_checkpoint(model_dir + '/' + checkpoint_filename)
-    trainer = pl.Trainer(logger=csv_logger, gpus=3, accelerator="ddp")
+    trainer = pl.Trainer(logger=csv_logger, gpus='0,1,2', strategy="ddp")
     #trainer = pl.Trainer(logger=csv_logger, gpus=1 if str(device).startswith("cuda") else 0)
 
     with torch.inference_mode():
@@ -168,8 +169,10 @@ def run_experiment(args):
     datamodule = get_data(args)
     model = get_model(args, device)
     if args.mode == "train":
+        print("In train mode")
         model = train_model(args=args, model=model, datamodule=datamodule, device=device,)
     else:
+        print("In test mode")
         datamodule.setup()
         test_model(args=args, model=model, datamodule=datamodule, device=device,)
 
