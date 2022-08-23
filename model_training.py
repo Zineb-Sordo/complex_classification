@@ -84,8 +84,6 @@ def train_model(
     print("In train_model tune and {}".format(str(device).startswith("cuda")))
 
     trainer: pl.Trainer = pl.Trainer(
-        auto_scale_batch_size=True,
-        strategy=args.strategy,
         accelerator=args.accelerator,
         devices=args.n_devices,
         max_epochs=args.n_epochs,
@@ -108,18 +106,17 @@ def train_model(
 
     trainer.tune(model, datamodule)
     print("In train_model fit and {}".format(str(device).startswith("cuda")))
-    # trainer: pl.Trainer = pl.Trainer(
-    #     accelerator=args.accelerator,
-    #     devices=args.n_devices,
-    #     strategy=args.strategy,
-    #     max_epochs=args.n_epochs,
-    #     replace_sampler_ddp=False,
-    #
-    #     logger=[wandb_logger, csv_logger],
-    #     #logger=wandb_logger,
-    #     #logger=csv_logger,
-    #     callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
-    # )
+    trainer: pl.Trainer = pl.Trainer(
+        accelerator=args.accelerator,
+        devices=args.n_devices,
+        strategy=args.strategy,
+        max_epochs=args.n_epochs,
+        replace_sampler_ddp=False,
+        logger=[wandb_logger, csv_logger],
+        #logger=wandb_logger,
+        #logger=csv_logger,
+        callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
+    )
 
     # trainer: pl.Trainer = pl.Trainer(
     #     gpus=1 if str(device).startswith("cuda") else 0,
@@ -227,7 +224,7 @@ def get_args():
     parser.add_argument("--accelerator", type=str, default='gpu')
     parser.add_argument("--n_epochs", type=int, default=100)
     parser.add_argument("--n_seed", type=int, default=1)
-    parser.add_argument("--batch_size", type=int, default=8)
+    parser.add_argument("--batch_size", type=int, default=32)
     parser.add_argument("--lr", type=float, default=1e-5)
     parser.add_argument("--drop_prob", type=float, default=0.5)
     parser.add_argument("--lr_gamma", type=float, default=0.5)
