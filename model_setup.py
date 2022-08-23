@@ -228,6 +228,7 @@ class RSS(pl.LightningModule):
         self.sequences = sequences
         self.data_space = data_space
         self.return_features = return_features
+        self.device = device
 
         # get model depending on data and model type
         self.model = get_model(
@@ -246,7 +247,7 @@ class RSS(pl.LightningModule):
 
     def forward(self, batch):
         kspace = batch.sc_kspace
-        kspace = kspace.type(torch.complex64)
+        kspace = kspace.to(self.device).type(torch.complex64)
         return self.model(kspace.unsqueeze(1))
 
     def loss_fn(self, preds: torch.Tensor, labels: torch.Tensor) -> torch.Tensor:

@@ -173,7 +173,7 @@ class KneeDataset(MultiDataset):
             out_scaled = (Rrr[None, None] * out.real + Rri[None, None] * out.imag).type(torch.complex64) \
                          + 1j * (Rii[None, None] * out.imag + Rri[None, None] * out.real).type(torch.complex64)
             kspace_data = out_scaled
-
+            print("shape after scaling is {}".format(kspace_data.shape, out_scaled.shape))
             parameters = {
                 kspace_key: kspace_data,
                 target_key: target_data,
