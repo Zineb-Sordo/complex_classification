@@ -205,7 +205,7 @@ def get_args():
     parser.add_argument("--center_fraction", type=float, default=0.08)
     parser.add_argument("--coil_type", type=str, default="sc", choices=["sc", "mc"])
 
-    parser.add_argument("--sampler_filename", type=str, default=None)
+    parser.add_argument("--sampler_filename", type=str, default="./sampler_knee_tr.p")
     parser.add_argument(
         "--model_type",
         type=str,
