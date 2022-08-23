@@ -228,7 +228,6 @@ class RSS(pl.LightningModule):
         self.sequences = sequences
         self.data_space = data_space
         self.return_features = return_features
-        self.device = device
 
         # get model depending on data and model type
         self.model = get_model(
@@ -273,7 +272,7 @@ class RSS(pl.LightningModule):
             acc = compute_accuracy(preds[i], labels[:, i])
             acc_per_label.append(acc)
             
-            self.log(label_names[i], acc, prog_bar=True)
+            self.log(label_names[i], acc, prog_bar=True, sync_dist=True)
             
         return loss
 
@@ -482,6 +481,7 @@ class RSS(pl.LightningModule):
                         f"{prefix}_{key}_{metric}",
                         eval_metrics[key][metric],
                         prog_bar=True,
+                        sync_dist=True
                      )
             
         return loss, eval_metrics
