@@ -128,7 +128,9 @@ class ComplexPreActResNetFFTKnee(nn.Module):
 
     def forward(self, kspace):
         print("the kspace dtype is {}".format(kspace.dtype)) # torch.size([8, 1, 640, 400])
+        print(self.data_space == 'complex_input')
         if self.data_space == 'complex_input':
+            print("in if loop and the kspace dtype is {}".format(kspace.dtype))  # torch.size([8, 1, 640, 400])
             out = torch.complex(kspace.real, kspace.imag).type(torch.complex64)
             out = out.type_as(kspace)
             #out = torch.complex(kspace.real, kspace.imag).type(torch.complex64)

@@ -153,13 +153,13 @@ class KneeDataset(MultiDataset):
             # get mean
             mr, mi = kspace_data.real.mean([0, 1]).type(torch.complex64), kspace_data.imag.mean([0, 1]).type(torch.complex64)
             mean = mr + 1j * mi
-            out = kspace_data - mean
+            kspace_data = kspace_data - mean
             # get covariance
             eps = 0
-            n = out.numel() / out.size(1)
-            Crr = 1. / n * out.real.pow(2).sum([0, 1]) + eps
-            Cii = 1. / n * out.imag.pow(2).sum([0, 1]) + eps
-            Cri = (out.real.mul(out.imag)).mean([0, 1])
+            n = kspace_data.numel() / kspace_data.size(1)
+            Crr = 1. / n * kspace_data.real.pow(2).sum([0, 1]) + eps
+            Cii = 1. / n * kspace_data.imag.pow(2).sum([0, 1]) + eps
+            Cri = (kspace_data.real.mul(kspace_data.imag)).mean([0, 1])
 
             # calculate the inverse square root the covariance matrix
             det = Crr * Cii - Cri.pow(2)
@@ -170,10 +170,10 @@ class KneeDataset(MultiDataset):
             Rii = (Crr + s) * inverse_st
             Rri = -Cri * inverse_st
 
-            out_scaled = (Rrr[None, None] * out.real + Rri[None, None] * out.imag).type(torch.complex64) \
-                         + 1j * (Rii[None, None] * out.imag + Rri[None, None] * out.real).type(torch.complex64)
-            kspace_data = out_scaled
-            print("shape after scaling is {}".format(kspace_data.shape, out_scaled.shape))
+            kspace_data = (Rrr[None, None] * kspace_data.real + Rri[None, None] * kspace_data.imag).type(torch.complex64) \
+                         + 1j * (Rii[None, None] * kspace_data.imag + Rri[None, None] * kspace_data.real).type(torch.complex64)
+
+            print("shape after scaling is {}".format(kspace_data.shape))
             parameters = {
                 kspace_key: kspace_data,
                 target_key: target_data,
