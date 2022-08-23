@@ -84,6 +84,10 @@ def train_model(
     print("In train_model tune and {}".format(str(device).startswith("cuda")))
 
     trainer: pl.Trainer = pl.Trainer(
+        accelerator=args.accelerator,
+        devices=args.n_devices,
+        max_epochs=args.n_epochs,
+        replace_sampler_ddp=False,
         logger=[wandb_logger, csv_logger],
         callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
         auto_lr_find=True,
@@ -99,8 +103,8 @@ def train_model(
     #     auto_lr_find=True,
     # )
     # Runs a learning rate finder algorithm when calling trainer.tune() to find optimate lr
+
     trainer.tune(model, datamodule)
-    print("Finish tuning")
     print("In train_model fit and {}".format(str(device).startswith("cuda")))
     trainer: pl.Trainer = pl.Trainer(
         accelerator=args.accelerator,
@@ -156,7 +160,7 @@ def test_model(
         M_val = trainer.validate(model, datamodule.val_dataloader())
         M = trainer.test(model, datamodule.test_dataloader())
 
-    print("finish testing")
+    print("Finish testing")
 
 
 def run_experiment(args):
@@ -220,7 +224,7 @@ def get_args():
     parser.add_argument("--accelerator", type=str, default='cpu')
     parser.add_argument("--n_epochs", type=int, default=100)
     parser.add_argument("--n_seed", type=int, default=1)
-    parser.add_argument("--batch_size", type=int, default=32)
+    parser.add_argument("--batch_size", type=int, default=8)
     parser.add_argument("--lr", type=float, default=1e-5)
     parser.add_argument("--drop_prob", type=float, default=0.5)
     parser.add_argument("--lr_gamma", type=float, default=0.5)

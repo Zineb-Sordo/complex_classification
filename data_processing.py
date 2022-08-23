@@ -56,6 +56,22 @@ class MultiDataset(Dataset):
         raise NotImplementedError
 
 
+fields = [
+    "volume_id",
+    "slice_id",
+    "sc_kspace",
+    "mc_kspace",
+    "recon_esc",
+    "recon_rss",
+    "label",
+    "data_split",
+    "dataset",
+    "location",
+    "max_value"
+]
+Sample = namedtuple("Sample", fields, defaults=(math.nan,) * len(fields))
+
+
 class KneeDataset(MultiDataset):
     def __init__(
             self,
@@ -68,22 +84,21 @@ class KneeDataset(MultiDataset):
 
     ):
         super().__init__(split_csv_file=split_csv_file, mode=mode)
-        fields = [
-            "volume_id",
-            "slice_id",
-            "sc_kspace",
-            "mc_kspace",
-            "recon_esc",
-            "recon_rss",
-            "label",
-            "data_split",
-            "dataset",
-            "location",
-            "max_value"
-        ]
-
-        self.sample_filename = namedtuple("Sample", fields, defaults=(math.nan,) * len(fields))
-
+        # self.fields = [
+        #     "volume_id",
+        #     "slice_id",
+        #     "sc_kspace",
+        #     "mc_kspace",
+        #     "recon_esc",
+        #     "recon_rss",
+        #     "label",
+        #     "data_split",
+        #     "dataset",
+        #     "location",
+        #     "max_value"
+        # ]
+        # self.Sample = namedtuple("Sample", self.fields, defaults=(math.nan,) * len(self.fields))
+        #
         self.coil_type = coil_type
         assert self.coil_type in {"sc", "mc"}
         self.label_type = label_type
@@ -176,8 +191,7 @@ class KneeDataset(MultiDataset):
                 raise NotImplementedError(
                     f"Label type {self.label_type} not implemented"
                 )
-
-        sample = self.sample_filename(**parameters)
+        sample = Sample(**parameters)
         return sample
 
 
@@ -218,7 +232,6 @@ class KneeDataModule(pl.LightningDataModule):
         num_workers: int = 4,
     ):
         super().__init__()
-
         self.split_csv_file = split_csv_file
         self.coil_type = coil_type
         self.batch_size = batch_size
@@ -269,7 +282,7 @@ class KneeDataModule(pl.LightningDataModule):
         self.train_sampler = load(self.sampler_filename)
 
     def train_dataloader(self) -> DataLoader:
-        return DataLoader(self.train_dataset, batch_size=self.batch_size, sampler=self.train_sampler, num_workers=self.num_workers,)
+        return DataLoader(self.train_dataset, batch_size=self.batch_size,  sampler=self.train_sampler, num_workers=self.num_workers,)
 
     def val_dataloader(self) -> Union[DataLoader, List[DataLoader]]:
         return DataLoader(self.val_dataset, batch_size=self.batch_size, num_workers=self.num_workers)
