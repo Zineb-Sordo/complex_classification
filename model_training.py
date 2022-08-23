@@ -8,7 +8,7 @@ import os
 import pytorch_lightning as pl
 import torch
 from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint, LearningRateMonitor
-from pytorch_lightning.loggers import CSVLogger#, WandbLogger
+from pytorch_lightning.loggers import CSVLogger, WandbLogger
 from pathlib import Path
 import fire
 
@@ -77,20 +77,21 @@ def train_model(
         os.makedirs(str(model_dir))
 
     csv_logger = CSVLogger(save_dir=log_dir, name=f"train-{args.n_seed}", version=f"{args.n_seed}")
-    # wandb_logger = WandbLogger(name=f"{args.data_space}-{args.n_seed}")
+    wandb_logger = WandbLogger(name=f"{args.data_space}-{args.n_seed}")
     lr_monitor = LearningRateMonitor(logging_interval='step')
     model_checkpoint = ModelCheckpoint(monitor='val_auc_mean', dirpath=model_dir, filename="{epoch:02d}-{val_auc_mean:.2f}" ,save_top_k=1, mode='max')
-    early_stop_callback = EarlyStopping(monitor='val_auc_mean', patience=10, mode='max')
+    early_stop_callback = EarlyStopping(monitor='val_auc_mean', patience=5, mode='max')
     print("In train_model tune and {}".format(str(device).startswith("cuda")))
 
     trainer: pl.Trainer = pl.Trainer(
-        gpus='0,1,2',
+        accelerator='gpu',
+        devices=3,
         strategy="ddp",
         max_epochs=args.n_epochs,
         replace_sampler_ddp=False,
         #logger=wandb_logger,
-        logger=csv_logger,
-        #logger=[wandb_logger, csv_logger],
+        #logger=csv_logger,
+        logger=[wandb_logger, csv_logger],
         callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
         auto_lr_find=True,
     )
@@ -109,13 +110,14 @@ def train_model(
     print("Finish tuning")
     print("In train_model fit and {}".format(str(device).startswith("cuda")))
     trainer: pl.Trainer = pl.Trainer(
-        gpus='0,1,2',
-        accelerator="ddp",
+        accelerator='gpu',
+        devices=3,
+        strategy="ddp",
         max_epochs=args.n_epochs,
         replace_sampler_ddp=False,
-        #logger=[wandb_logger, csv_logger],
+        logger=[wandb_logger, csv_logger],
         #logger=wandb_logger,
-        logger=csv_logger,
+        #logger=csv_logger,
         callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
     )
 
@@ -128,7 +130,7 @@ def train_model(
     #     callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
     # )
     trainer.fit(model, datamodule)
-
+    print("Finished training model")
     return model
 
 
@@ -150,13 +152,18 @@ def test_model(
 
     csv_logger = CSVLogger(save_dir=log_dir, name=f"test-{args.n_seed}", version=f"{args.n_seed}")
     model = RSS.load_from_checkpoint(model_dir + '/' + checkpoint_filename)
-    trainer = pl.Trainer(logger=csv_logger, gpus='0,1,2', strategy="ddp")
+    trainer = pl.Trainer(logger=csv_logger,
+        accelerator='gpu',
+        devices=3,
+        strategy="ddp",)
     #trainer = pl.Trainer(logger=csv_logger, gpus=1 if str(device).startswith("cuda") else 0)
 
     with torch.inference_mode():
         model.eval()
         M_val = trainer.validate(model, datamodule.val_dataloader())
         M = trainer.test(model, datamodule.test_dataloader())
+
+    print("finish testing")
 
 
 def run_experiment(args):
@@ -166,6 +173,7 @@ def run_experiment(args):
     if torch.cuda.is_available():
         print("Found CUDA device, running job on GPU.")
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print(device)
     datamodule = get_data(args)
     model = get_model(args, device)
     if args.mode == "train":
