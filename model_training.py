@@ -83,8 +83,8 @@ def train_model(
     early_stop_callback = EarlyStopping(monitor='val_auc_mean', patience=10, mode='max')
 
     trainer: pl.Trainer = pl.Trainer(
-        gpus=3,
-        accelerator="ddp",
+        gpus='0,1,2',
+        strategy="ddp",
         max_epochs=args.n_epochs,
         replace_sampler_ddp=False,
         #logger=wandb_logger,
