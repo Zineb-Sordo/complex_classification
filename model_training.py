@@ -83,9 +83,8 @@ def train_model(
     early_stop_callback = EarlyStopping(monitor='val_auc_mean', patience=10, mode='max')
 
     trainer: pl.Trainer = pl.Trainer(
-        gpu=3,
+        gpus=3,
         accelerator="ddp",
-        num_nodes=3,
         max_epochs=args.n_epochs,
         replace_sampler_ddp=False,
         #logger=wandb_logger,
@@ -109,9 +108,8 @@ def train_model(
 
     print("In train_model and {}".format(str(device).startswith("cuda")))
     trainer: pl.Trainer = pl.Trainer(
-        gpu=3,
+        gpus=3,
         accelerator="ddp",
-        num_nodes=3,
         max_epochs=args.n_epochs,
         replace_sampler_ddp=False,
         #logger=[wandb_logger, csv_logger],
@@ -151,7 +149,7 @@ def test_model(
 
     csv_logger = CSVLogger(save_dir=log_dir, name=f"test-{args.n_seed}", version=f"{args.n_seed}")
     model = RSS.load_from_checkpoint(model_dir + '/' + checkpoint_filename)
-    trainer = pl.Trainer(logger=csv_logger, gpu=3, accelerator="ddp",num_nodes=3,)
+    trainer = pl.Trainer(logger=csv_logger, gpus=3, accelerator="ddp")
     #trainer = pl.Trainer(logger=csv_logger, gpus=1 if str(device).startswith("cuda") else 0)
 
     with torch.inference_mode():
