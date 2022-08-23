@@ -82,9 +82,8 @@ class KneeDataset(MultiDataset):
             "max_value"
         ]
 
-        self.sample_template = namedtuple(
-            "Sample", fields, defaults=(math.nan,) * len(fields)
-        )
+        self.sample_filename = namedtuple("Sample", fields, defaults=(math.nan,) * len(fields))
+
         self.coil_type = coil_type
         assert self.coil_type in {"sc", "mc"}
         self.label_type = label_type
@@ -178,7 +177,7 @@ class KneeDataset(MultiDataset):
                     f"Label type {self.label_type} not implemented"
                 )
 
-        sample = self.sample_template(**parameters)
+        sample = self.sample_filename(**parameters)
         return sample
 
 

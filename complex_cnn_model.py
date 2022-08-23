@@ -57,9 +57,7 @@ class ComplexPreActBlock(nn.Module):
 
 
 def complex_dropout2d(input, p=0.5, training=True):
-    mask = torch.ones(*input.shape, dtype = torch.float32, device=torch.device('cuda'))
-    #mask = torch.ones(*input.shape, dtype = torch.float32)
-
+    mask = torch.ones(*input.shape, dtype=torch.float32, device=torch.device("cuda" if torch.cuda.is_available() else "cpu"))
     mask = dropout2d(mask, p, training ) * 1 / (1-p)
     mask.type(input.dtype)
     return mask * input

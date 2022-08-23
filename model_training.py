@@ -84,13 +84,6 @@ def train_model(
     print("In train_model tune and {}".format(str(device).startswith("cuda")))
 
     trainer: pl.Trainer = pl.Trainer(
-        accelerator='gpu',
-        devices=3,
-        strategy="ddp",
-        max_epochs=args.n_epochs,
-        replace_sampler_ddp=False,
-        #logger=wandb_logger,
-        #logger=csv_logger,
         logger=[wandb_logger, csv_logger],
         callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
         auto_lr_find=True,
@@ -110,9 +103,9 @@ def train_model(
     print("Finish tuning")
     print("In train_model fit and {}".format(str(device).startswith("cuda")))
     trainer: pl.Trainer = pl.Trainer(
-        accelerator='gpu',
-        devices=3,
-        strategy="ddp",
+        accelerator=args.accelerator,
+        devices=args.n_devices,
+        strategy=args.strategy,
         max_epochs=args.n_epochs,
         replace_sampler_ddp=False,
         logger=[wandb_logger, csv_logger],
@@ -153,9 +146,9 @@ def test_model(
     csv_logger = CSVLogger(save_dir=log_dir, name=f"test-{args.n_seed}", version=f"{args.n_seed}")
     model = RSS.load_from_checkpoint(model_dir + '/' + checkpoint_filename)
     trainer = pl.Trainer(logger=csv_logger,
-        accelerator='gpu',
-        devices=3,
-        strategy="ddp",)
+        accelerator=args.accelerator,
+        devices=args.n_devices,
+        strategy=args.strategy,)
     #trainer = pl.Trainer(logger=csv_logger, gpus=1 if str(device).startswith("cuda") else 0)
 
     with torch.inference_mode():
@@ -173,14 +166,11 @@ def run_experiment(args):
     if torch.cuda.is_available():
         print("Found CUDA device, running job on GPU.")
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    print(device)
     datamodule = get_data(args)
     model = get_model(args, device)
     if args.mode == "train":
-        print("In train mode")
         model = train_model(args=args, model=model, datamodule=datamodule, device=device,)
     else:
-        print("In test mode")
         datamodule.setup()
         test_model(args=args, model=model, datamodule=datamodule, device=device,)
 
@@ -205,7 +195,7 @@ def get_args():
     # parser.add_argument("--split_csv_file", type=str, default='..//metadata_knee.csv', required=False)
     parser.add_argument("--split_csv_file",
                         type=str,
-                        default='./metadata_knee.csv',
+                        default='./knee/metadata_knee.csv',
                         required=False)
     parser.add_argument("--recon_model_ckpt", type=str)
     parser.add_argument("--recon_model_type", type=str, default=["rss"], required=False, choices=["rss"])
@@ -225,6 +215,9 @@ def get_args():
     )
 
     # training parameters
+    parser.add_argument("--n_devices", type=int, default=1)
+    parser.add_argument("--strategy", type=str, default="dp")
+    parser.add_argument("--accelerator", type=str, default='cpu')
     parser.add_argument("--n_epochs", type=int, default=100)
     parser.add_argument("--n_seed", type=int, default=1)
     parser.add_argument("--batch_size", type=int, default=32)
