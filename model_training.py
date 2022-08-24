@@ -55,7 +55,7 @@ def get_model(
         )
     else:
         raise NotImplementedError
-    return model.to(device)
+    return model
 
 
 def train_model(
@@ -84,6 +84,11 @@ def train_model(
     print("In train_model tune and {}".format(str(device).startswith("cuda")))
 
     trainer: pl.Trainer = pl.Trainer(auto_scale_batch_size=True,
+
+                                     accelerator=args.accelerator,
+                                     devices=args.n_devices,
+                                     strategy=args.strategy,
+
         logger=csv_logger,
         callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
         auto_lr_find=True,
