@@ -132,7 +132,6 @@ def train_model(
             logger=csv_logger,
             # logger=[wandb_logger, csv_logger],
             callbacks=[model_checkpoint, early_stop_callback, lr_monitor],)
-
     trainer.fit(model, datamodule)
     print("Finished training model")
     return model

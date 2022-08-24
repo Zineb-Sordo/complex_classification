@@ -144,17 +144,12 @@ class KneeDataset(MultiDataset):
             kspace_data = f[kspace_key][:]
             target_data = f[target_key][:]
 
-            # image_data = torch.view_as_real(torch.from_numpy(kspace_data))
-            # image_data = ifft2c_new(image_data)
-            # kspace_data = torch.view_as_complex(image_data)
-
             image_data = fastmri.ifft2c(T.to_tensor(kspace_data))
             image_data = ifft2c_new(image_data)
             kspace_data = torch.complex(image_data[:,:,0], image_data[:,:,1])
 
-            # Add scaling option
-            #if scaling:
-            # get mean
+            # Add scaling of complex-valued input data
+
             mr, mi = kspace_data.real.mean([0, 1]).type(torch.complex64), kspace_data.imag.mean([0, 1]).type(torch.complex64)
             mean = mr + 1j * mi
             kspace_data = kspace_data - mean
