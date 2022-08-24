@@ -173,7 +173,7 @@ def get_model(
     sequences: Optional[Tuple[str, str, str]] = None,
     return_features=False,
     num_labels=4
-) -> nn.Module:
+) -> pl.LightningModule:
     if data_type == "knee":
         if model_type == "complex_preact_resnet18":
             return complex_resnet18_knee(image_shape=image_shape, drop_prob=drop_prob, data_space=data_space, return_features=return_features)
@@ -311,7 +311,6 @@ class RSS(pl.LightningModule):
     def validation_step(self, batch, batch_idx):
         labels = batch.label.long()
         # get predictions
-        print("in validation_step the batch shape and batch_idx are {} and {}".format(batch.sc_kspace.shape, batch_idx))
 
         preds = self.forward(batch=batch)
         #print("preds shape: ",preds.shape)
@@ -329,7 +328,6 @@ class RSS(pl.LightningModule):
             loss += self.loss_fn(preds=preds_cartilage, labels=labels_cartilage)
 
         batch_size = labels.shape[0]
-        print("in validation_step the batch shape 2 and batch_idx are {} and {}".format(batch_size, batch_idx))
 
         return {
             "loss": loss,
@@ -493,6 +491,7 @@ class RSS(pl.LightningModule):
         return loss, eval_metrics
 
     def configure_optimizers(self):
+        print("in optimizer")
         optimizer = optim.AdamW(
             self.parameters(), lr=self.lr, weight_decay=self.weight_decay
         )

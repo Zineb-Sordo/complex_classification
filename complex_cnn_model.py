@@ -8,6 +8,8 @@ from complexPyTorch.complexLayers import ComplexBatchNorm1d
 from complexPyTorch.complexFunctions import complex_relu, complex_normalize, complex_avg_pool2d
 from torch.nn.functional import dropout2d
 import numpy as np
+import pytorch_lightning as pl
+
 
 
 def center_crop(data, shape: Tuple[int, int]):
@@ -20,7 +22,7 @@ def center_crop(data, shape: Tuple[int, int]):
     return data[..., w_from:w_to, h_from:h_to]
 
 
-class ComplexPreActBlock(nn.Module):
+class ComplexPreActBlock(pl.LightningModule):
     """Pre-activation complex version of the BasicBlock."""
 
     expansion = 1
@@ -76,7 +78,7 @@ class ComplexDropout2d(nn.Module):
             return input
 
 
-class ComplexPreActResNetFFTKnee(nn.Module):
+class ComplexPreActResNetFFTKnee(pl.LightningModule):
     def __init__(
             self,
             block,
@@ -130,9 +132,6 @@ class ComplexPreActResNetFFTKnee(nn.Module):
     def forward(self, kspace):
         print("the kspace shape is {} and dtype is {}".format(kspace.shape, kspace.dtype)) # torch.size([8, 1, 640, 400])
         if self.data_space == 'complex_input':
-            print(kspace[:, :, :, 0].shape)
-            print((kspace[:, :, :, 0] == kspace[:, :, :, 1]).all())
-
             out = torch.complex(kspace.real, kspace.imag).type(torch.complex64)
 
             #out = torch.complex(kspace.real, kspace.imag).type(torch.complex64)
