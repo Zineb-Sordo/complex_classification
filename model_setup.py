@@ -246,7 +246,7 @@ class RSS(pl.LightningModule):
 
     def forward(self, batch):
         kspace = batch.sc_kspace
-        print("after batch.sc_kspace, the kspace shape is {}".format(kspace.shape))
+        print("batch.sc_kspace shape is {}".format(kspace.shape))
         kspace = kspace.type(torch.complex64)
         print("dtype of the kspace is {}".format(kspace.dtype))
         return self.model(kspace.unsqueeze(1))
@@ -281,6 +281,7 @@ class RSS(pl.LightningModule):
     def training_step(self, batch, batch_idx):
         labels = batch.label.long()
         # get predictions
+        print("in training_step the batch shape and batch_idx are {} and {}".format(batch.shape, batch_idx))
         preds = self.forward(batch=batch)
         # print("preds shape: ",preds.shape)
         if self.data_type == "knee":
@@ -310,6 +311,8 @@ class RSS(pl.LightningModule):
     def validation_step(self, batch, batch_idx):
         labels = batch.label.long()
         # get predictions
+        print("in validation_step the batch shape and batch_idx are {} and {}".format(batch.shape, batch_idx))
+
         preds = self.forward(batch=batch)
         #print("preds shape: ",preds.shape)
         if self.data_type == "knee":
@@ -326,6 +329,8 @@ class RSS(pl.LightningModule):
             loss += self.loss_fn(preds=preds_cartilage, labels=labels_cartilage)
 
         batch_size = labels.shape[0]
+        print("in validation_step the batch shape 2 and batch_idx are {} and {}".format(batch_size, batch_idx))
+
         return {
             "loss": loss,
             "batch_idx": batch_idx,

@@ -133,7 +133,9 @@ class ComplexPreActResNetFFTKnee(nn.Module):
             out = torch.complex(kspace.real, kspace.imag).type(torch.complex64)
             #out = torch.complex(kspace.real, kspace.imag).type(torch.complex64)
             out = center_crop(out, self.image_shape)
+            print(out.shape)
             out = self.conv_comp(out)
+            print("after conv_comp the shape is {}".format(out.shape))
         out = self.dropout(out)
 
         layer_1_out = self.layer1(out)

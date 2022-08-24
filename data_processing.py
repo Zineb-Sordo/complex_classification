@@ -56,6 +56,7 @@ class MultiDataset(Dataset):
         raise NotImplementedError
 
 
+# Defining the Sample namedtuple at module level
 fields = [
     "volume_id",
     "slice_id",
@@ -84,21 +85,7 @@ class KneeDataset(MultiDataset):
 
     ):
         super().__init__(split_csv_file=split_csv_file, mode=mode)
-        # self.fields = [
-        #     "volume_id",
-        #     "slice_id",
-        #     "sc_kspace",
-        #     "mc_kspace",
-        #     "recon_esc",
-        #     "recon_rss",
-        #     "label",
-        #     "data_split",
-        #     "dataset",
-        #     "location",
-        #     "max_value"
-        # ]
-        # self.Sample = namedtuple("Sample", self.fields, defaults=(math.nan,) * len(self.fields))
-        #
+
         self.coil_type = coil_type
         assert self.coil_type in {"sc", "mc"}
         self.label_type = label_type
@@ -192,6 +179,7 @@ class KneeDataset(MultiDataset):
                     f"Label type {self.label_type} not implemented"
                 )
         sample = Sample(**parameters)
+        print("the sample shape is {}".format(sample.sc_kspace.shape))
         return sample
 
 

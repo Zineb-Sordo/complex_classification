@@ -83,7 +83,7 @@ def train_model(
     early_stop_callback = EarlyStopping(monitor='val_auc_mean', patience=5, mode='max')
     print("In train_model tune and {}".format(str(device).startswith("cuda")))
 
-    if args.strategy == 'ddp':
+    if (args.strategy == 'ddp') or (args.strategy == 'dp'):
 
         trainer: pl.Trainer = pl.Trainer(
             max_epochs=args.n_epochs,
@@ -112,7 +112,7 @@ def train_model(
 
     print("In train_model fit and {}".format(str(device).startswith("cuda")))
 
-    if args.strategy == 'ddp':
+    if (args.strategy == 'ddp') or (args.strategy == 'dp'):
 
         trainer: pl.Trainer = pl.Trainer(
             max_epochs=args.n_epochs,
@@ -228,11 +228,11 @@ def get_args():
 
     # training parameters
     parser.add_argument("--n_devices", type=int, default=3)
-    parser.add_argument("--strategy", type=str, default="ddp")
+    parser.add_argument("--strategy", type=str, default="dp")
     parser.add_argument("--accelerator", type=str, default='gpu')
     parser.add_argument("--n_epochs", type=int, default=100)
     parser.add_argument("--n_seed", type=int, default=1)
-    parser.add_argument("--batch_size", type=int, default=32)
+    parser.add_argument("--batch_size", type=int, default=8)
     parser.add_argument("--lr", type=float, default=1e-5)
     parser.add_argument("--drop_prob", type=float, default=0.5)
     parser.add_argument("--lr_gamma", type=float, default=0.5)
