@@ -246,10 +246,7 @@ class RSS(pl.LightningModule):
 
     def forward(self, batch):
         kspace = batch.sc_kspace
-        kspace = kspace.to(self.device).type(torch.complex64)
-
-        kspace = kspace.type(torch.complex64)
-
+        kspace = kspace.cuda().type(torch.complex64)
         return self.model(kspace.unsqueeze(1))
 
     def loss_fn(self, preds: torch.Tensor, labels: torch.Tensor) -> torch.Tensor:
