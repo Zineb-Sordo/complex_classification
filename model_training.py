@@ -55,7 +55,7 @@ def get_model(
         )
     else:
         raise NotImplementedError
-    return model
+    return model.to(device)
 
 
 def train_model(
