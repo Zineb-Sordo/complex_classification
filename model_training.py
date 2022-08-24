@@ -83,11 +83,11 @@ def train_model(
     early_stop_callback = EarlyStopping(monitor='val_auc_mean', patience=5, mode='max')
     print("In train_model tune and {}".format(str(device).startswith("cuda")))
 
-    if args.accelerator == 'gpu':
+    if args.strategy == 'ddp':
 
         trainer: pl.Trainer = pl.Trainer(
             max_epochs=args.n_epochs,
-            replace_sampler_ddp=False if args.strategy == "ddp" else None,
+            replace_sampler_ddp=False,
             accelerator=args.accelerator,
             devices=args.n_devices,
             strategy=args.strategy,

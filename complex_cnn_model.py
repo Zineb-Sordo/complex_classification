@@ -133,9 +133,7 @@ class ComplexPreActResNetFFTKnee(nn.Module):
         if self.data_space == 'complex_input':
             out = torch.complex(kspace.real, kspace.imag).cuda().type(torch.complex64)
             #out = torch.complex(kspace.real, kspace.imag).type(torch.complex64)
-            print(out.shape)
             out = center_crop(out, self.image_shape)
-            print(out.shape)
             out = self.conv_comp(out)
 
         out = self.dropout(out)
