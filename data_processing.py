@@ -229,7 +229,7 @@ class KneeDataModule(pl.LightningDataModule):
         sampler_filename: Optional[str] = None,
         combine_class_recon: bool = False,
         dev_mode: bool = False,
-        num_workers: int = 4,
+        num_workers: int = 0,
     ):
         super().__init__()
         self.split_csv_file = split_csv_file
