@@ -85,6 +85,7 @@ def train_model(
 
     trainer: pl.Trainer = pl.Trainer(auto_scale_batch_size=True,
 
+                                     replace_sampler_ddp=False,
                                      accelerator=args.accelerator,
                                      devices=args.n_devices,
                                      strategy=args.strategy,
