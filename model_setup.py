@@ -245,9 +245,9 @@ class RSS(pl.LightningModule):
         self.n_bootstrap_samples = n_bootstrap_samples
 
     def forward(self, batch):
-        kspace = batch.sc_kspace.type_as(batch)
+        kspace = batch.sc_kspace
         print("after batch.sc_kspace, the kspace shape is {}".format(kspace.shape))
-        kspace = kspace.type(torch.complex64)
+        kspace = kspace.type(torch.complex64).type_as(kspace)
         return self.model(kspace.unsqueeze(1))
 
     def loss_fn(self, preds: torch.Tensor, labels: torch.Tensor) -> torch.Tensor:
