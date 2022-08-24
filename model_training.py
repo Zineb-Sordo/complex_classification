@@ -83,11 +83,7 @@ def train_model(
     early_stop_callback = EarlyStopping(monitor='val_auc_mean', patience=5, mode='max')
     print("In train_model tune and {}".format(str(device).startswith("cuda")))
 
-    trainer: pl.Trainer = pl.Trainer(
-        accelerator=args.accelerator,
-        devices=args.n_devices,
-        max_epochs=args.n_epochs,
-        replace_sampler_ddp=False,
+    trainer: pl.Trainer = pl.Trainer(auto_scale_batch_size=True,
         logger=csv_logger,
         callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
         auto_lr_find=True,

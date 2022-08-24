@@ -281,7 +281,6 @@ class RSS(pl.LightningModule):
 
     def training_step(self, batch, batch_idx):
         labels = batch.label.long()
-        print("the batch shape is {}".format(batch.shape))
         # get predictions
         preds = self.forward(batch=batch)
         # print("preds shape: ",preds.shape)
