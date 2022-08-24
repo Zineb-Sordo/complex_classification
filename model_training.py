@@ -109,27 +109,30 @@ def train_model(
     # Runs a learning rate finder algorithm when calling trainer.tune() to find optimate lr
 
     trainer.tune(model, datamodule)
-    print("In train_model fit and {}".format(str(device).startswith("cuda")))
-    # trainer: pl.Trainer = pl.Trainer(
-    #     accelerator=args.accelerator,
-    #     devices=args.n_devices,
-    #     strategy=args.strategy,
-    #     max_epochs=args.n_epochs,
-    #     replace_sampler_ddp=False,
-    #     #logger=[wandb_logger, csv_logger],
-    #     #logger=wandb_logger,
-    #     logger=csv_logger,
-    #     callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
-    # )
 
-    # trainer: pl.Trainer = pl.Trainer(
-    #     gpus=1 if str(device).startswith("cuda") else 0,
-    #     max_epochs=args.n_epochs,
-    #     #logger=[wandb_logger, csv_logger],
-    #     # logger=wandb_logger,
-    #     logger=csv_logger,
-    #     callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
-    # )
+    print("In train_model fit and {}".format(str(device).startswith("cuda")))
+
+    if args.strategy == 'ddp':
+
+        trainer: pl.Trainer = pl.Trainer(
+            max_epochs=args.n_epochs,
+            replace_sampler_ddp=False,
+            accelerator=args.accelerator,
+            devices=args.n_devices,
+            strategy=args.strategy,
+            logger=csv_logger,
+            callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
+        )
+
+    else:
+
+        trainer: pl.Trainer = pl.Trainer(
+            gpus=1 if str(device).startswith("cuda") else 0,
+            max_epochs=args.n_epochs,
+            logger=csv_logger,
+            # logger=[wandb_logger, csv_logger],
+            callbacks=[model_checkpoint, early_stop_callback, lr_monitor],)
+
     trainer.fit(model, datamodule)
     print("Finished training model")
     return model
