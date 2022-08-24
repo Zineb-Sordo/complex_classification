@@ -87,7 +87,7 @@ def train_model(
 
         trainer: pl.Trainer = pl.Trainer(
             max_epochs=args.n_epochs,
-            replace_sampler_ddp=False,
+            replace_sampler_ddp=False if args.strategy == "ddp" else None,
             accelerator=args.accelerator,
             devices=args.n_devices,
             strategy=args.strategy,
