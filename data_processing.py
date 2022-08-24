@@ -146,7 +146,7 @@ class KneeDataset(MultiDataset):
 
             image_data = fastmri.ifft2c(T.to_tensor(kspace_data))
             image_data = ifft2c_new(image_data)
-            kspace_data = torch.complex(image_data[:,:,0], image_data[:,:,1])
+            kspace_data = torch.complex(image_data[:, :, 0], image_data[:, :, 1])
 
             # Add scaling of complex-valued input data
 
@@ -182,7 +182,7 @@ class KneeDataset(MultiDataset):
                 "dataset": info.dataset,
                 "location": info.location,
             }
-            print("in parameters the kspace shape is {}".format(parameters['sc_kspace'].shape))
+            print("in parameters the kspace dtype is {}".format(parameters['sc_kspace'].dtype))
             if self.label_type == "knee_multilabel":
                 parameters["label"] = self.parse_multilabel(info.labels)
             elif self.label_type == "knee":
