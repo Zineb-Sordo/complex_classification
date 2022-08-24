@@ -83,42 +83,44 @@ def train_model(
     early_stop_callback = EarlyStopping(monitor='val_auc_mean', patience=5, mode='max')
     print("In train_model tune and {}".format(str(device).startswith("cuda")))
 
-    trainer: pl.Trainer = pl.Trainer(
-        auto_scale_batch_size=None,
-        max_epochs=args.n_epochs,
-        replace_sampler_ddp=False,
-        accelerator=args.accelerator,
-        devices=args.n_devices,
-        strategy=args.strategy,
-        logger=csv_logger,
-        callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
-        auto_lr_find=True,
-    )
+    if args.accelerator == 'gpu':
 
-    # trainer: pl.Trainer = pl.Trainer(
-    #     gpus=1 if str(device).startswith("cuda") else 0,
-    #     max_epochs=args.n_epochs,
-    #     # logger=wandb_logger,
-    #     logger=csv_logger,
-    #     # logger=[wandb_logger, csv_logger],
-    #     callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
-    #     auto_lr_find=True,
-    # )
+        trainer: pl.Trainer = pl.Trainer(
+            max_epochs=args.n_epochs,
+            replace_sampler_ddp=False,
+            accelerator=args.accelerator,
+            devices=args.n_devices,
+            strategy=args.strategy,
+            logger=csv_logger,
+            callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
+            auto_lr_find=True,
+        )
+
+    else:
+
+        trainer: pl.Trainer = pl.Trainer(
+            gpus=1 if str(device).startswith("cuda") else 0,
+            max_epochs=args.n_epochs,
+            logger=csv_logger,
+            # logger=[wandb_logger, csv_logger],
+            callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
+            auto_lr_find=True,
+        )
     # Runs a learning rate finder algorithm when calling trainer.tune() to find optimate lr
 
     trainer.tune(model, datamodule)
     print("In train_model fit and {}".format(str(device).startswith("cuda")))
-    trainer: pl.Trainer = pl.Trainer(
-        accelerator=args.accelerator,
-        devices=args.n_devices,
-        strategy=args.strategy,
-        max_epochs=args.n_epochs,
-        replace_sampler_ddp=False,
-        #logger=[wandb_logger, csv_logger],
-        #logger=wandb_logger,
-        logger=csv_logger,
-        callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
-    )
+    # trainer: pl.Trainer = pl.Trainer(
+    #     accelerator=args.accelerator,
+    #     devices=args.n_devices,
+    #     strategy=args.strategy,
+    #     max_epochs=args.n_epochs,
+    #     replace_sampler_ddp=False,
+    #     #logger=[wandb_logger, csv_logger],
+    #     #logger=wandb_logger,
+    #     logger=csv_logger,
+    #     callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
+    # )
 
     # trainer: pl.Trainer = pl.Trainer(
     #     gpus=1 if str(device).startswith("cuda") else 0,
@@ -151,11 +153,13 @@ def test_model(
 
     csv_logger = CSVLogger(save_dir=log_dir, name=f"test-{args.n_seed}", version=f"{args.n_seed}")
     model = RSS.load_from_checkpoint(model_dir + '/' + checkpoint_filename)
-    trainer = pl.Trainer(logger=csv_logger,
-        accelerator=args.accelerator,
-        devices=args.n_devices,
-        strategy=args.strategy,)
-    #trainer = pl.Trainer(logger=csv_logger, gpus=1 if str(device).startswith("cuda") else 0)
+    if args.accelerator == "gpu":
+        trainer = pl.Trainer(logger=csv_logger,
+            accelerator=args.accelerator,
+            devices=args.n_devices,
+            strategy=args.strategy,)
+    else:
+        trainer = pl.Trainer(logger=csv_logger, gpus=1 if str(device).startswith("cuda") else 0)
 
     with torch.inference_mode():
         model.eval()
