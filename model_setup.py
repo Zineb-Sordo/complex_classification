@@ -281,7 +281,7 @@ class RSS(pl.LightningModule):
     def training_step(self, batch, batch_idx):
         labels = batch.label.long()
         # get predictions
-        print("in training_step the batch shape and batch_idx are {} and {}".format(batch.shape, batch_idx))
+        print("in training_step the batch shape and batch_idx are {} and {}".format(batch.sc_kspace.shape, batch_idx))
         preds = self.forward(batch=batch)
         # print("preds shape: ",preds.shape)
         if self.data_type == "knee":
@@ -311,7 +311,7 @@ class RSS(pl.LightningModule):
     def validation_step(self, batch, batch_idx):
         labels = batch.label.long()
         # get predictions
-        print("in validation_step the batch shape and batch_idx are {} and {}".format(batch.shape, batch_idx))
+        print("in validation_step the batch shape and batch_idx are {} and {}".format(batch.sc_kspace.shape, batch_idx))
 
         preds = self.forward(batch=batch)
         #print("preds shape: ",preds.shape)
