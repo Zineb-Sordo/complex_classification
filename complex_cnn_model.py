@@ -135,7 +135,7 @@ class ComplexPreActResNetFFTKnee(nn.Module):
             #out = torch.complex(kspace.real, kspace.imag).type(torch.complex64)
             out = center_crop(out, self.image_shape)
             out = self.conv_comp(out)
-
+        print("after crop")
         out = self.dropout(out)
 
         layer_1_out = self.layer1(out)
@@ -153,7 +153,7 @@ class ComplexPreActResNetFFTKnee(nn.Module):
         out_abnormal = self.Clinear_abnormal(out)
 
         # First approach: output is magnitude
-
+        print("before .abs and after complex linear layers")
         out_mtear = out_mtear.abs()
         out_acl = out_acl.abs()
         out_cartilage = out_cartilage.abs()
@@ -179,7 +179,7 @@ class ComplexPreActResNetFFTKnee(nn.Module):
         # out_abnormal = self.linear_abnormal(out_abnormal)
 
         # Third approach is use a convolution of the magnitude and phase channels
-
+        print("after everything")
         #print("outputs = {}, {}, {}, {}".format(out_abnormal, out_mtear, out_acl, out_cartilage))
         return out_abnormal, out_mtear, out_acl, out_cartilage
 
