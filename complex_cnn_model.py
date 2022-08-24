@@ -130,12 +130,14 @@ class ComplexPreActResNetFFTKnee(nn.Module):
     def forward(self, kspace):
         print("the kspace shape is {} and dtype is {}".format(kspace.shape, kspace.dtype)) # torch.size([8, 1, 640, 400])
         if self.data_space == 'complex_input':
+            print(kspace[:, :, :, 0].dtype)
+            print((kspace[:, :, :, 0] == kspace[:, :, :, 1]).all())
+
             out = torch.complex(kspace.real, kspace.imag).type(torch.complex64)
+
             #out = torch.complex(kspace.real, kspace.imag).type(torch.complex64)
             out = center_crop(out, self.image_shape)
-            print(out.shape)
             out = self.conv_comp(out)
-            print("after conv_comp the shape is {}".format(out.shape))
         out = self.dropout(out)
 
         layer_1_out = self.layer1(out)
