@@ -83,32 +83,32 @@ def train_model(
     early_stop_callback = EarlyStopping(monitor='val_auc_mean', patience=5, mode='max')
     print("In train_model tune and {}".format(str(device).startswith("cuda")))
 
-    if (args.strategy == 'ddp') or (args.strategy == 'dp'):
-
-        trainer: pl.Trainer = pl.Trainer(
-            max_epochs=args.n_epochs,
-            replace_sampler_ddp=False,
-            accelerator=args.accelerator,
-            devices=args.n_devices,
-            strategy=args.strategy,
-            logger=csv_logger,
-            callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
-            auto_lr_find=True,
-        )
-
-    else:
-
-        trainer: pl.Trainer = pl.Trainer(
-            gpus=1 if str(device).startswith("cuda") else 0,
-            max_epochs=args.n_epochs,
-            logger=csv_logger,
-            # logger=[wandb_logger, csv_logger],
-            callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
-            auto_lr_find=True,
-        )
-    # Runs a learning rate finder algorithm when calling trainer.tune() to find optimate lr
-
-    trainer.tune(model, datamodule)
+    # if (args.strategy == 'ddp') or (args.strategy == 'dp'):
+    #
+    #     trainer: pl.Trainer = pl.Trainer(
+    #         max_epochs=args.n_epochs,
+    #         replace_sampler_ddp=False,
+    #         accelerator=args.accelerator,
+    #         devices=args.n_devices,
+    #         strategy=args.strategy,
+    #         logger=csv_logger,
+    #         callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
+    #         auto_lr_find=True,
+    #     )
+    #
+    # else:
+    #
+    #     trainer: pl.Trainer = pl.Trainer(
+    #         gpus=1 if str(device).startswith("cuda") else 0,
+    #         max_epochs=args.n_epochs,
+    #         logger=csv_logger,
+    #         # logger=[wandb_logger, csv_logger],
+    #         callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
+    #         auto_lr_find=True,
+    #     )
+    # # Runs a learning rate finder algorithm when calling trainer.tune() to find optimate lr
+    #
+    # trainer.tune(model, datamodule)
 
     print("In train_model fit and {}".format(str(device).startswith("cuda")))
 
