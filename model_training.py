@@ -84,9 +84,10 @@ def train_model(
     print("In train_model tune and {}".format(str(device).startswith("cuda")))
 
     trainer: pl.Trainer = pl.Trainer(
-        auto_scale_batch_size=True,
+        auto_scale_batch_size=None,
         max_epochs=args.n_epochs,
         replace_sampler_ddp=False,
+        accelerator=args.accelerator,
         devices=args.n_devices,
         strategy=args.strategy,
         logger=csv_logger,
