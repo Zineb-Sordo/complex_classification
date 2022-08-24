@@ -85,49 +85,29 @@ def train_model(
 
     if args.strategy == 'ddp':
 
-        # trainer: pl.Trainer = pl.Trainer(
-        #     max_epochs=args.n_epochs,
-        #     replace_sampler_ddp=False,
-        #     accelerator=args.accelerator,
-        #     devices=args.n_devices,
-        #     strategy=args.strategy,
-        #     logger=csv_logger,
-        #     callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
-        #     auto_lr_find=True,
-        # )
-
         trainer: pl.Trainer = pl.Trainer(
-            gpus=3,
             max_epochs=args.n_epochs,
-            accelerator="gpu",
-            strategy="ddp",
+            replace_sampler_ddp=False,
+            accelerator=args.accelerator,
+            devices=args.n_devices,
+            strategy=args.strategy,
             logger=csv_logger,
-            # logger=[wandb_logger, csv_logger],
             callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
-            auto_lr_find=True,)
-
+            auto_lr_find=True,
+        )
 
     else:
 
         trainer: pl.Trainer = pl.Trainer(
-            gpus=3,
+            gpus=1 if str(device).startswith("cuda") else 0,
             max_epochs=args.n_epochs,
-            accelerator="gpu",
-            strategy="ddp",
             logger=csv_logger,
             # logger=[wandb_logger, csv_logger],
-            callbacks=[model_checkpoint, early_stop_callback, lr_monitor],)
-
-        # trainer: pl.Trainer = pl.Trainer(
-        #     gpus=1 if str(device).startswith("cuda") else 0,
-        #     max_epochs=args.n_epochs,
-        #     logger=csv_logger,
-        #     # logger=[wandb_logger, csv_logger],
-        #     callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
-        #     auto_lr_find=True,
-        # )
-
+            callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
+            auto_lr_find=True,
+        )
     # Runs a learning rate finder algorithm when calling trainer.tune() to find optimate lr
+
     trainer.tune(model, datamodule)
 
     print("In train_model fit and {}".format(str(device).startswith("cuda")))
