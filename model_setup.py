@@ -246,7 +246,10 @@ class RSS(pl.LightningModule):
 
     def forward(self, batch):
         kspace = batch.sc_kspace
+        print("after batch.sc_kspace, the kspace shape is {}".format(kspace.shape))
         kspace = kspace.cuda().type(torch.complex64)
+        print("in forward model_setup the kspace shapce is {}".format(kspace.shape))
+        print("in forward model_setup the kspace shapce unsqueeze is {}".format(kspace.unsqueeze(1).shape))
         return self.model(kspace.unsqueeze(1))
 
     def loss_fn(self, preds: torch.Tensor, labels: torch.Tensor) -> torch.Tensor:

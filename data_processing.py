@@ -187,6 +187,7 @@ class KneeDataset(MultiDataset):
                 "dataset": info.dataset,
                 "location": info.location,
             }
+            print("in parameters the kspace shape is {}".format(parameters['kspace_key']))
             if self.label_type == "knee_multilabel":
                 parameters["label"] = self.parse_multilabel(info.labels)
             elif self.label_type == "knee":
