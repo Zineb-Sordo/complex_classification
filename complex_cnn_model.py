@@ -57,7 +57,10 @@ class ComplexPreActBlock(nn.Module):
 
 
 def complex_dropout2d(input, p=0.5, training=True):
-    mask = torch.ones(*input.shape, dtype=torch.float32, device=torch.device("cuda" if torch.cuda.is_available() else "cpu"))
+    mask = torch.ones(*input.shape, dtype=torch.float32, device=torch.device('cuda'))
+
+    #mask = torch.ones(*input.shape, dtype = torch.float32)
+
     mask = dropout2d(mask, p, training ) * 1 / (1-p)
     mask.type(input.dtype)
     return mask * input
@@ -128,15 +131,12 @@ class ComplexPreActResNetFFTKnee(nn.Module):
 
     def forward(self, kspace):
         print("the kspace dtype is {}".format(kspace.dtype)) # torch.size([8, 1, 640, 400])
-        print(self.data_space == 'complex_input')
         if self.data_space == 'complex_input':
-            print("in if loop and the kspace dtype is {}".format(kspace.dtype))  # torch.size([8, 1, 640, 400])
-            out = torch.complex(kspace.real, kspace.imag).type(torch.complex64)
-            out = out.type_as(kspace)
+            out = torch.complex(kspace.real, kspace.imag).type(torch.complex64).cuda()
+            #out = out.type_as(kspace)
             #out = torch.complex(kspace.real, kspace.imag).type(torch.complex64)
             out = center_crop(out, self.image_shape)
             out = self.conv_comp(out)
-            print(out.shape)
 
         out = self.dropout(out)
 
@@ -146,8 +146,8 @@ class ComplexPreActResNetFFTKnee(nn.Module):
         layer_4_out = self.layer4(layer_3_out)
         out = complex_avg_pool2d(layer_4_out, 4)
         out = out.view(out.size(0), -1)
-        #out = self.dropout(out)
-        #out = complex_relu(out)
+        out = self.dropout(out)
+        out = complex_relu(out)
 
         out_mtear = self.Clinear_mtear(out)
         out_acl = self.Clinear_acl(out)
