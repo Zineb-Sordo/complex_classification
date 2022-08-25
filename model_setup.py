@@ -15,7 +15,7 @@ from sklearn import metrics
 import torch
 from torchmetrics import functional
 import numpy as np
-from complex_cnn_model import complex_resnet18_knee, complex_resnet50_knee
+from complex_cnn_model import complex_resnet18_knee, complex_resnet34_knee, complex_resnet50_knee
 from torchsummary import summary
 
 
@@ -180,6 +180,10 @@ def get_model(
             model18 = complex_resnet18_knee(image_shape=image_shape, drop_prob=drop_prob, data_space=data_space, return_features=return_features)
             print(summary(model18))
             return model18
+        elif model_type == "complex_preact_resnet50":
+            model34 = complex_resnet34_knee(image_shape=image_shape, drop_prob=drop_prob, data_space=data_space, return_features=return_features)
+            print(summary(model34))
+            return model34
         elif model_type == "complex_preact_resnet50":
             model50 = complex_resnet50_knee(image_shape=image_shape, drop_prob=drop_prob, data_space=data_space, return_features=return_features)
             print(summary(model50))

@@ -58,6 +58,45 @@ class ComplexPreActBlock(pl.LightningModule):
         return out
 
 
+class ComplexPreActBottleneck(nn.Module):
+    """Pre-activation version of the original Bottleneck module."""
+
+    expansion = 4
+
+    def __init__(self, in_planes, planes, stride=1):
+        super(ComplexPreActBottleneck, self).__init__()
+        self.bn1 = ComplexBatchNorm2d(in_planes)
+        self.conv1 = ComplexConv2d(in_planes, planes, kernel_size=1, bias=False)
+        self.bn2 = ComplexBatchNorm2d(planes)
+        self.conv2 = ComplexConv2d(
+            planes, planes, kernel_size=3, stride=stride, padding=1, bias=False
+        )
+        self.bn3 = ComplexBatchNorm2d(planes)
+        self.conv3 = ComplexConv2d(
+            planes, self.expansion * planes, kernel_size=1, bias=False
+        )
+
+        if stride != 1 or in_planes != self.expansion * planes:
+            self.shortcut = nn.Sequential(
+                ComplexConv2d(
+                    in_planes,
+                    self.expansion * planes,
+                    kernel_size=1,
+                    stride=stride,
+                    bias=False,
+                )
+            )
+
+    def forward(self, x):
+        out = complex_relu(self.bn1(x))
+        shortcut = self.shortcut(out) if hasattr(self, "shortcut") else x
+        out = self.conv1(out)
+        out = self.conv2(F.relu(self.bn2(out)))
+        out = self.conv3(F.relu(self.bn3(out)))
+        out += shortcut
+        return out
+
+
 def complex_dropout2d(input, p=0.5, training=True):
     mask = torch.ones(*input.shape, dtype = torch.float32, device=torch.device('cuda'))
     #mask = torch.ones(*input.shape, dtype = torch.float32)
@@ -200,7 +239,7 @@ def complex_resnet18_knee(image_shape, data_space, drop_prob=0.3, return_feature
     )
 
 
-def complex_resnet50_knee(image_shape, data_space, drop_prob=0.3, return_features=False):
+def complex_resnet34_knee(image_shape, data_space, drop_prob=0.3, return_features=False):
     return ComplexPreActResNetFFTKnee(
         ComplexPreActBlock,
         [3, 4, 6, 3],
@@ -208,6 +247,15 @@ def complex_resnet50_knee(image_shape, data_space, drop_prob=0.3, return_feature
         image_shape=image_shape,
         data_space=data_space,
         return_features=return_features
+    )
+
+
+def complex_resnet50_knee(image_shape, drop_prob=0.5):
+    return ComplexPreActResNetFFTKnee(
+        ComplexPreActBottleneck,
+        [3, 4, 6, 3],
+        drop_prob=drop_prob,
+        image_shape=image_shape
     )
 
 
