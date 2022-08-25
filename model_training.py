@@ -83,36 +83,36 @@ def train_model(
     early_stop_callback = EarlyStopping(monitor='val_auc_mean', patience=5, mode='max')
     print("In train_model tune and {}".format(str(device).startswith("cuda")))
 
-    # if (args.strategy == 'ddp') or (args.strategy == 'dp'):
-    #
-    #     trainer: pl.Trainer = pl.Trainer(
-    #         max_epochs=args.n_epochs,
-    #         replace_sampler_ddp=False,
-    #         accelerator=args.accelerator,
-    #         devices=args.n_devices,
-    #         strategy=args.strategy,
-    #         logger=csv_logger,
-    #         callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
-    #         auto_lr_find=True,
-    #     )
-    #
-    # else:
-    #
-    #     trainer: pl.Trainer = pl.Trainer(
-    #         gpus=1 if str(device).startswith("cuda") else 0,
-    #         max_epochs=args.n_epochs,
-    #         logger=csv_logger,
-    #         # logger=[wandb_logger, csv_logger],
-    #         callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
-    #         auto_lr_find=True,
-    #     )
-    # # Runs a learning rate finder algorithm when calling trainer.tune() to find optimate lr
-    #
-    # trainer.tune(model, datamodule)
+    if args.n_devices != 1:
+
+        trainer: pl.Trainer = pl.Trainer(
+            max_epochs=args.n_epochs,
+            replace_sampler_ddp=False,
+            accelerator=args.accelerator,
+            devices=args.n_devices,
+            strategy=args.strategy,
+            logger=csv_logger,
+            callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
+            auto_lr_find=True,
+        )
+
+    else:
+
+        trainer: pl.Trainer = pl.Trainer(
+            gpus=1 if str(device).startswith("cuda") else 0,
+            max_epochs=args.n_epochs,
+            logger=csv_logger,
+            # logger=[wandb_logger, csv_logger],
+            callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
+            auto_lr_find=True,
+        )
+    # Runs a learning rate finder algorithm when calling trainer.tune() to find optimate lr
+
+    trainer.tune(model, datamodule)
 
     print("In train_model fit and {}".format(str(device).startswith("cuda")))
 
-    if (args.strategy == 'ddp') or (args.strategy == 'dp'):
+    if args.n_devices != 1:
 
         trainer: pl.Trainer = pl.Trainer(
             max_epochs=args.n_epochs,
@@ -232,7 +232,7 @@ def get_args():
     parser.add_argument("--accelerator", type=str, default='gpu')
     parser.add_argument("--n_epochs", type=int, default=100)
     parser.add_argument("--n_seed", type=int, default=1)
-    parser.add_argument("--batch_size", type=int, default=8)
+    parser.add_argument("--batch_size", type=int, default=32)
     parser.add_argument("--lr", type=float, default=1e-5)
     parser.add_argument("--drop_prob", type=float, default=0.5)
     parser.add_argument("--lr_gamma", type=float, default=0.5)
