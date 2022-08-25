@@ -194,6 +194,17 @@ def complex_resnet18_knee(image_shape, data_space, drop_prob=0.3, return_feature
     )
 
 
+def complex_resnet50_knee(image_shape, data_space, drop_prob=0.3, return_features=False):
+    return ComplexPreActResNetFFTKnee(
+        ComplexPreActBlock,
+        [3, 4, 6, 3],
+        drop_prob=drop_prob,
+        image_shape=image_shape,
+        data_space=data_space,
+        return_features=return_features
+    )
+
+
 def test():
     net = complex_resnet18_knee(drop_out=0.5)
     y = net((torch.randn(1, 3, 32, 32)))

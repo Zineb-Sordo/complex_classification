@@ -15,7 +15,7 @@ from sklearn import metrics
 import torch
 from torchmetrics import functional
 import numpy as np
-from complex_cnn_model import complex_resnet18_knee
+from complex_cnn_model import complex_resnet18_knee, complex_resnet50_knee
 
 
 def compute_auc(preds, labels):
@@ -177,6 +177,8 @@ def get_model(
     if data_type == "knee":
         if model_type == "complex_preact_resnet18":
             return complex_resnet18_knee(image_shape=image_shape, drop_prob=drop_prob, data_space=data_space, return_features=return_features)
+        elif model_type == "complex_preact_resnet50":
+            return complex_resnet50_knee(image_shape=image_shape, drop_prob=drop_prob, data_space=data_space, return_features=return_features)
     else:
         raise NotImplementedError(f"Model type {model_type} not complex and not implemented")
 
