@@ -313,6 +313,8 @@ class RSS(pl.LightningModule):
         # get predictions
 
         preds = self.forward(batch=batch)
+        print("in validation step, kspace shape {}".format(batch.sc_kspace.shape))
+
         #print("preds shape: ",preds.shape)
         if self.data_type == "knee":
             labels_abnormal = labels[:, 0]
