@@ -247,7 +247,7 @@ class RSS(pl.LightningModule):
     def forward(self, batch):
         kspace = batch.sc_kspace
         print("batch.sc_kspace shape is {}".format(kspace.shape))
-        kspace = kspace.type(torch.complex32)
+        kspace = kspace.type(torch.complex64)
         print("dtype of the kspace is {}".format(kspace.dtype))
         return self.model(kspace.unsqueeze(1))
 
