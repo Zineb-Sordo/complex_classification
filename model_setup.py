@@ -16,6 +16,7 @@ import torch
 from torchmetrics import functional
 import numpy as np
 from complex_cnn_model import complex_resnet18_knee, complex_resnet50_knee
+from torchsummary import summary
 
 
 def compute_auc(preds, labels):
@@ -176,9 +177,13 @@ def get_model(
 ) -> pl.LightningModule:
     if data_type == "knee":
         if model_type == "complex_preact_resnet18":
-            return complex_resnet18_knee(image_shape=image_shape, drop_prob=drop_prob, data_space=data_space, return_features=return_features)
+            model18 = complex_resnet18_knee(image_shape=image_shape, drop_prob=drop_prob, data_space=data_space, return_features=return_features)
+            print(summary(model18))
+            return model18
         elif model_type == "complex_preact_resnet50":
-            return complex_resnet50_knee(image_shape=image_shape, drop_prob=drop_prob, data_space=data_space, return_features=return_features)
+            model50 = complex_resnet50_knee(image_shape=image_shape, drop_prob=drop_prob, data_space=data_space, return_features=return_features)
+            print(summary(model50))
+            return model50
     else:
         raise NotImplementedError(f"Model type {model_type} not complex and not implemented")
 
@@ -248,9 +253,9 @@ class RSS(pl.LightningModule):
 
     def forward(self, batch):
         kspace = batch.sc_kspace
-        print("batch.sc_kspace shape is {}".format(kspace.shape))
+        # print("batch.sc_kspace shape is {}".format(kspace.shape))
         kspace = kspace.type(torch.complex64)
-        print("dtype of the kspace is {}".format(kspace.dtype))
+        # print("dtype of the kspace is {}".format(kspace.dtype))
         return self.model(kspace.unsqueeze(1))
 
     def loss_fn(self, preds: torch.Tensor, labels: torch.Tensor) -> torch.Tensor:
@@ -283,7 +288,7 @@ class RSS(pl.LightningModule):
     def training_step(self, batch, batch_idx):
         labels = batch.label.long()
         # get predictions
-        print("in training_step the batch shape and batch_idx are {} and {}".format(batch.sc_kspace.shape, batch_idx))
+        # print("in training_step the batch shape and batch_idx are {} and {}".format(batch.sc_kspace.shape, batch_idx))
         preds = self.forward(batch=batch)
         # print("preds shape: ",preds.shape)
         if self.data_type == "knee":
@@ -315,9 +320,9 @@ class RSS(pl.LightningModule):
         # get predictions
 
         preds = self.forward(batch=batch)
-        print("in validation step, kspace shape {}".format(batch.sc_kspace.shape))
+        # print("in validation step, kspace shape {}".format(batch.sc_kspace.shape))
 
-        #print("preds shape: ",preds.shape)
+        # print("preds shape: ",preds.shape)
         if self.data_type == "knee":
             labels_abnormal = labels[:, 0]
             labels_mtear = labels[:, 1]
@@ -495,7 +500,6 @@ class RSS(pl.LightningModule):
         return loss, eval_metrics
 
     def configure_optimizers(self):
-        print("in optimizer")
         optimizer = optim.AdamW(
             self.parameters(), lr=self.lr, weight_decay=self.weight_decay
         )
