@@ -135,8 +135,8 @@ class ComplexPreActResNetFFTKnee(pl.LightningModule):
             out = torch.complex(kspace.real, kspace.imag).type(torch.complex64)
             #out = torch.complex(kspace.real, kspace.imag).type(torch.complex64)
             print(out[:,:,:,0].shape)
-            print(torch.equal(out[:,:,:,0],out[:,:,:,1]))
-            out = center_crop(out[:,:,:,0], self.image_shape)
+            print(torch.equal(out[:,:,:,:,0],out[:,:,:,:,1]))
+            out = center_crop(out[:,:,:,:,0], self.image_shape)
             out = self.conv_comp(out)
         out = self.dropout(out)
 
