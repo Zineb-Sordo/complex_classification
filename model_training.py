@@ -105,7 +105,7 @@ def train_model(
             # logger=[wandb_logger, csv_logger],
             callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
             auto_lr_find=True,
-            precision=16
+            precision=32
         )
     # Runs a learning rate finder algorithm when calling trainer.tune() to find optimate lr
 
@@ -123,7 +123,7 @@ def train_model(
             strategy=args.strategy,
             logger=csv_logger,
             callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
-            precision=16
+            precision=32
         )
 
     else:
