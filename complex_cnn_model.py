@@ -133,7 +133,6 @@ class ComplexPreActResNetFFTKnee(pl.LightningModule):
         print("the kspace shape is {} and dtype is {}".format(kspace.shape, kspace.dtype)) # torch.size([8, 1, 640, 400])
         if self.data_space == 'complex_input':
             out = torch.complex(kspace.real, kspace.imag).type(torch.complex64)
-
             #out = torch.complex(kspace.real, kspace.imag).type(torch.complex64)
             out = center_crop(out, self.image_shape)
             out = self.conv_comp(out)
@@ -145,8 +144,8 @@ class ComplexPreActResNetFFTKnee(pl.LightningModule):
         layer_4_out = self.layer4(layer_3_out)
         out = complex_avg_pool2d(layer_4_out, 4)
         out = out.view(out.size(0), -1)
-        out = self.dropout(out)
-        out = complex_relu(out)
+        #out = self.dropout(out)
+        #out = complex_relu(out)
 
         out_mtear = self.Clinear_mtear(out)
         out_acl = self.Clinear_acl(out)
