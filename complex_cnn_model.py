@@ -132,9 +132,9 @@ class ComplexPreActResNetFFTKnee(pl.LightningModule):
     def forward(self, kspace):
         print("the kspace shape is {} and dtype is {}".format(kspace.shape, kspace.dtype)) # torch.size([8, 1, 640, 400])
         if self.data_space == 'complex_input':
-            out = torch.complex(kspace.real, kspace.imag).type(torch.complex32).cuda()
+            out = torch.complex(kspace.real, kspace.imag).type(torch.complex64).cuda()
             #out = torch.complex(kspace.real, kspace.imag).type(torch.complex64)
-            out = center_crop(out[:,:,:,:,0], self.image_shape)
+            out = center_crop(out, self.image_shape)
             out = self.conv_comp(out)
         out = self.dropout(out)
 
