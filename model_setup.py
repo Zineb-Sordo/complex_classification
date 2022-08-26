@@ -166,6 +166,7 @@ def classifier_metrics(
 
 
 def get_model(
+    device: torch.device,
     data_type: str,
     model_type: str,
     drop_prob: float,
@@ -177,15 +178,15 @@ def get_model(
 ) -> pl.LightningModule:
     if data_type == "knee":
         if model_type == "complex_preact_resnet18":
-            model18 = complex_resnet18_knee(image_shape=image_shape, drop_prob=drop_prob, data_space=data_space, return_features=return_features)
+            model18 = complex_resnet18_knee(device=device, image_shape=image_shape, drop_prob=drop_prob, data_space=data_space, return_features=return_features)
             print(summary(model18))
             return model18
         elif model_type == "complex_preact_resnet50":
-            model34 = complex_resnet34_knee(image_shape=image_shape, drop_prob=drop_prob, data_space=data_space, return_features=return_features)
+            model34 = complex_resnet34_knee(device=device, image_shape=image_shape, drop_prob=drop_prob, data_space=data_space, return_features=return_features)
             print(summary(model34))
             return model34
         elif model_type == "complex_preact_resnet50":
-            model50 = complex_resnet50_knee(image_shape=image_shape, drop_prob=drop_prob, data_space=data_space, return_features=return_features)
+            model50 = complex_resnet50_knee(device=device, image_shape=image_shape, drop_prob=drop_prob, data_space=data_space, return_features=return_features)
             print(summary(model50))
             return model50
     else:
@@ -239,9 +240,11 @@ class RSS(pl.LightningModule):
         self.sequences = sequences
         self.data_space = data_space
         self.return_features = return_features
+        self.device = device
 
         # get model depending on data and model type
         self.model = get_model(
+            device=self.device,
             data_type=self.data_type,
             model_type=self.model_type,
             drop_prob=self.drop_prob,

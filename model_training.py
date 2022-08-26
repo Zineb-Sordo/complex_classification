@@ -47,7 +47,7 @@ def get_model(
             drop_prob=args.drop_prob,
             kspace_shape=[640, 400],
             data_space=args.data_space,
-            device=device,
+            device=torch.device,
             lr=args.lr,
             weight_decay=args.weight_decay,
             lr_gamma=args.lr_gamma,
