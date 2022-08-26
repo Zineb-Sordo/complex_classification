@@ -105,7 +105,7 @@ def train_model(
             # logger=[wandb_logger, csv_logger],
             callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
             auto_lr_find=True,
-            precision=16
+            precision=args.precision
         )
     # Runs a learning rate finder algorithm when calling trainer.tune() to find optimate lr
 
@@ -123,7 +123,7 @@ def train_model(
             strategy=args.strategy,
             logger=csv_logger,
             callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
-            precision=16
+            precision=args.precision
         )
 
     else:
@@ -240,7 +240,7 @@ def get_args():
     parser.add_argument("--lr_gamma", type=float, default=0.5)
     parser.add_argument("--weight_decay", type=float, default=1e-4)
     parser.add_argument("--lr_step_size", type=int, default=5)
-
+    parser.add_argument("--precision", type=int, default=64)
     parser.add_argument("--n_masks", type=int, default=100)
 
     parser.add_argument("--seed", type=int, default=420)
