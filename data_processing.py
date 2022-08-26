@@ -135,7 +135,7 @@ class KneeDataset(MultiDataset):
             # image_data = ifft2c_new(image_data)
             # kspace_data = torch.complex(image_data[:, :, 0], image_data[:, :, 1])
 
-            image_data = torch.from_numpy(kspace_data)
+            image_data = torch.view_as_real(torch.from_numpy(kspace_data))
             image_data = ifft2c_new(image_data)
             kspace_data = torch.view_as_complex(image_data)
 

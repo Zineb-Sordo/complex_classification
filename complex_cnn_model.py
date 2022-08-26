@@ -117,7 +117,7 @@ class ComplexDropout2d(nn.Module):
             return input
 
 
-class ComplexPreActResNetFFTKnee(nn.Module):
+class ComplexPreActResNetFFTKnee(pl.LightningModule):
     def __init__(
             self,
             block,
@@ -171,11 +171,7 @@ class ComplexPreActResNetFFTKnee(nn.Module):
     def forward(self, kspace):
         print("the kspace shape is {} and dtype is {}".format(kspace.shape, kspace.dtype)) # torch.size([8, 1, 640, 400])
         if self.data_space == 'complex_input':
-            print("cnn1 {}".format(type(kspace.dtype)))
-            out = torch.complex(kspace.real, kspace.imag).cuda()#.type(torch.complex64)
-            print("cnn2 {}".format(type(out.dtype)))
-            print("cnn3 {}".format(type(torch.complex(kspace.real, kspace.imag).cuda().type(torch.complex64).dtype)))
-
+            out = torch.complex(kspace.real, kspace.imag).cuda().type(torch.complex64)
             # print("In forward CNN, kspace shape {}".format(out.shape))
             #out = torch.complex(kspace.real, kspace.imag).type(torch.complex64)
             out = center_crop(out, self.image_shape)
