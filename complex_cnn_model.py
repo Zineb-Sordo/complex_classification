@@ -19,7 +19,7 @@ def center_crop(data, shape: Tuple[int, int]):
     w_to = w_from + shape[0]
     h_to = h_from + shape[1]
 
-    return data[..., w_from:w_to, h_from:h_to].cuda()
+    return data[..., w_from:w_to, h_from:h_to]
 
 
 class ComplexPreActBlock(pl.LightningModule):
@@ -171,7 +171,11 @@ class ComplexPreActResNetFFTKnee(nn.Module):
     def forward(self, kspace):
         print("the kspace shape is {} and dtype is {}".format(kspace.shape, kspace.dtype)) # torch.size([8, 1, 640, 400])
         if self.data_space == 'complex_input':
-            out = torch.complex(kspace.real, kspace.imag).cuda().type(torch.complex64)
+            print("cnn1 {}".format(type(kspace.dtype)))
+            out = torch.complex(kspace.real, kspace.imag).cuda()#.type(torch.complex64)
+            print("cnn2 {}".format(type(out.dtype)))
+            print("cnn3 {}".format(type(torch.complex(kspace.real, kspace.imag).cuda().type(torch.complex64).dtype)))
+
             # print("In forward CNN, kspace shape {}".format(out.shape))
             #out = torch.complex(kspace.real, kspace.imag).type(torch.complex64)
             out = center_crop(out, self.image_shape)
