@@ -47,7 +47,7 @@ def get_model(
             drop_prob=args.drop_prob,
             kspace_shape=[640, 400],
             data_space=args.data_space,
-            device=torch.device,
+            device=device,
             lr=args.lr,
             weight_decay=args.weight_decay,
             lr_gamma=args.lr_gamma,
@@ -133,6 +133,7 @@ def train_model(
             max_epochs=args.n_epochs,
             logger=csv_logger,
             # logger=[wandb_logger, csv_logger],
+            precision=args.precision,
             callbacks=[model_checkpoint, early_stop_callback, lr_monitor],)
     trainer.fit(model, datamodule)
     print("Finished training model")

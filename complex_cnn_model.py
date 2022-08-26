@@ -98,7 +98,7 @@ class ComplexPreActBottleneck(nn.Module):
 
 
 def complex_dropout2d(input, p=0.5, training=True):
-    mask = torch.ones(*input.shape, dtype = torch.float32, device=torch.device('cuda'))
+    mask = torch.ones(*input.shape, dtype=torch.float32, device=torch.device('cuda'))
     #mask = torch.ones(*input.shape, dtype = torch.float32)
     mask = dropout2d(mask, p, training) * 1 / (1-p)
     mask.type(input.dtype)
@@ -171,13 +171,10 @@ class ComplexPreActResNetFFTKnee(pl.LightningModule):
     def forward(self, kspace):
         print("the kspace shape is {} and dtype is {}".format(kspace.shape, kspace.dtype)) # torch.size([8, 1, 640, 400])
         if self.data_space == 'complex_input':
-            print(type(kspace))
             out = torch.complex(kspace.real, kspace.imag).cuda().type(torch.complex64)
-            print(type(out))
             # print("In forward CNN, kspace shape {}".format(out.shape))
             #out = torch.complex(kspace.real, kspace.imag).type(torch.complex64)
             out = center_crop(out, self.image_shape)
-            print(type(out))
             out = self.conv_comp(out)
         out = self.dropout(out)
 
