@@ -117,7 +117,7 @@ class ComplexDropout2d(nn.Module):
             return input
 
 
-class ComplexPreActResNetFFTKnee(pl.LightningModule):
+class ComplexPreActResNetFFTKnee(nn.Module):
     def __init__(
             self,
             block,
