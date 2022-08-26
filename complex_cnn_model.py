@@ -19,7 +19,7 @@ def center_crop(data, shape: Tuple[int, int]):
     w_to = w_from + shape[0]
     h_to = h_from + shape[1]
 
-    return data[..., w_from:w_to, h_from:h_to]
+    return data[..., w_from:w_to, h_from:h_to].cuda()
 
 
 class ComplexPreActBlock(pl.LightningModule):
