@@ -92,8 +92,8 @@ def train_model(
             devices=args.n_devices,
             strategy=args.strategy,
             logger=csv_logger,
-            callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
-            auto_lr_find=True,
+            callbacks=[model_checkpoint, early_stop_callback]#, lr_monitor],
+            #auto_lr_find=True,
         )
 
     else:
@@ -122,7 +122,7 @@ def train_model(
             devices=args.n_devices,
             strategy=args.strategy,
             logger=csv_logger,
-            callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
+            callbacks=[model_checkpoint, early_stop_callback],#, lr_monitor],
             precision=args.precision
         )
 
