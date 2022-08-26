@@ -117,10 +117,9 @@ class ComplexDropout2d(nn.Module):
             return input
 
 
-class ComplexPreActResNetFFTKnee(nn.Module):
+class ComplexPreActResNetFFTKnee(pl.LightningModule):
     def __init__(
             self,
-            device: torch.device,
             block,
             num_blocks,
             image_shape,
@@ -131,9 +130,8 @@ class ComplexPreActResNetFFTKnee(nn.Module):
 
     ):
         super(ComplexPreActResNetFFTKnee, self).__init__()
-
-        self.device = device
         self.in_planes = 64
+
         self.conv_comp = ComplexConv2d(1, 64, kernel_size=3, stride=1, padding=1, bias=False)
         # self.conv1_p = nn.Conv2d(2, 1, kernel_size=3, stride=1, padding=1, bias=False)
 
@@ -174,7 +172,7 @@ class ComplexPreActResNetFFTKnee(nn.Module):
         print("the kspace shape is {} and dtype is {}".format(kspace.shape, kspace.dtype)) # torch.size([8, 1, 640, 400])
         if self.data_space == 'complex_input':
             print(type(kspace))
-            out = torch.complex(kspace.real, kspace.imag).to(self.device).type(torch.complex64)
+            out = torch.complex(kspace.real, kspace.imag).cuda().type(torch.complex64)
             print(type(out))
             # print("In forward CNN, kspace shape {}".format(out.shape))
             #out = torch.complex(kspace.real, kspace.imag).type(torch.complex64)
@@ -233,19 +231,18 @@ class ComplexPreActResNetFFTKnee(nn.Module):
         return out_abnormal, out_mtear, out_acl, out_cartilage
 
 
-def complex_resnet18_knee(device, image_shape, data_space, drop_prob=0.3, return_features=False):
+def complex_resnet18_knee(image_shape, data_space, drop_prob=0.3, return_features=False):
     return ComplexPreActResNetFFTKnee(
         ComplexPreActBlock,
         [2, 2, 2, 2],
         drop_prob=drop_prob,
         image_shape=image_shape,
         data_space=data_space,
-        return_features=return_features,
-        device=device
+        return_features=return_features
     )
 
 
-def complex_resnet34_knee(device, image_shape, data_space, drop_prob=0.3, return_features=False):
+def complex_resnet34_knee(image_shape, data_space, drop_prob=0.3, return_features=False):
     return ComplexPreActResNetFFTKnee(
         ComplexPreActBlock,
         [3, 4, 6, 3],
@@ -256,7 +253,7 @@ def complex_resnet34_knee(device, image_shape, data_space, drop_prob=0.3, return
     )
 
 
-def complex_resnet50_knee(device, image_shape, drop_prob=0.5):
+def complex_resnet50_knee(image_shape, drop_prob=0.5):
     return ComplexPreActResNetFFTKnee(
         ComplexPreActBottleneck,
         [3, 4, 6, 3],
