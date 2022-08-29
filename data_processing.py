@@ -140,7 +140,7 @@ class KneeDataset(MultiDataset):
 
             # Add scaling of complex-valued input data
 
-            mr, mi = kspace_data.real.mean([0, 1]).type(torch.complex64), kspace_data.imag.mean([0, 1]).type(torch.complex64)
+            mr, mi = kspace_data.real.mean([0, 1]).type(torch.complex32), kspace_data.imag.mean([0, 1]).type(torch.complex32)
             mean = mr + 1j * mi
             kspace_data = kspace_data - mean
             # get covariance
@@ -159,8 +159,8 @@ class KneeDataset(MultiDataset):
             Rii = (Crr + s) * inverse_st
             Rri = -Cri * inverse_st
 
-            kspace_data = (Rrr[None, None] * kspace_data.real + Rri[None, None] * kspace_data.imag).type(torch.complex64) \
-                         + 1j * (Rii[None, None] * kspace_data.imag + Rri[None, None] * kspace_data.real).type(torch.complex64)
+            kspace_data = (Rrr[None, None] * kspace_data.real + Rri[None, None] * kspace_data.imag).type(torch.complex32) \
+                         + 1j * (Rii[None, None] * kspace_data.imag + Rri[None, None] * kspace_data.real).type(torch.complex32)
 
             parameters = {
                 kspace_key: kspace_data,
