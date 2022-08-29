@@ -113,15 +113,13 @@ def train_model(
     else:
 
         trainer: pl.Trainer = pl.Trainer(
-            gpus=3 if str(device).startswith("cuda") else 0,
+            gpus=1 if str(device).startswith("cuda") else 0,
             max_epochs=args.n_epochs,
-            strategy='ddp',
             logger=csv_logger,
             # logger=[wandb_logger, csv_logger],
             callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
             auto_lr_find=True,
             auto_scale_batch_size=False,
-            replace_sampler_ddp=False,
             #precision=args.precision
         )
     # Runs a learning rate finder algorithm when calling trainer.tune() to find optimate lr
