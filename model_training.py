@@ -14,7 +14,7 @@ import fire
 
 from model_setup import RSS
 from data_processing import KneeDataModule
-from ray.tune.integration.pytorch_lightning import TuneReportCallback
+#from ray.tune.integration.pytorch_lightning import TuneReportCallback
 
 # get the data
 def get_data(args: argparse.ArgumentParser) -> pl.LightningDataModule:
@@ -113,8 +113,9 @@ def train_model(
     else:
 
         trainer: pl.Trainer = pl.Trainer(
-            gpus=1 if str(device).startswith("cuda") else 0,
+            gpus=3 if str(device).startswith("cuda") else 0,
             max_epochs=args.n_epochs,
+            strategy='dp',
             logger=csv_logger,
             # logger=[wandb_logger, csv_logger],
             callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
