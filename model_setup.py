@@ -174,7 +174,7 @@ def get_model(
     sequences: Optional[Tuple[str, str, str]] = None,
     return_features=False,
     num_labels=4
-) -> pl.LightningModule:
+) ->nn.Module:
     if data_type == "knee":
         if model_type == "complex_preact_resnet18":
             model18 = complex_resnet18_knee(image_shape=image_shape, drop_prob=drop_prob, data_space=data_space, return_features=return_features)
