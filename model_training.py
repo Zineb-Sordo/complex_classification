@@ -14,7 +14,7 @@ import fire
 
 from model_setup import RSS
 from data_processing import KneeDataModule
-
+from ray.tune.integration.pytorch_lightning import TuneReportCallback
 
 # get the data
 def get_data(args: argparse.ArgumentParser) -> pl.LightningDataModule:
@@ -84,7 +84,18 @@ def train_model(
     print("In train_model tune and {}".format(str(device).startswith("cuda")))
 
     # Use ray tune for hyperparameter tuning with pytorch lightning
-    #metrics = {"loss": "val_loss", "acc": "val"}
+    metrics = {"loss": "val_loss", "avg_auc": "val_auc_mean"}
+    callbacks_ray = [model_checkpoint, early_stop_callback, lr_monitor, TuneReportCallback(metrics, on="validation_end")]
+    config = {
+        "layer_1_size": tune.choice([32, 64, 128]),
+        "layer_2_size": tune.choice([64, 128, 256]),
+        "dropout": tune.choice([0.3, 0.5]),
+        "activation_function": tune.choix(["complex_relu", "abs"])
+        #"lr": tune.loguniform(1e-4, 1e-1),
+        #"batch_size": tune.choice([32, 64, 128]),
+
+    }
+
 
     if args.n_devices != 1:
 
