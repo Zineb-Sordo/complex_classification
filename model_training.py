@@ -83,6 +83,9 @@ def train_model(
     early_stop_callback = EarlyStopping(monitor='val_auc_mean', patience=5, mode='max')
     print("In train_model tune and {}".format(str(device).startswith("cuda")))
 
+    # Use ray tune for hyperparameter tuning with pytorch lightning
+    #metrics = {"loss": "val_loss", "acc": "val"}
+
     if args.n_devices != 1:
 
         trainer: pl.Trainer = pl.Trainer(
