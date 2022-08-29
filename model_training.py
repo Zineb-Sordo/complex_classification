@@ -121,7 +121,7 @@ def train_model(
             callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
             auto_lr_find=True,
             auto_scale_batch_size=False,
-            precision=args.precision
+            #precision=args.precision
         )
     # Runs a learning rate finder algorithm when calling trainer.tune() to find optimate lr
 
