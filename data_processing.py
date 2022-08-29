@@ -131,13 +131,12 @@ class KneeDataset(MultiDataset):
             kspace_data = f[kspace_key][:]
             target_data = f[target_key][:]
 
-            # image_data = fastmri.ifft2c(T.to_tensor(kspace_data))
-            # image_data = ifft2c_new(image_data)
-            # kspace_data = torch.complex(image_data[:, :, 0], image_data[:, :, 1])
+            image_data = fastmri.ifft2c(T.to_tensor(kspace_data))
+            kspace_data = torch.complex(image_data[:, :, 0], image_data[:, :, 1])
 
-            image_data = torch.view_as_real(torch.from_numpy(kspace_data))
-            image_data = ifft2c_new(image_data)
-            kspace_data = torch.view_as_complex(image_data)
+            # image_data = torch.view_as_real(torch.from_numpy(kspace_data))
+            # image_data = ifft2c_new(image_data)
+            # kspace_data = torch.view_as_complex(image_data)
 
             # Add scaling of complex-valued input data
 
@@ -163,7 +162,6 @@ class KneeDataset(MultiDataset):
             kspace_data = (Rrr[None, None] * kspace_data.real + Rri[None, None] * kspace_data.imag).type(torch.complex64) \
                          + 1j * (Rii[None, None] * kspace_data.imag + Rri[None, None] * kspace_data.real).type(torch.complex64)
 
-            print("shape after scaling is {}".format(kspace_data.shape))
             parameters = {
                 kspace_key: kspace_data,
                 target_key: target_data,
@@ -173,7 +171,7 @@ class KneeDataset(MultiDataset):
                 "dataset": info.dataset,
                 "location": info.location,
             }
-            print("in parameters the kspace dtype is {}".format(parameters['sc_kspace'].dtype))
+            # print("in parameters the kspace dtype is {}".format(parameters['sc_kspace'].dtype))
             if self.label_type == "knee_multilabel":
                 parameters["label"] = self.parse_multilabel(info.labels)
             elif self.label_type == "knee":
@@ -273,8 +271,8 @@ class KneeDataModule(pl.LightningDataModule):
         # load the sampler
         self.train_sampler = load(self.sampler_filename)
 
+
     def train_dataloader(self) -> DataLoader:
-        # return DataLoader(self.train_dataset, batch_size=self.batch_size,  sampler=self.train_sampler, num_workers=self.num_workers,)
         return DataLoader(self.train_dataset, batch_size=self.batch_size,  sampler=self.train_sampler, num_workers=self.num_workers,)
 
     def val_dataloader(self) -> Union[DataLoader, List[DataLoader]]:

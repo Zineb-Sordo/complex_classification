@@ -11,7 +11,6 @@ import numpy as np
 import pytorch_lightning as pl
 
 
-
 def center_crop(data, shape: Tuple[int, int]):
 
     w_from = (data.shape[-2] - shape[0]) // 2
@@ -99,7 +98,7 @@ class ComplexPreActBottleneck(nn.Module):
 
 def complex_dropout2d(input, p=0.5, training=True):
     mask = torch.ones(*input.shape, dtype=torch.float32, device=torch.device('cuda'))
-    #mask = torch.ones(*input.shape, dtype = torch.float32)
+    #mask = torch.ones(*input.shape, dtype = torch.float32) #when using CPU only
     mask = dropout2d(mask, p, training) * 1 / (1-p)
     mask.type(input.dtype)
     return mask * input
@@ -169,7 +168,7 @@ class ComplexPreActResNetFFTKnee(pl.LightningModule):
         return nn.Sequential(*layers)
 
     def forward(self, kspace):
-        print("the kspace shape is {} and dtype is {}".format(kspace.shape, kspace.dtype)) # torch.size([8, 1, 640, 400])
+        # print("the kspace shape is {} and dtype is {}".format(kspace.shape, kspace.dtype)) # torch.size([8, 1, 640, 400])
         if self.data_space == 'complex_input':
             out = torch.complex(kspace.real, kspace.imag).cuda().type(torch.complex64)
             # print("In forward CNN, kspace shape {}".format(out.shape))
