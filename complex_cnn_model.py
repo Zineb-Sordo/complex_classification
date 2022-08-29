@@ -174,7 +174,7 @@ class ComplexPreActResNetFFTKnee(pl.LightningModule):
             # print("In forward CNN, kspace shape {}".format(out.shape))
             #out = torch.complex(kspace.real, kspace.imag).type(torch.complex64)
             out = center_crop(out, self.image_shape)
-            out = self.conv_comp(out)
+            out = self.conv_comp(out).type(torch.complex64)
         out = self.dropout(out)
 
         layer_1_out = self.layer1(out)
