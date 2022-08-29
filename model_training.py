@@ -115,7 +115,7 @@ def train_model(
         trainer: pl.Trainer = pl.Trainer(
             gpus=3 if str(device).startswith("cuda") else 0,
             max_epochs=args.n_epochs,
-            strategy='dp',
+            strategy='ddp',
             logger=csv_logger,
             # logger=[wandb_logger, csv_logger],
             callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
