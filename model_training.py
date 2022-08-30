@@ -106,6 +106,7 @@ def train_model(
             devices=args.n_devices,
             strategy=args.strategy,
             logger=csv_logger,
+            precision=args.precision,
             callbacks=[model_checkpoint, early_stop_callback]#, lr_monitor],
             #auto_lr_find=True,
         )
@@ -120,7 +121,7 @@ def train_model(
             callbacks=[model_checkpoint, early_stop_callback, lr_monitor],
             auto_lr_find=True,
             auto_scale_batch_size=False,
-            precision=32
+            precision=args.precision,
         )
     # Runs a learning rate finder algorithm when calling trainer.tune() to find optimate lr
 
@@ -148,7 +149,7 @@ def train_model(
             max_epochs=args.n_epochs,
             logger=csv_logger,
             # logger=[wandb_logger, csv_logger],
-            precision=32,
+            precision=args.precision,
             callbacks=[model_checkpoint, early_stop_callback, lr_monitor],)
     trainer.fit(model, datamodule)
     print("Finished training model")
@@ -256,7 +257,7 @@ def get_args():
     parser.add_argument("--lr_gamma", type=float, default=0.5)
     parser.add_argument("--weight_decay", type=float, default=1e-4)
     parser.add_argument("--lr_step_size", type=int, default=5)
-    parser.add_argument("--precision", type=int, default=64)
+    parser.add_argument("--precision", type=int, default=16)
     parser.add_argument("--n_masks", type=int, default=100)
 
     parser.add_argument("--seed", type=int, default=420)

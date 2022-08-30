@@ -181,7 +181,7 @@ class KneeDataset(MultiDataset):
                     f"Label type {self.label_type} not implemented"
                 )
         sample = Sample(**parameters)
-        print("the sample shape is {}".format(sample.sc_kspace.shape))
+        # print("the sample shape is {}".format(sample.sc_kspace.shape))
         return sample
 
 
