@@ -184,6 +184,40 @@ def get_sampler_weights(dataset, save_filename="./sampler_knee_tr.p"):
     dump(sampler, save_filename)
 
 
+def scale_data(train, val, test):
+    mr, mi = train.real.mean([0, 1]).type(torch.complex64), train.imag.mean([0, 1]).type(torch.complex64)
+    train_mean = mr + 1j * mi
+    train_data = train - train_mean
+    val_data, test_data = val - train_mean, test - train_mean
+
+    # get covariance of the train set
+    eps = 0
+    n = train_data.numel() / train_data.size(1)
+    Crr = 1. / n * train_data.real.pow(2).sum([0, 1]) + eps
+    Cii = 1. / n * train_data.imag.pow(2).sum([0, 1]) + eps
+    Cri = (train_data.real.mul(train_data.imag)).train_mean([0, 1])
+
+    # calculate the inverse square root the covariance matrix of the train set
+    det = Crr * Cii - Cri.pow(2)
+    s = torch.sqrt(det)
+    t = torch.sqrt(Cii + Crr + 2 * s)
+    inverse_st = 1.0 / (s * t)
+    Rrr = (Cii + s) * inverse_st
+    Rii = (Crr + s) * inverse_st
+    Rri = -Cri * inverse_st
+
+    scaled_train_set = (Rrr[None, None] * train_data.real + Rri[None, None] * train_data.imag).type(torch.complex64) \
+                         + 1j * (Rii[None, None] * train_data.imag + Rri[None, None] * train_data.real).type(torch.complex64)
+
+    scaled_val_set = (Rrr[None, None] * val_data.real + Rri[None, None] * val_data.imag).type(torch.complex64) \
+                         + 1j * (Rii[None, None] * val_data.imag + Rri[None, None] * val_data.real).type(torch.complex64)
+
+    scaled_test_set = (Rrr[None, None] * test_data.real + Rri[None, None] * test_data.imag).type(torch.complex64) \
+                         + 1j * (Rii[None, None] * test_data.imag + Rri[None, None] * test_data.real).type(torch.complex64)
+
+    return scaled_train_set, scaled_val_set, scaled_test_set
+
+
 class KneeDataModule(pl.LightningDataModule):
     def __init__(
         self,
@@ -241,44 +275,6 @@ class KneeDataModule(pl.LightningDataModule):
             label_type=self.label_type,
             data_space=self.data_space,
         )
-        if self.scaling:
-            mr, mi = self.train_dataset.real.mean([0, 1]).type(torch.complex64), self.train_dataset.imag.mean([0, 1]).type(torch.complex64)
-            train_mean = mr + 1j * mi
-            self.train_dataset = self.train_dataset - train_mean
-            self.val_dataset, self.test_dataset = self.val_dataset - train_mean, self.test_dataset - train_mean
-
-            # get covariance of the train set
-            eps = 0
-            n = self.train_dataset.numel() / self.train_dataset.size(1)
-            Crr = 1. / n * self.train_dataset.real.pow(2).sum([0, 1]) + eps
-            Cii = 1. / n * self.train_dataset.imag.pow(2).sum([0, 1]) + eps
-            Cri = (self.train_dataset.real.mul(self.train_dataset.imag)).train_mean([0, 1])
-
-            # calculate the inverse square root the covariance matrix of the train set
-            det = Crr * Cii - Cri.pow(2)
-            s = torch.sqrt(det)
-            t = torch.sqrt(Cii + Crr + 2 * s)
-            inverse_st = 1.0 / (s * t)
-            Rrr = (Cii + s) * inverse_st
-            Rii = (Crr + s) * inverse_st
-            Rri = -Cri * inverse_st
-
-            self.train_dataset = (Rrr[None, None] * self.train_dataset.real + Rri[None, None] * self.train_dataset.imag).type(
-                torch.complex64) \
-                               + 1j * (Rii[None, None] * self.train_dataset.imag + Rri[None, None] * self.train_dataset.real).type(
-                torch.complex64)
-
-            self.val_dataset = (Rrr[None, None] * self.val_dataset.real + Rri[None, None] * self.val_dataset.imag).type(
-                torch.complex64) \
-                             + 1j * (Rii[None, None] * self.val_dataset.imag + Rri[None, None] * self.val_dataset.real).type(
-                torch.complex64)
-
-            self.test_dataset = (Rrr[None, None] * self.test_dataset.real + Rri[None, None] * self.test_dataset.imag).type(
-                torch.complex64) \
-                              + 1j * (Rii[None, None] * self.test_dataset.imag + Rri[None, None] * self.test_dataset.real).type(
-                torch.complex64)
-
-        print(type(self.train_dataset))
 
         if self.sampler_filename is None:
             print("Creating sampler weights...")
@@ -291,13 +287,16 @@ class KneeDataModule(pl.LightningDataModule):
         # load the sampler
         self.train_sampler = load(self.sampler_filename)
 
+        if self.scaling:
+            train_dataset, val_dataset, test_dataset = scale_data(self.train_dataset, self.val_dataset, self.test_dataset)
 
-    def train_dataloader(self) -> DataLoader:
-        return DataLoader(self.train_dataset, batch_size=self.batch_size,  sampler=self.train_sampler, num_workers=self.num_workers,)
 
-    def val_dataloader(self) -> Union[DataLoader, List[DataLoader]]:
-        return DataLoader(self.val_dataset, batch_size=self.batch_size, num_workers=self.num_workers)
+    def train_dataloader(self, train_dataset) -> DataLoader:
+        return DataLoader(train_dataset, batch_size=self.batch_size,  sampler=self.train_sampler, num_workers=self.num_workers,)
 
-    def test_dataloader(self) -> Union[DataLoader, List[DataLoader]]:
-        return DataLoader(self.test_dataset, batch_size=self.batch_size, num_workers=self.num_workers)
+    def val_dataloader(self, val_dataset) -> Union[DataLoader, List[DataLoader]]:
+        return DataLoader(val_dataset, batch_size=self.batch_size, num_workers=self.num_workers)
+
+    def test_dataloader(self, test_dataset) -> Union[DataLoader, List[DataLoader]]:
+        return DataLoader(test_dataset, batch_size=self.batch_size, num_workers=self.num_workers)
 
