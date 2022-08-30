@@ -299,6 +299,8 @@ class KneeDataModule(pl.LightningDataModule):
         self.train_sampler = load(self.sampler_filename)
 
     def train_dataloader(self) -> DataLoader:
+        print(type(self.train_dataset))
+        print(self.train_dataset.shape)
         self.train_dataset = scale_train_data(self.train_dataset)
         return DataLoader(self.train_dataset, batch_size=self.batch_size,  sampler=self.train_sampler, num_workers=self.num_workers,)
 
