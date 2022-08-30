@@ -184,40 +184,6 @@ def get_sampler_weights(dataset, save_filename="./sampler_knee_tr.p"):
     dump(sampler, save_filename)
 
 
-def scale_data(train, val, test):
-    mr, mi = train.real.mean([0, 1]).type(torch.complex64), train.imag.mean([0, 1]).type(torch.complex64)
-    train_mean = mr + 1j * mi
-    train_data = train - train_mean
-    val_data, test_data = val - train_mean, test - train_mean
-
-    # get covariance of the train set
-    eps = 0
-    n = train_data.numel() / train_data.size(1)
-    Crr = 1. / n * train_data.real.pow(2).sum([0, 1]) + eps
-    Cii = 1. / n * train_data.imag.pow(2).sum([0, 1]) + eps
-    Cri = (train_data.real.mul(train_data.imag)).train_mean([0, 1])
-
-    # calculate the inverse square root the covariance matrix of the train set
-    det = Crr * Cii - Cri.pow(2)
-    s = torch.sqrt(det)
-    t = torch.sqrt(Cii + Crr + 2 * s)
-    inverse_st = 1.0 / (s * t)
-    Rrr = (Cii + s) * inverse_st
-    Rii = (Crr + s) * inverse_st
-    Rri = -Cri * inverse_st
-
-    scaled_train_set = (Rrr[None, None] * train_data.real + Rri[None, None] * train_data.imag).type(torch.complex64) \
-                         + 1j * (Rii[None, None] * train_data.imag + Rri[None, None] * train_data.real).type(torch.complex64)
-
-    scaled_val_set = (Rrr[None, None] * val_data.real + Rri[None, None] * val_data.imag).type(torch.complex64) \
-                         + 1j * (Rii[None, None] * val_data.imag + Rri[None, None] * val_data.real).type(torch.complex64)
-
-    scaled_test_set = (Rrr[None, None] * test_data.real + Rri[None, None] * test_data.imag).type(torch.complex64) \
-                         + 1j * (Rii[None, None] * test_data.imag + Rri[None, None] * test_data.real).type(torch.complex64)
-
-    return scaled_train_set, scaled_val_set, scaled_test_set
-
-
 class KneeDataModule(pl.LightningDataModule):
     def __init__(
         self,
