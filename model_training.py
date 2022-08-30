@@ -148,7 +148,7 @@ def train_model(
             max_epochs=args.n_epochs,
             logger=csv_logger,
             # logger=[wandb_logger, csv_logger],
-            precision=args.precision,
+            precision=32,
             callbacks=[model_checkpoint, early_stop_callback, lr_monitor],)
     trainer.fit(model, datamodule)
     print("Finished training model")
