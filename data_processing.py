@@ -282,21 +282,18 @@ class KneeDataModule(pl.LightningDataModule):
             get_sampler_weights(self.train_dataset, self.sampler_filename)
         elif not os.path.exists(self.sampler_filename):
             raise ValueError("Weighted sampler does not exist")
-
+        print(type(self.train_dataset))
+        print(self.train_dataset.shape)
         assert Path(self.sampler_filename).is_file()
         # load the sampler
         self.train_sampler = load(self.sampler_filename)
 
-        if self.scaling:
-            train_dataset, val_dataset, test_dataset = scale_data(self.train_dataset, self.val_dataset, self.test_dataset)
+    def train_dataloader(self) -> DataLoader:
+        return DataLoader(self.train_dataset, batch_size=self.batch_size,  sampler=self.train_sampler, num_workers=self.num_workers,)
 
+    def val_dataloader(self) -> Union[DataLoader, List[DataLoader]]:
+        return DataLoader(self.val_dataset, batch_size=self.batch_size, num_workers=self.num_workers)
 
-    def train_dataloader(self, train_dataset) -> DataLoader:
-        return DataLoader(train_dataset, batch_size=self.batch_size,  sampler=self.train_sampler, num_workers=self.num_workers,)
-
-    def val_dataloader(self, val_dataset) -> Union[DataLoader, List[DataLoader]]:
-        return DataLoader(val_dataset, batch_size=self.batch_size, num_workers=self.num_workers)
-
-    def test_dataloader(self, test_dataset) -> Union[DataLoader, List[DataLoader]]:
-        return DataLoader(test_dataset, batch_size=self.batch_size, num_workers=self.num_workers)
+    def test_dataloader(self) -> Union[DataLoader, List[DataLoader]]:
+        return DataLoader(self.test_dataset, batch_size=self.batch_size, num_workers=self.num_workers)
 
