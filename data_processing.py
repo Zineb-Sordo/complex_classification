@@ -184,11 +184,10 @@ def get_sampler_weights(dataset, save_filename="./sampler_knee_tr.p"):
     dump(sampler, save_filename)
 
 
-def scale_data(train, val, test):
-    mr, mi = train.real.mean([0, 1]).type(torch.complex64), train.imag.mean([0, 1]).type(torch.complex64)
+def scale_train_data(dataset):
+    mr, mi = dataset.real.mean([0, 1]).type(torch.complex64), dataset.imag.mean([0, 1]).type(torch.complex64)
     train_mean = mr + 1j * mi
-    train_data = train - train_mean
-    val_data, test_data = val - train_mean, test - train_mean
+    train_data = dataset - train_mean
 
     # get covariance of the train set
     eps = 0
@@ -206,16 +205,29 @@ def scale_data(train, val, test):
     Rii = (Crr + s) * inverse_st
     Rri = -Cri * inverse_st
 
-    scaled_train_set = (Rrr[None, None] * train_data.real + Rri[None, None] * train_data.imag).type(torch.complex64) \
-                         + 1j * (Rii[None, None] * train_data.imag + Rri[None, None] * train_data.real).type(torch.complex64)
+    scaled_data = (Rrr[None, None] * train_data.real + Rri[None, None] * train_data.imag).type(torch.complex64) \
+                       + 1j * (Rii[None, None] * train_data.imag + Rri[None, None] * train_data.real).type(torch.complex64)
 
-    scaled_val_set = (Rrr[None, None] * val_data.real + Rri[None, None] * val_data.imag).type(torch.complex64) \
-                         + 1j * (Rii[None, None] * val_data.imag + Rri[None, None] * val_data.real).type(torch.complex64)
+    return scaled_data, train_mean, Rrr, Rii, Rri
 
-    scaled_test_set = (Rrr[None, None] * test_data.real + Rri[None, None] * test_data.imag).type(torch.complex64) \
-                         + 1j * (Rii[None, None] * test_data.imag + Rri[None, None] * test_data.real).type(torch.complex64)
 
-    return scaled_train_set, scaled_val_set, scaled_test_set
+def scale_val_data(train_dataset, val_dataset,):
+
+    _, train_mean, Rrr, Rii, Rri = scale_train_data(train_dataset)
+    val_data = val_dataset - train_mean
+    scaled_data = (Rrr[None, None] * val_data.real + Rri[None, None] * val_data.imag).type(torch.complex64) \
+                      + 1j * (Rii[None, None] * val_data.imag + Rri[None, None] * val_data.real).type(torch.complex64)
+
+    return scaled_data
+
+
+def scale_test_data(train_dataset, test_dataset,):
+    _, train_mean, Rrr, Rii, Rri = scale_train_data(train_dataset)
+    test_data = test_dataset - train_mean
+    scaled_data = (Rrr[None, None] * test_data.real + Rri[None, None] * test_data.imag).type(torch.complex64) \
+                  + 1j * (Rii[None, None] * test_data.imag + Rri[None, None] * test_data.real).type(torch.complex64)
+
+    return scaled_data
 
 
 class KneeDataModule(pl.LightningDataModule):
@@ -282,18 +294,19 @@ class KneeDataModule(pl.LightningDataModule):
             get_sampler_weights(self.train_dataset, self.sampler_filename)
         elif not os.path.exists(self.sampler_filename):
             raise ValueError("Weighted sampler does not exist")
-        print(type(self.train_dataset))
-        print(self.train_dataset.shape)
         assert Path(self.sampler_filename).is_file()
         # load the sampler
         self.train_sampler = load(self.sampler_filename)
 
     def train_dataloader(self) -> DataLoader:
+        self.train_dataset = scale_train_data(self.train_dataset)
         return DataLoader(self.train_dataset, batch_size=self.batch_size,  sampler=self.train_sampler, num_workers=self.num_workers,)
 
     def val_dataloader(self) -> Union[DataLoader, List[DataLoader]]:
+        self.val_dataset = scale_val_data(self.train_dataset, self.val_dataset)
         return DataLoader(self.val_dataset, batch_size=self.batch_size, num_workers=self.num_workers)
 
     def test_dataloader(self) -> Union[DataLoader, List[DataLoader]]:
+        self.test_dataset = scale_test_data(self.train_dataset, self.test_dataset)
         return DataLoader(self.test_dataset, batch_size=self.batch_size, num_workers=self.num_workers)
 
