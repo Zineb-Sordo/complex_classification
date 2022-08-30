@@ -163,6 +163,8 @@ class KneeDataset(MultiDataset):
 
 def get_sampler_weights(dataset, save_filename="./sampler_knee_tr.p"):
     Y_tr = []
+    print(type(dataset))
+    print(len(dataset))
 
     for i in tqdm(range(len(dataset))):
         label = dataset[i].label.sum().item()
