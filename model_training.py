@@ -28,6 +28,7 @@ def get_data(args: argparse.ArgumentParser) -> pl.LightningDataModule:
             batch_size=args.batch_size,
             sampler_filename=args.sampler_filename,
             data_space=args.data_space,
+            scaling=args.scaling,
         )
     else:
         raise NotImplementedError
@@ -222,6 +223,7 @@ def get_args():
     # parser.add_argument("--task", type=str, default="classification")
     parser.add_argument("--image_shape", type=int, default=[320, 320], nargs=2, required=False)
     parser.add_argument("--image_type", type=str, default='orig', required=False, choices=["orig"])
+    parser.add_argument("--scaling", type=bool, default=True, required=False)
 
     # parser.add_argument("--split_csv_file", type=str, default='..//metadata_knee.csv', required=False)
     parser.add_argument("--split_csv_file",

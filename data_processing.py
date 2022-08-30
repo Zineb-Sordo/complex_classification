@@ -138,30 +138,6 @@ class KneeDataset(MultiDataset):
             # image_data = ifft2c_new(image_data)
             # kspace_data = torch.view_as_complex(image_data)
 
-            # Add scaling of complex-valued input data
-
-            mr, mi = kspace_data.real.mean([0, 1]).type(torch.complex64), kspace_data.imag.mean([0, 1]).type(torch.complex64)
-            mean = mr + 1j * mi
-            kspace_data = kspace_data - mean
-            # get covariance
-            eps = 0
-            n = kspace_data.numel() / kspace_data.size(1)
-            Crr = 1. / n * kspace_data.real.pow(2).sum([0, 1]) + eps
-            Cii = 1. / n * kspace_data.imag.pow(2).sum([0, 1]) + eps
-            Cri = (kspace_data.real.mul(kspace_data.imag)).mean([0, 1])
-
-            # calculate the inverse square root the covariance matrix
-            det = Crr * Cii - Cri.pow(2)
-            s = torch.sqrt(det)
-            t = torch.sqrt(Cii + Crr + 2 * s)
-            inverse_st = 1.0 / (s * t)
-            Rrr = (Cii + s) * inverse_st
-            Rii = (Crr + s) * inverse_st
-            Rri = -Cri * inverse_st
-
-            kspace_data = (Rrr[None, None] * kspace_data.real + Rri[None, None] * kspace_data.imag).type(torch.complex64) \
-                         + 1j * (Rii[None, None] * kspace_data.imag + Rri[None, None] * kspace_data.real).type(torch.complex64)
-
             parameters = {
                 kspace_key: kspace_data,
                 target_key: target_data,
@@ -208,6 +184,40 @@ def get_sampler_weights(dataset, save_filename="./sampler_knee_tr.p"):
     dump(sampler, save_filename)
 
 
+def scale_data(train, val, test):
+    mr, mi = train.real.mean([0, 1]).type(torch.complex64), train.imag.mean([0, 1]).type(torch.complex64)
+    train_mean = mr + 1j * mi
+    train_data = train - train_mean
+    val_data, test_data = val - train_mean, test - train_mean
+
+    # get covariance of the train set
+    eps = 0
+    n = train_data.numel() / train_data.size(1)
+    Crr = 1. / n * train_data.real.pow(2).sum([0, 1]) + eps
+    Cii = 1. / n * train_data.imag.pow(2).sum([0, 1]) + eps
+    Cri = (train_data.real.mul(train_data.imag)).train_mean([0, 1])
+
+    # calculate the inverse square root the covariance matrix of the train set
+    det = Crr * Cii - Cri.pow(2)
+    s = torch.sqrt(det)
+    t = torch.sqrt(Cii + Crr + 2 * s)
+    inverse_st = 1.0 / (s * t)
+    Rrr = (Cii + s) * inverse_st
+    Rii = (Crr + s) * inverse_st
+    Rri = -Cri * inverse_st
+
+    scaled_train_set = (Rrr[None, None] * train_data.real + Rri[None, None] * train_data.imag).type(torch.complex64) \
+                         + 1j * (Rii[None, None] * train_data.imag + Rri[None, None] * train_data.real).type(torch.complex64)
+
+    scaled_val_set = (Rrr[None, None] * val_data.real + Rri[None, None] * val_data.imag).type(torch.complex64) \
+                         + 1j * (Rii[None, None] * val_data.imag + Rri[None, None] * val_data.real).type(torch.complex64)
+
+    scaled_test_set = (Rrr[None, None] * test_data.real + Rri[None, None] * test_data.imag).type(torch.complex64) \
+                         + 1j * (Rii[None, None] * test_data.imag + Rri[None, None] * test_data.real).type(torch.complex64)
+
+    return scaled_train_set, scaled_val_set, scaled_test_set
+
+
 class KneeDataModule(pl.LightningDataModule):
     def __init__(
         self,
@@ -220,6 +230,7 @@ class KneeDataModule(pl.LightningDataModule):
         combine_class_recon: bool = False,
         dev_mode: bool = False,
         num_workers: int = 4,
+        scaling: bool = True,
     ):
         super().__init__()
         self.split_csv_file = split_csv_file
@@ -231,6 +242,7 @@ class KneeDataModule(pl.LightningDataModule):
         self.data_space = data_space
         self.label_type = label_type
         self.num_workers = num_workers
+
 
     def setup(self, stage: Optional[str] = None):
         # get data split names
@@ -247,6 +259,7 @@ class KneeDataModule(pl.LightningDataModule):
             label_type=self.label_type,
             data_space=self.data_space,
         )
+
         self.val_dataset = KneeDataset(
             split_csv_file=self.split_csv_file,
             coil_type=self.coil_type,
@@ -254,6 +267,7 @@ class KneeDataModule(pl.LightningDataModule):
             label_type=self.label_type,
             data_space=self.data_space,
         )
+
         self.test_dataset = KneeDataset(
             split_csv_file=self.split_csv_file,
             mode=test_mode,
@@ -261,12 +275,16 @@ class KneeDataModule(pl.LightningDataModule):
             label_type=self.label_type,
             data_space=self.data_space,
         )
+
+        self.train_dataset, self.val_dataset, self.test_dataset = scale_data(self.train_dataset, self.val_dataset, self.test_dataset)
+
         if self.sampler_filename is None:
             print("Creating sampler weights...")
             self.sampler_filename = "./sampler_knee_tr.p"
             get_sampler_weights(self.train_dataset, self.sampler_filename)
         elif not os.path.exists(self.sampler_filename):
             raise ValueError("Weighted sampler does not exist")
+
         assert Path(self.sampler_filename).is_file()
         # load the sampler
         self.train_sampler = load(self.sampler_filename)
