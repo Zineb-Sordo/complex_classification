@@ -170,7 +170,7 @@ class ComplexPreActResNetFFTKnee(nn.Module):
         return nn.Sequential(*layers)
 
     def forward(self, kspace):
-        # print("the kspace shape is {} and dtype is {}".format(kspace.shape, kspace.dtype)) # torch.size([8, 1, 640, 400])
+        print("the kspace shape is {} and dtype is {}".format(kspace.shape, kspace.dtype)) # torch.size([8, 1, 640, 400])
         if self.data_space == 'complex_input':
             if torch.cuda.is_available():
                 out = torch.complex(kspace.real, kspace.imag).cuda().type(torch.complex64)

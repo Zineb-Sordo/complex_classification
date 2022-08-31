@@ -99,7 +99,7 @@ class KneeDataset(MultiDataset):
         super().__init__(split_csv_file=split_csv_file, mode=mode)
 
         self.coil_type = coil_type
-        assert self.coil_type in {"sc", "mc"}
+        assert self.coil_type in {"sc", "mc", "sc_scaled"}
         self.label_type = label_type
         self.data_space = data_space
         self.mode = mode

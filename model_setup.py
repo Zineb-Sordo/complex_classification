@@ -202,7 +202,7 @@ class RSS(pl.LightningModule):
                  device: torch.device,
                  data_space: str,
                  #label_names: str,
-                 coil_type: str = "sc",
+                 coil_type: str,
                  lr: float = 1e-5,
                  weight_decay: float = 1e-5,
                  lr_gamma: float = 0.1,
@@ -262,7 +262,7 @@ class RSS(pl.LightningModule):
         elif self.coil_type == "sc_scaled":
             kspace = batch.sc_kspace_scaled
         kspace = kspace.to(device=self.device).type(torch.complex64)
-        # print("the kspace shape given to network is {} and dtype is {}".format(kspace.shape, kspace.dtype)) # torch.size([8, 1, 640, 400])
+        print("the kspace shape given to network is {} and dtype is {}".format(kspace.shape, kspace.dtype)) # torch.size([8, 1, 640, 400])
         return self.model(kspace.unsqueeze(1))
 
     def loss_fn(self, preds: torch.Tensor, labels: torch.Tensor) -> torch.Tensor:
