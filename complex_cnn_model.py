@@ -11,14 +11,14 @@ import numpy as np
 import pytorch_lightning as pl
 
 
-def center_crop(data, shape: Tuple[int, int]):
-
-    w_from = (data.shape[-2] - shape[0]) // 2
-    h_from = (data.shape[-1] - shape[1]) // 2
-    w_to = w_from + shape[0]
-    h_to = h_from + shape[1]
-
-    return data[..., w_from:w_to, h_from:h_to]
+# def center_crop(data, shape: Tuple[int, int]):
+#
+#     w_from = (data.shape[-2] - shape[0]) // 2
+#     h_from = (data.shape[-1] - shape[1]) // 2
+#     w_to = w_from + shape[0]
+#     h_to = h_from + shape[1]
+#
+#     return data[..., w_from:w_to, h_from:h_to]
 
 
 class ComplexPreActBlock(pl.LightningModule):
@@ -97,8 +97,10 @@ class ComplexPreActBottleneck(nn.Module):
 
 
 def complex_dropout2d(input, p=0.5, training=True):
-    mask = torch.ones(*input.shape, dtype=torch.float32, device=torch.device('cuda'))
-    #mask = torch.ones(*input.shape, dtype = torch.float32) #when using CPU only
+    if torch.cuda.is_available():
+        mask = torch.ones(*input.shape, dtype=torch.float32, device=torch.device('cuda'))
+    else:
+        mask = torch.ones(*input.shape, dtype = torch.float32) #when using CPU only
     mask = dropout2d(mask, p, training) * 1 / (1-p)
     mask.type(input.dtype)
     return mask * input
@@ -170,9 +172,10 @@ class ComplexPreActResNetFFTKnee(nn.Module):
     def forward(self, kspace):
         # print("the kspace shape is {} and dtype is {}".format(kspace.shape, kspace.dtype)) # torch.size([8, 1, 640, 400])
         if self.data_space == 'complex_input':
-            out = torch.complex(kspace.real, kspace.imag).cuda().type(torch.complex64)
-            #out = torch.complex(kspace.real, kspace.imag).type(torch.complex64)
-            out = center_crop(out, self.image_shape)
+            if torch.cuda.is_available():
+                out = torch.complex(kspace.real, kspace.imag).cuda().type(torch.complex64)
+            else:
+                out = torch.complex(kspace.real, kspace.imag).type(torch.complex64)
             out = self.conv_comp(out)
         out = self.dropout(out)
 

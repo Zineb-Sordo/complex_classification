@@ -239,6 +239,7 @@ class RSS(pl.LightningModule):
         self.sequences = sequences
         self.data_space = data_space
         self.return_features = return_features
+        self.coil_type = coil_type
 
         # get model depending on data and model type
         self.model = get_model(
@@ -256,7 +257,10 @@ class RSS(pl.LightningModule):
         self.n_bootstrap_samples = n_bootstrap_samples
 
     def forward(self, batch):
-        kspace = batch.sc_kspace
+        if self.coil_type == "sc":
+            kspace = batch.sc_kspace
+        elif self.coil_type == "sc_scaled":
+            kspace = batch.sc_kspace_scaled
         kspace = kspace.to(device=self.device).type(torch.complex64)
         # print("the kspace shape given to network is {} and dtype is {}".format(kspace.shape, kspace.dtype)) # torch.size([8, 1, 640, 400])
         return self.model(kspace.unsqueeze(1))

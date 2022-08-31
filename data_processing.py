@@ -14,6 +14,7 @@ from torch.utils.data import WeightedRandomSampler
 from typing import Dict, Optional, Tuple
 import pytorch_lightning as pl
 import torch
+from torchvision import transforms
 
 from pathlib import Path
 
@@ -61,6 +62,7 @@ fields = [
     "volume_id",
     "slice_id",
     "sc_kspace",
+    "sc_kspace_scaled",
     "mc_kspace",
     "recon_esc",
     "recon_rss",
@@ -73,6 +75,16 @@ fields = [
 Sample = namedtuple("Sample", fields, defaults=(math.nan,) * len(fields))
 
 
+def center_crop(data, shape: Tuple[int, int]):
+
+    w_from = (data.shape[-2] - shape[0]) // 2
+    h_from = (data.shape[-1] - shape[1]) // 2
+    w_to = w_from + shape[0]
+    h_to = h_from + shape[1]
+
+    return data[..., w_from:w_to, h_from:h_to]
+
+
 class KneeDataset(MultiDataset):
     def __init__(
             self,
@@ -82,7 +94,7 @@ class KneeDataset(MultiDataset):
             data_space: str,
             coil_type='sc',
             image_only: bool = False,
-
+            image_shape=[320,320],
     ):
         super().__init__(split_csv_file=split_csv_file, mode=mode)
 
@@ -91,6 +103,7 @@ class KneeDataset(MultiDataset):
         self.label_type = label_type
         self.data_space = data_space
         self.mode = mode
+        self.image_shape = image_shape
 
     def parse_label(self, label_arr: Sequence[str]) -> torch.Tensor:
         label_arr = label_arr.replace("[", "").replace("]", "").replace("'", "")
@@ -124,19 +137,25 @@ class KneeDataset(MultiDataset):
         loc = self.get_metadata_value(index, "location")
 
         info = self.metadata_by_mode[self.mode].iloc[index]
-        kspace_key = "sc_kspace" if self.coil_type == "sc" else "mc_kspace"
+        if self.coil_type == "sc":
+            kspace_key = "sc_kspace"
+        elif self.coil_type == "sc_scaled":
+            kspace_key = "sc_kspace_scaled"
+        else:
+            kspace_key = "mc_kspace"
         target_key = "recon_esc" if self.coil_type == "sc" else "recon_rss"
 
         with h5py.File(loc) as f:
             kspace_data = f[kspace_key][:]
             target_data = f[target_key][:]
 
-            image_data = fastmri.ifft2c(T.to_tensor(kspace_data))
-            kspace_data = torch.complex(image_data[:, :, 0], image_data[:, :, 1])
-
-            # image_data = torch.view_as_real(torch.from_numpy(kspace_data).float())
-            # image_data = ifft2c_new(image_data)
-            # kspace_data = torch.view_as_complex(image_data)
+            if kspace_key == "sc_kspace":
+                image_data = fastmri.ifft2c(T.to_tensor(kspace_data))
+                kspace_data = torch.complex(image_data[:, :, 0], image_data[:, :, 1])
+                kspace_data = center_crop(kspace_data, self.image_shape)
+                # image_data = torch.view_as_real(torch.from_numpy(kspace_data).float())
+                # image_data = ifft2c_new(image_data)
+                # kspace_data = torch.view_as_complex(image_data)
 
             parameters = {
                 kspace_key: kspace_data,
@@ -156,6 +175,9 @@ class KneeDataset(MultiDataset):
                 raise NotImplementedError(
                     f"Label type {self.label_type} not implemented"
                 )
+
+
+
         sample = Sample(**parameters)
         # print("the sample shape is {}".format(sample.sc_kspace.shape))
         return sample
@@ -163,8 +185,6 @@ class KneeDataset(MultiDataset):
 
 def get_sampler_weights(dataset, save_filename="./sampler_knee_tr.p"):
     Y_tr = []
-    print(type(dataset))
-    print(len(dataset))
 
     for i in tqdm(range(len(dataset))):
         label = dataset[i].label.sum().item()
@@ -184,52 +204,6 @@ def get_sampler_weights(dataset, save_filename="./sampler_knee_tr.p"):
     sampler = WeightedRandomSampler(samples_weight, len(samples_weight))
 
     dump(sampler, save_filename)
-
-
-def scale_train_data(dataset):
-    mr, mi = dataset.real.mean([0, 1]).type(torch.complex64), dataset.imag.mean([0, 1]).type(torch.complex64)
-    train_mean = mr + 1j * mi
-    train_data = dataset - train_mean
-
-    # get covariance of the train set
-    eps = 0
-    n = train_data.numel() / train_data.size(1)
-    Crr = 1. / n * train_data.real.pow(2).sum([0, 1]) + eps
-    Cii = 1. / n * train_data.imag.pow(2).sum([0, 1]) + eps
-    Cri = (train_data.real.mul(train_data.imag)).train_mean([0, 1])
-
-    # calculate the inverse square root the covariance matrix of the train set
-    det = Crr * Cii - Cri.pow(2)
-    s = torch.sqrt(det)
-    t = torch.sqrt(Cii + Crr + 2 * s)
-    inverse_st = 1.0 / (s * t)
-    Rrr = (Cii + s) * inverse_st
-    Rii = (Crr + s) * inverse_st
-    Rri = -Cri * inverse_st
-
-    scaled_data = (Rrr[None, None] * train_data.real + Rri[None, None] * train_data.imag).type(torch.complex64) \
-                       + 1j * (Rii[None, None] * train_data.imag + Rri[None, None] * train_data.real).type(torch.complex64)
-
-    return scaled_data, train_mean, Rrr, Rii, Rri
-
-
-def scale_val_data(train_dataset, val_dataset,):
-
-    _, train_mean, Rrr, Rii, Rri = scale_train_data(train_dataset)
-    val_data = val_dataset - train_mean
-    scaled_data = (Rrr[None, None] * val_data.real + Rri[None, None] * val_data.imag).type(torch.complex64) \
-                      + 1j * (Rii[None, None] * val_data.imag + Rri[None, None] * val_data.real).type(torch.complex64)
-
-    return scaled_data
-
-
-def scale_test_data(train_dataset, test_dataset,):
-    _, train_mean, Rrr, Rii, Rri = scale_train_data(train_dataset)
-    test_data = test_dataset - train_mean
-    scaled_data = (Rrr[None, None] * test_data.real + Rri[None, None] * test_data.imag).type(torch.complex64) \
-                  + 1j * (Rii[None, None] * test_data.imag + Rri[None, None] * test_data.real).type(torch.complex64)
-
-    return scaled_data
 
 
 class KneeDataModule(pl.LightningDataModule):
@@ -301,16 +275,18 @@ class KneeDataModule(pl.LightningDataModule):
         self.train_sampler = load(self.sampler_filename)
 
     def train_dataloader(self) -> DataLoader:
-
-        #self.train_dataset = scale_train_data(self.train_dataset)
-        return DataLoader(self.train_dataset, batch_size=self.batch_size,  sampler=self.train_sampler, num_workers=self.num_workers,)
+        return DataLoader(self.train_dataset,
+                          batch_size=self.batch_size,
+                          sampler=self.train_sampler,
+                          num_workers=self.num_workers,)
 
     def val_dataloader(self) -> Union[DataLoader, List[DataLoader]]:
-        #print(type(self.train_dataset))
-        #self.val_dataset = scale_val_data(self.train_dataset, self.val_dataset)
-        return DataLoader(self.val_dataset, batch_size=self.batch_size, num_workers=self.num_workers)
+        return DataLoader(self.val_dataset,
+                          batch_size=self.batch_size,
+                          num_workers=self.num_workers)
 
     def test_dataloader(self) -> Union[DataLoader, List[DataLoader]]:
-       # self.test_dataset = scale_test_data(self.train_dataset, self.test_dataset)
-        return DataLoader(self.test_dataset, batch_size=self.batch_size, num_workers=self.num_workers)
+        return DataLoader(self.test_dataset,
+                          batch_size=self.batch_size,
+                          num_workers=self.num_workers)
 

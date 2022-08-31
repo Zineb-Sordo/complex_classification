@@ -98,7 +98,7 @@ def train_model(
     # }
 
 
-    if args.n_devices != 1:
+    if (args.n_devices != 1) and (args.accelerator == "gpu"):
 
         trainer: pl.Trainer = pl.Trainer(
             max_epochs=args.n_epochs,
@@ -130,7 +130,7 @@ def train_model(
 
     print("In train_model fit and {}".format(str(device).startswith("cuda")))
 
-    if args.n_devices != 1:
+    if (args.n_devices != 1) and (args.accelerator == "gpu"):
 
         trainer: pl.Trainer = pl.Trainer(
             max_epochs=args.n_epochs,
@@ -224,19 +224,18 @@ def get_args():
     # parser.add_argument("--task", type=str, default="classification")
     parser.add_argument("--image_shape", type=int, default=[320, 320], nargs=2, required=False)
     parser.add_argument("--image_type", type=str, default='orig', required=False, choices=["orig"])
-    parser.add_argument("--scaling", type=bool, default=True, required=False)
 
     # parser.add_argument("--split_csv_file", type=str, default='..//metadata_knee.csv', required=False)
     parser.add_argument("--split_csv_file",
                         type=str,
-                        default='./metadata_knee.csv',
+                        default='./knee/metadata_knee.csv',
                         required=False)
     parser.add_argument("--recon_model_ckpt", type=str)
     parser.add_argument("--recon_model_type", type=str, default=["rss"], required=False, choices=["rss"])
     parser.add_argument("--mask_type", type=str, default="none")
     parser.add_argument("--k_fraction", type=float, default=0.25)
     parser.add_argument("--center_fraction", type=float, default=0.08)
-    parser.add_argument("--coil_type", type=str, default="sc", choices=["sc", "mc"])
+    parser.add_argument("--coil_type", type=str, default="sc_scaled", choices=["sc", "mc", "sc_scaled"])
 
     parser.add_argument("--sampler_filename", type=str, default="./sampler_knee_tr.p")
     parser.add_argument(
@@ -251,7 +250,7 @@ def get_args():
     # training parameters
     parser.add_argument("--n_devices", type=int, default=3)
     parser.add_argument("--strategy", type=str, default="dp")
-    parser.add_argument("--accelerator", type=str, default='gpu')
+    parser.add_argument("--accelerator", type=str, default='cpu')
     parser.add_argument("--n_epochs", type=int, default=100)
     parser.add_argument("--n_seed", type=int, default=1)
     parser.add_argument("--batch_size", type=int, default=8)
