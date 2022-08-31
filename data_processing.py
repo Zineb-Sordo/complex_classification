@@ -218,7 +218,6 @@ class KneeDataModule(pl.LightningDataModule):
         combine_class_recon: bool = False,
         dev_mode: bool = False,
         num_workers: int = 4,
-        scaling: bool = True,
     ):
         super().__init__()
         self.split_csv_file = split_csv_file
@@ -230,7 +229,6 @@ class KneeDataModule(pl.LightningDataModule):
         self.data_space = data_space
         self.label_type = label_type
         self.num_workers = num_workers
-        self.scaling = scaling
 
     def setup(self, stage: Optional[str] = None):
         # get data split names

@@ -28,7 +28,6 @@ def get_data(args: argparse.ArgumentParser) -> pl.LightningDataModule:
             batch_size=args.batch_size,
             sampler_filename=args.sampler_filename,
             data_space=args.data_space,
-            scaling=args.scaling,
         )
     else:
         raise NotImplementedError
