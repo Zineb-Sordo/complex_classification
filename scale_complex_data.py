@@ -21,7 +21,7 @@ def center_crop(data, shape: Tuple[int, int]):
 
 if __name__ == '__main__':
 
-    csv_file = "./knee/metadata_knee.csv"
+    csv_file = "./metadata_knee.csv"
     df = pd.read_csv(csv_file)
     df_train = df[df.data_split == "train_class"]
     df_val_test = df[(df.data_split == "val_class") | (df.data_split == "test_class")]
