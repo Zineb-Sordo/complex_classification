@@ -135,7 +135,6 @@ class KneeDataset(MultiDataset):
     def __getitem__(self, index):
         assert self.mode in self.metadata_by_mode
         loc = self.get_metadata_value(index, "location")
-        print(loc)
         info = self.metadata_by_mode[self.mode].iloc[index]
         if self.coil_type == "sc":
             kspace_key = "sc_kspace"
@@ -146,8 +145,6 @@ class KneeDataset(MultiDataset):
         target_key = "recon_esc" if self.coil_type == "sc" else "recon_rss"
 
         with h5py.File(loc) as f:
-            print(loc)
-            print(f.keys())
             kspace_data = f[kspace_key][:]
             target_data = f[target_key][:]
 
