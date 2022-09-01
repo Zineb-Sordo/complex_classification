@@ -70,7 +70,6 @@ if __name__ == '__main__':
         l_out_train_fft[i] = (Rrr[None, None] * slice_out.real + Rri[None, None] * slice_out.imag).type(torch.complex64) \
                        + 1j * (Rii[None, None] * slice_out.imag + Rri[None, None] * slice_out.real).type(torch.complex64)
 
-    for i in tqdm.tqdm(range(len(list_train_paths))):
         file_train = h5py.File(list_train_paths[i], 'r+')
         if "sc_kspace_scaled" in file_train.keys():
             continue
@@ -101,10 +100,8 @@ if __name__ == '__main__':
         l_out_val_fft[i] = (Rrr[None, None] * slice_out.real + Rri[None, None] * slice_out.imag).type(torch.complex64)\
                             + 1j * (Rii[None, None] * slice_out.imag + Rri[None, None] * slice_out.real).type(torch.complex64)
 
-
-    for i in tqdm.tqdm(range(len(list_val_paths))):
         file_val_test = h5py.File(list_val_paths[i], 'r+')
-        if "sc_kspace_scaled" in file_train.keys():
+        if "sc_kspace_scaled" in file_val_test.keys():
             continue
         else:
             file_val_test.create_dataset("sc_kspace_scaled", data=l_out_val_fft[i])
