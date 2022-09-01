@@ -14,7 +14,10 @@ import fire
 
 from model_setup import RSS
 from data_processing import KneeDataModule
+from complex_activation_functions import zReLU, modReLU
+
 #from ray.tune.integration.pytorch_lightning import TuneReportCallback
+
 
 # get the data
 def get_data(args: argparse.ArgumentParser) -> pl.LightningDataModule:
@@ -42,6 +45,7 @@ def get_model(
         # get spatial domain model
         model = RSS(
             model_type=args.model_type,
+            activation_function=args.activation_function,
             data_type=args.data_type,
             image_shape=[320, 320],
             drop_prob=args.drop_prob,
@@ -88,18 +92,12 @@ def train_model(
     # metrics = {"loss": "val_loss", "avg_auc": "val_auc_mean"}
     # callbacks_ray = [model_checkpoint, early_stop_callback, lr_monitor, TuneReportCallback(metrics, on="validation_end")]
     # config = {
-    #     "layer_1_size": tune.choice([32, 64, 128]),
-    #     "layer_2_size": tune.choice([64, 128, 256]),
     #     "dropout": tune.choice([0.3, 0.5]),
-    #     "activation_function": tune.choix(["complex_relu", "abs"])
-    #     #"lr": tune.loguniform(1e-4, 1e-1),
-    #     #"batch_size": tune.choice([32, 64, 128]),
-    #
+    #     "activation_function": tune.choix(["complex_relu", "modReLU", "zReLU"])
     # }
 
 
     if (args.n_devices != 1) and (args.accelerator == "gpu"):
-
         trainer: pl.Trainer = pl.Trainer(
             max_epochs=args.n_epochs,
             replace_sampler_ddp=False,
@@ -236,7 +234,7 @@ def get_args():
     parser.add_argument("--k_fraction", type=float, default=0.25)
     parser.add_argument("--center_fraction", type=float, default=0.08)
     parser.add_argument("--coil_type", type=str, default="sc_scaled", choices=["sc", "mc", "sc_scaled"])
-
+    parser.add_argument("--activation_function", type=str, default="modReLU", choices=["complex_relu", "modReLU", "zReLU"])
     parser.add_argument("--sampler_filename", type=str, default="./sampler_knee_tr.p")
     parser.add_argument(
         "--model_type",
@@ -248,9 +246,9 @@ def get_args():
     )
 
     # training parameters
-    parser.add_argument("--n_devices", type=int, default=3)
+    parser.add_argument("--n_devices", type=int, default=1)
     parser.add_argument("--strategy", type=str, default="dp")
-    parser.add_argument("--accelerator", type=str, default='cpu')
+    parser.add_argument("--accelerator", type=str, default='gpu')
     parser.add_argument("--n_epochs", type=int, default=100)
     parser.add_argument("--n_seed", type=int, default=1)
     parser.add_argument("--batch_size", type=int, default=8)

@@ -9,6 +9,7 @@ from complexPyTorch.complexFunctions import complex_relu, complex_normalize, com
 from torch.nn.functional import dropout2d
 import numpy as np
 import pytorch_lightning as pl
+from complex_activation_functions import zReLU, modReLU
 
 
 # def center_crop(data, shape: Tuple[int, int]):
@@ -26,15 +27,15 @@ class ComplexPreActBlock(pl.LightningModule):
 
     expansion = 1
 
-    def __init__(self, in_planes, planes, stride=1):
+    def __init__(self, activation_function, in_planes, planes, stride=1,):
         super(ComplexPreActBlock, self).__init__()
+
+        self.activation_function = activation_function
         self.Cbn1 = ComplexBatchNorm2d(in_planes, track_running_stats=False)
-        self.Cconv1 = ComplexConv2d(
-            in_planes, planes, kernel_size=3, stride=stride, padding=1, bias=False
+        self.Cconv1 = ComplexConv2d(in_planes, planes, kernel_size=3, stride=stride, padding=1, bias=False
         )
         self.Cbn2 = ComplexBatchNorm2d(planes)
-        self.Cconv2 = ComplexConv2d(
-            planes, planes, kernel_size=3, stride=1, padding=1, bias=False
+        self.Cconv2 = ComplexConv2d(planes, planes, kernel_size=3, stride=1, padding=1, bias=False
         )
 
         if stride != 1 or in_planes != self.expansion * planes:
@@ -49,49 +50,20 @@ class ComplexPreActBlock(pl.LightningModule):
             )
 
     def forward(self, x):
-        out = complex_relu(self.Cbn1(x))
+        if self.activation_function == "complex_relu":
+            out = complex_relu(self.Cbn1(x))
+        elif self.activation_function == "modReLU":
+            out = modReLU(self.Cbn1(x), 0.1)
+        elif self.activation_function == "zReLU":
+            out = zReLU(self.Cbn1(x))
         shortcut = self.shortcut(out) if hasattr(self, "shortcut") else x
         out = self.Cconv1(out)
-        out = self.Cconv2(complex_relu(self.Cbn2(out)))
-        out += shortcut
-        return out
-
-
-class ComplexPreActBottleneck(nn.Module):
-    """Pre-activation version of the original Bottleneck module."""
-
-    expansion = 4
-
-    def __init__(self, in_planes, planes, stride=1):
-        super(ComplexPreActBottleneck, self).__init__()
-        self.bn1 = ComplexBatchNorm2d(in_planes)
-        self.conv1 = ComplexConv2d(in_planes, planes, kernel_size=1, bias=False)
-        self.bn2 = ComplexBatchNorm2d(planes)
-        self.conv2 = ComplexConv2d(
-            planes, planes, kernel_size=3, stride=stride, padding=1, bias=False
-        )
-        self.bn3 = ComplexBatchNorm2d(planes)
-        self.conv3 = ComplexConv2d(
-            planes, self.expansion * planes, kernel_size=1, bias=False
-        )
-
-        if stride != 1 or in_planes != self.expansion * planes:
-            self.shortcut = nn.Sequential(
-                ComplexConv2d(
-                    in_planes,
-                    self.expansion * planes,
-                    kernel_size=1,
-                    stride=stride,
-                    bias=False,
-                )
-            )
-
-    def forward(self, x):
-        out = complex_relu(self.bn1(x))
-        shortcut = self.shortcut(out) if hasattr(self, "shortcut") else x
-        out = self.conv1(out)
-        out = self.conv2(F.relu(self.bn2(out)))
-        out = self.conv3(F.relu(self.bn3(out)))
+        if self.activation_function == "CReLU":
+            out = self.Cconv2(complex_relu(self.Cbn2(out)))
+        elif self.activation_function == "modReLU":
+            out = self.Cconv2(modReLU(self.Cbn2(out), 0.1))
+        elif self.activation_function == "zReLU":
+            out = self.Cconv2(zReLU(self.Cbn2(out)))
         out += shortcut
         return out
 
@@ -124,22 +96,23 @@ class ComplexPreActResNetFFTKnee(nn.Module):
             block,
             num_blocks,
             image_shape,
+            activation_function,
             data_space,
             num_classes=4,
             drop_prob=0.5,
             return_features=False,
-
     ):
         super(ComplexPreActResNetFFTKnee, self).__init__()
         self.in_planes = 64
+        self.activation_function = activation_function
 
         self.conv_comp = ComplexConv2d(1, 64, kernel_size=3, stride=1, padding=1, bias=False)
         # self.conv1_p = nn.Conv2d(2, 1, kernel_size=3, stride=1, padding=1, bias=False)
 
-        self.layer1 = self._make_layer(block, 64, num_blocks[0], stride=1)
-        self.layer2 = self._make_layer(block, 128, num_blocks[1], stride=2)
-        self.layer3 = self._make_layer(block, 256, num_blocks[2], stride=2)
-        self.layer4 = self._make_layer(block, 512, num_blocks[3], stride=2)
+        self.layer1 = self._make_layer(block, activation_function, 64, num_blocks[0], stride=1)
+        self.layer2 = self._make_layer(block, activation_function, 128, num_blocks[1], stride=2)
+        self.layer3 = self._make_layer(block, activation_function, 256, num_blocks[2], stride=2)
+        self.layer4 = self._make_layer(block, activation_function, 512, num_blocks[3], stride=2)
 
         self.dropout = ComplexDropout2d(p=drop_prob)
         self.image_shape = image_shape
@@ -158,14 +131,12 @@ class ComplexPreActResNetFFTKnee(nn.Module):
         self.Clinear_cartilage = ComplexLinear(in_dim, num_classes)
 
         self.complexLinear = ComplexLinear(in_dim, num_classes)
-        # self.bn1d = ComplexBatchNorm1d(out_dim, track_running_stats = False)
-        # self.complexLinear2 = ComplexLinear(out_dim, num_classes)
 
-    def _make_layer(self, block, planes, num_blocks, stride):
+    def _make_layer(self, block, activation_function, planes, num_blocks, stride):
         strides = [stride] + [1] * (num_blocks - 1)
         layers = []
         for stride in strides:
-            layers.append(block(self.in_planes, planes, stride))
+            layers.append(block(activation_function, self.in_planes, planes, stride))
             self.in_planes = planes * block.expansion
         return nn.Sequential(*layers)
 
@@ -191,8 +162,6 @@ class ComplexPreActResNetFFTKnee(nn.Module):
         # print("complex_avg_pool2d shape is {}".format(out.shape))
         out = out.view(out.size(0), -1)
         # print("out.view shape is {}".format(out.shape))
-        #out = self.dropout(out)
-        #out = complex_relu(out)
 
         out_mtear = self.Clinear_mtear(out)
         out_acl = self.Clinear_acl(out)
@@ -229,38 +198,14 @@ class ComplexPreActResNetFFTKnee(nn.Module):
         return out_abnormal, out_mtear, out_acl, out_cartilage
 
 
-def complex_resnet18_knee(image_shape, data_space, drop_prob=0.3, return_features=False):
+def complex_resnet18_knee(activation_function, image_shape, data_space, drop_prob=0.3, return_features=False):
     return ComplexPreActResNetFFTKnee(
         ComplexPreActBlock,
         [2, 2, 2, 2],
         drop_prob=drop_prob,
         image_shape=image_shape,
         data_space=data_space,
+        activation_function=activation_function,
         return_features=return_features
     )
 
-
-def complex_resnet34_knee(image_shape, data_space, drop_prob=0.3, return_features=False):
-    return ComplexPreActResNetFFTKnee(
-        ComplexPreActBlock,
-        [3, 4, 6, 3],
-        drop_prob=drop_prob,
-        image_shape=image_shape,
-        data_space=data_space,
-        return_features=return_features
-    )
-
-
-def complex_resnet50_knee(image_shape, drop_prob=0.5):
-    return ComplexPreActResNetFFTKnee(
-        ComplexPreActBottleneck,
-        [3, 4, 6, 3],
-        drop_prob=drop_prob,
-        image_shape=image_shape
-    )
-
-
-def test():
-    net = complex_resnet18_knee(drop_out=0.5)
-    y = net((torch.randn(1, 3, 32, 32)))
-    print(y.size())

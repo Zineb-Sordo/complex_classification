@@ -15,7 +15,7 @@ from sklearn import metrics
 import torch
 from torchmetrics import functional
 import numpy as np
-from complex_cnn_model import complex_resnet18_knee, complex_resnet34_knee, complex_resnet50_knee
+from complex_cnn_model import complex_resnet18_knee
 from torchsummary import summary
 
 
@@ -170,6 +170,7 @@ def get_model(
     model_type: str,
     drop_prob: float,
     data_space: str,
+    activation_function: str,
     image_shape: Tuple[int, int],
     sequences: Optional[Tuple[str, str, str]] = None,
     return_features=False,
@@ -177,17 +178,9 @@ def get_model(
 ) -> nn.Module:
     if data_type == "knee":
         if model_type == "complex_preact_resnet18":
-            model18 = complex_resnet18_knee(image_shape=image_shape, drop_prob=drop_prob, data_space=data_space, return_features=return_features)
+            model18 = complex_resnet18_knee(activation_function=activation_function, image_shape=image_shape, drop_prob=drop_prob, data_space=data_space, return_features=return_features)
             print(summary(model18))
             return model18
-        elif model_type == "complex_preact_resnet50":
-            model34 = complex_resnet34_knee(image_shape=image_shape, drop_prob=drop_prob, data_space=data_space, return_features=return_features)
-            print(summary(model34))
-            return model34
-        elif model_type == "complex_preact_resnet50":
-            model50 = complex_resnet50_knee(image_shape=image_shape, drop_prob=drop_prob, data_space=data_space, return_features=return_features)
-            print(summary(model50))
-            return model50
     else:
         raise NotImplementedError(f"Model type {model_type} not complex and not implemented")
 
@@ -197,6 +190,7 @@ class RSS(pl.LightningModule):
                  model_type: str,
                  data_type: str,
                  drop_prob: float,
+                 activation_function: str,
                  kspace_shape: Tuple[int, int],
                  image_shape: Tuple[int, int],
                  device: torch.device,
@@ -240,10 +234,12 @@ class RSS(pl.LightningModule):
         self.data_space = data_space
         self.return_features = return_features
         self.coil_type = coil_type
+        self.activation_function = activation_function
 
         # get model depending on data and model type
         self.model = get_model(
             data_type=self.data_type,
+            activation_function=self.activation_function,
             model_type=self.model_type,
             drop_prob=self.drop_prob,
             image_shape=self.image_shape,
