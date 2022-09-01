@@ -4,7 +4,7 @@ import tqdm
 
 if __name__ == '__main__':
 
-    file_path = "./metadata_knee.csv"
+    file_path = "./knee/metadata_knee.csv"
     df = pd.read_csv(file_path)
 
     for i in tqdm.tqdm(range(len(df))):

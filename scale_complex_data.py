@@ -70,15 +70,14 @@ if __name__ == '__main__':
         l_out_train_fft[i] = (Rrr[None, None] * slice_out.real + Rri[None, None] * slice_out.imag).type(torch.complex64) \
                        + 1j * (Rii[None, None] * slice_out.imag + Rri[None, None] * slice_out.real).type(torch.complex64)
 
-    # for i in tqdm.tqdm(range(len(list_train_paths))):
-    #     file_train = h5py.File(list_train_paths[i], 'r+')
-    #     file_train.create_dataset("sc_kspace_scaled", data=l_out_train_fft[i])
-    #     file_train.close()
+    for i in tqdm.tqdm(range(len(list_train_paths))):
+        file_train = h5py.File(list_train_paths[i], 'r+')
+        if "sc_kspace_scaled" in file_train.keys():
+            continue
+        else:
+            file_train.create_dataset("sc_kspace_scaled", data=l_out_train_fft[i])
+        file_train.close()
 
-    # for i in range(len(list_h5_files_train)):
-    #     file_train = list_h5_files_train[i]
-    #     file_train.create_dataset("sc_kspace_scaled", data=l_out_train_fft[i])
-    #     file_train.close()
 
     # Do the same with the val and test dataframe using the mean and cov of the training set
     print("Doing the same for validation and test sets using train mean and cov")
@@ -102,14 +101,13 @@ if __name__ == '__main__':
         l_out_val_fft[i] = (Rrr[None, None] * slice_out.real + Rri[None, None] * slice_out.imag).type(torch.complex64)\
                             + 1j * (Rii[None, None] * slice_out.imag + Rri[None, None] * slice_out.real).type(torch.complex64)
 
-    # for i in range(len(list_h5_files_val_test)):
-    #     file_val_test = list_h5_files_val_test[i]
-    #     file_val_test.create_dataset("sc_kspace_scaled", data=l_out_val_fft[i])
-    #     file_val_test.close()
 
     for i in tqdm.tqdm(range(len(list_val_paths))):
         file_val_test = h5py.File(list_val_paths[i], 'r+')
-        file_val_test.create_dataset("sc_kspace_scaled", data=l_out_val_fft[i])
+        if "sc_kspace_scaled" in file_train.keys():
+            continue
+        else:
+            file_val_test.create_dataset("sc_kspace_scaled", data=l_out_val_fft[i])
         file_val_test.close()
 
 
