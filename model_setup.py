@@ -254,7 +254,7 @@ class RSS(pl.LightningModule):
 
     def forward(self, batch):
         print(self.coil_type)
-        print(batch.keys())
+        print(batch._fields)
         if self.coil_type == "sc":
             kspace = batch.sc_kspace
         elif self.coil_type == "sc_scaled":
