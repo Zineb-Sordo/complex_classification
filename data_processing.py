@@ -135,7 +135,7 @@ class KneeDataset(MultiDataset):
     def __getitem__(self, index):
         assert self.mode in self.metadata_by_mode
         loc = self.get_metadata_value(index, "location")
-
+        print(loc)
         info = self.metadata_by_mode[self.mode].iloc[index]
         if self.coil_type == "sc":
             kspace_key = "sc_kspace"
