@@ -226,8 +226,7 @@ def get_args():
     # parser.add_argument("--split_csv_file", type=str, default='..//metadata_knee.csv', required=False)
     parser.add_argument("--split_csv_file",
                         type=str,
-                        default='./knee/metadata_knee.csv',
-                        required=False)
+                        default='./metadata_knee.csv')
     parser.add_argument("--recon_model_ckpt", type=str)
     parser.add_argument("--recon_model_type", type=str, default=["rss"], required=False, choices=["rss"])
     parser.add_argument("--mask_type", type=str, default="none")
