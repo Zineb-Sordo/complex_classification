@@ -253,6 +253,8 @@ class RSS(pl.LightningModule):
         self.n_bootstrap_samples = n_bootstrap_samples
 
     def forward(self, batch):
+        print(self.coil_type)
+        print(batch.keys())
         if self.coil_type == "sc":
             kspace = batch.sc_kspace
         elif self.coil_type == "sc_scaled":
