@@ -9,7 +9,7 @@ from complexPyTorch.complexFunctions import complex_relu, complex_normalize, com
 from torch.nn.functional import dropout2d
 import numpy as np
 import pytorch_lightning as pl
-from complex_activation_functions import zReLU, modReLU
+from complex_activation_functions import zReLU, modReLU, cardioid
 
 
 # def center_crop(data, shape: Tuple[int, int]):
@@ -60,10 +60,14 @@ class ComplexPreActBlock(pl.LightningModule):
         out = self.Cconv1(out)
         if self.activation_function == "CReLU":
             out = self.Cconv2(complex_relu(self.Cbn2(out)))
-        elif self.activation_function == "modReLU":
-            out = self.Cconv2(modReLU(self.Cbn2(out), 0.1))
         elif self.activation_function == "zReLU":
             out = self.Cconv2(zReLU(self.Cbn2(out)))
+        elif self.activation_function == "cardioid":
+            out = self.Cconv2(cardioid(self.Cbn2(out)))
+
+        elif self.activation_function == "modReLU":
+            out = self.Cconv2(modReLU(self.Cbn2(out)))
+
         out += shortcut
         return out
 

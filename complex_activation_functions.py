@@ -1,5 +1,6 @@
 import torch
 import numpy as np
+import torch.nn as nn
 
 
 def zReLU(input):
@@ -11,8 +12,10 @@ def zReLU(input):
     return result
 
 
-def modReLU(input, bias):
+def modReLU(input, image_shape):
 
+    bias_shape = (1, 1, image_shape)
+    bias = torch.tensor
     a, b = input.real, input.imag
     input_mag = input.abs()
     mask = ((input_mag + bias) >= 0).float() * (1 + bias / input_mag)
@@ -20,3 +23,12 @@ def modReLU(input, bias):
     imag = mask * b
     result = real.type(torch.complex64) + 1j*imag.type(torch.complex64)
     return result
+
+
+def cardioid(input):
+    phase = input.angle()
+    mask = 0.5*(1 + torch.cos(phase))
+    a, b = input.real, input.imag
+    real = a * mask
+    imag = b * mask
+    result = real.type(torch.complex64) + 1j * imag.type(torch.complex64)
