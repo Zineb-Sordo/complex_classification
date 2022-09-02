@@ -202,7 +202,7 @@ class RSS(pl.LightningModule):
                  lr_gamma: float = 0.1,
                  lr_step_size: int = 20,
                  # dwi_kspace_shape: Optional[Tuple[int, int]] = None,
-                 num_labels = 4,
+                 num_labels=4,
                  n_bootstrap_samples: int = 50,
                  sequences: Optional[Tuple[str, str, str]] = ["t2", "b50"],
                  return_features: str = False
