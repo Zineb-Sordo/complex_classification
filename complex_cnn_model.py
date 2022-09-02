@@ -150,6 +150,7 @@ class ComplexPreActResNetFFTKnee(nn.Module):
         return nn.Sequential(*layers)
 
     def forward(self, kspace):
+
         print("the kspace shape is {} and dtype is {}".format(kspace.shape, kspace.dtype)) # torch.size([8, 1, 640, 400])
         if self.data_space == 'complex_input':
             if torch.cuda.is_available():
@@ -157,53 +158,49 @@ class ComplexPreActResNetFFTKnee(nn.Module):
             else:
                 out = torch.complex(kspace.real, kspace.imag).type(torch.complex64)
             out = self.conv_comp(out)
-        print("out conv_comp shape is {}".format(out.shape))
+
         out = self.dropout(out)
 
-        layer_1_out = self.layer1(out)
-        print("layer1 shape is {}".format(layer_1_out.shape))
-        layer_2_out = self.layer2(layer_1_out)
-        print("layer2 shape is {}".format(layer_2_out.shape))
-        layer_3_out = self.layer3(layer_2_out)
-        print("layer3 shape is {}".format(layer_3_out.shape))
-        layer_4_out = self.layer4(layer_3_out)
-        print("layer4 shape is {}".format(layer_4_out.shape))
-        out = complex_avg_pool2d(layer_4_out, 4)
-        print("complex_avg_pool2d shape is {}".format(out.shape))
-        out = out.view(out.size(0), -1)
-        print("out.view shape is {}".format(out.shape))
+        layer_1_out = self.layer1(out) # [8,64,320,320]
+        layer_2_out = self.layer2(layer_1_out) # [8,128,320,320]
+        layer_3_out = self.layer3(layer_2_out) # [8,256,320,320]
+        layer_4_out = self.layer4(layer_3_out) # [8,512,320,320]
+        out = complex_avg_pool2d(layer_4_out, 4) # [8,512,10,10]
+        out = out.view(out.size(0), -1)  # [8,51200]
 
         out_mtear = self.Clinear_mtear(out)
         out_acl = self.Clinear_acl(out)
         out_cartilage = self.Clinear_cartilage(out)
         out_abnormal = self.Clinear_abnormal(out)
-        print("out_mtear.Clinear_mtear shape is {}".format(out_mtear.shape))
+
+        # print("out_mtear.Clinear_mtear shape is {}".format(out_mtear.shape))
 
         # First approach: output is magnitude
-        out_mtear = out_mtear.abs()
-        out_acl = out_acl.abs()
-        out_cartilage = out_cartilage.abs()
-        out_abnormal = out_abnormal.abs()
+        # out_mtear = out_mtear.abs()
+        # out_acl = out_acl.abs()
+        # out_cartilage = out_cartilage.abs()
+        # out_abnormal = out_abnormal.abs()
 
         # Second approach: output the stacked magnitude and phase
 
-        # out_mtear = torch.stack((out_mtear.abs(), out_mtear.angle()), axis=1).float()
-        # out_mtear = out_mtear.view(out_mtear.size(0), -1)
-        #
-        # out_acl = torch.stack((out_acl.abs(), out_acl.angle()), axis=1).float()
-        # out_acl = out_acl.view(out_acl.size(0), -1)
-        #
-        # out_cartilage = torch.stack((out_cartilage.abs(), out_cartilage.angle()), axis=1).float()
-        # out_cartilage = out_cartilage.view(out_cartilage.size(0), -1)
-        #
-        # out_abnormal = torch.stack((out_abnormal.abs(), out_abnormal.angle()), axis=1).float()
-        # out_abnormal = out_abnormal.view(out_abnormal.size(0), -1)
-        #
-        # out_mtear = self.linear_mtear(out_mtear)
-        # out_acl = self.linear_acl(out_acl)
-        # out_cartilage = self.linear_cartilage(out_cartilage)
-        # out_abnormal = self.linear_abnormal(out_abnormal)
+        out_mtear = torch.stack((out_mtear.abs(), out_mtear.angle()), axis=1).float()
+        print(out_mtear.shape)
+        out_mtear = out_mtear.view(out_mtear.size(0), -1)
+        print(out_mtear.shape)
+        out_acl = torch.stack((out_acl.abs(), out_acl.angle()), axis=1).float()
+        out_acl = out_acl.view(out_acl.size(0), -1)
 
+        out_cartilage = torch.stack((out_cartilage.abs(), out_cartilage.angle()), axis=1).float()
+        out_cartilage = out_cartilage.view(out_cartilage.size(0), -1)
+
+        out_abnormal = torch.stack((out_abnormal.abs(), out_abnormal.angle()), axis=1).float()
+        out_abnormal = out_abnormal.view(out_abnormal.size(0), -1)
+
+        out_mtear = self.linear_mtear(out_mtear)
+        out_acl = self.linear_acl(out_acl)
+        out_cartilage = self.linear_cartilage(out_cartilage)
+        out_abnormal = self.linear_abnormal(out_abnormal)
+        print(out_mtear.shape)
         # Third approach is use a convolution of the magnitude and phase channels
         #print("outputs = {}, {}, {}, {}".format(out_abnormal, out_mtear, out_acl, out_cartilage))
         return out_abnormal, out_mtear, out_acl, out_cartilage
