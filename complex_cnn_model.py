@@ -50,12 +50,16 @@ class ComplexPreActBlock(pl.LightningModule):
             )
 
     def forward(self, x):
+
         if self.activation_function == "complex_relu":
             out = complex_relu(self.Cbn1(x))
         elif self.activation_function == "modReLU":
             out = modReLU(self.Cbn1(x), 0.1)
         elif self.activation_function == "zReLU":
             out = zReLU(self.Cbn1(x))
+        elif self.activation_function == "cardioid":
+            out = zReLU(self.Cbn1(x))
+
         shortcut = self.shortcut(out) if hasattr(self, "shortcut") else x
         out = self.Cconv1(out)
         if self.activation_function == "CReLU":
