@@ -150,32 +150,34 @@ class ComplexPreActResNetFFTKnee(nn.Module):
         return nn.Sequential(*layers)
 
     def forward(self, kspace):
-        # print("the kspace shape is {} and dtype is {}".format(kspace.shape, kspace.dtype)) # torch.size([8, 1, 640, 400])
+        print("the kspace shape is {} and dtype is {}".format(kspace.shape, kspace.dtype)) # torch.size([8, 1, 640, 400])
         if self.data_space == 'complex_input':
             if torch.cuda.is_available():
                 out = torch.complex(kspace.real, kspace.imag).cuda().type(torch.complex64)
             else:
                 out = torch.complex(kspace.real, kspace.imag).type(torch.complex64)
             out = self.conv_comp(out)
+        print("out conv_comp shape is {}".format(out.shape))
         out = self.dropout(out)
 
         layer_1_out = self.layer1(out)
-        # print("layer1 shape is {}".format(layer_1_out.shape))
+        print("layer1 shape is {}".format(layer_1_out.shape))
         layer_2_out = self.layer2(layer_1_out)
-        # print("layer2 shape is {}".format(layer_2_out.shape))
+        print("layer2 shape is {}".format(layer_2_out.shape))
         layer_3_out = self.layer3(layer_2_out)
-        # print("layer3 shape is {}".format(layer_3_out.shape))
+        print("layer3 shape is {}".format(layer_3_out.shape))
         layer_4_out = self.layer4(layer_3_out)
-        # print("layer4 shape is {}".format(layer_4_out.shape))
+        print("layer4 shape is {}".format(layer_4_out.shape))
         out = complex_avg_pool2d(layer_4_out, 4)
-        # print("complex_avg_pool2d shape is {}".format(out.shape))
+        print("complex_avg_pool2d shape is {}".format(out.shape))
         out = out.view(out.size(0), -1)
-        # print("out.view shape is {}".format(out.shape))
+        print("out.view shape is {}".format(out.shape))
 
         out_mtear = self.Clinear_mtear(out)
         out_acl = self.Clinear_acl(out)
         out_cartilage = self.Clinear_cartilage(out)
         out_abnormal = self.Clinear_abnormal(out)
+        print("out_mtear.Clinear_mtear shape is {}".format(out_mtear.shape))
 
         # First approach: output is magnitude
         out_mtear = out_mtear.abs()
