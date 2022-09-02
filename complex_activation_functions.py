@@ -27,8 +27,9 @@ def modReLU(input, image_shape):
 
 def cardioid(input):
     phase = input.angle()
-    mask = 0.5*(1 + torch.cos(phase))
+    mask = 0.5*(1 + torch.cos(phase)).float()
     a, b = input.real, input.imag
     real = a * mask
     imag = b * mask
     result = real.type(torch.complex64) + 1j * imag.type(torch.complex64)
+    return result
