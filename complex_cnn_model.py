@@ -138,15 +138,15 @@ class ComplexPreActResNetFFTKnee(nn.Module):
         self.Clinear = ComplexLinear(in_dim, out_dim)
 
         self.bn1d = ComplexBatchNorm1d(out_dim)
-        self.linear_mtear = nn.Linear(out_dim, num_classes)
-        self.linear_acl = nn.Linear(out_dim, num_classes)
-        self.linear_abnormal = nn.Linear(out_dim, num_classes)
-        self.linear_cartilage = nn.Linear(out_dim, num_classes)
+        # self.linear_mtear = nn.Linear(out_dim, num_classes)
+        # self.linear_acl = nn.Linear(out_dim, num_classes)
+        # self.linear_abnormal = nn.Linear(out_dim, num_classes)
+        # self.linear_cartilage = nn.Linear(out_dim, num_classes)
 
-        # self.linear_mtear = nn.Linear(2*out_dim, num_classes)
-        # self.linear_acl = nn.Linear(2*out_dim, num_classes)
-        # self.linear_abnormal = nn.Linear(2*out_dim, num_classes)
-        # self.linear_cartilage = nn.Linear(2*out_dim, num_classes)
+        self.linear_mtear = nn.Linear(2*out_dim, num_classes)
+        self.linear_acl = nn.Linear(2*out_dim, num_classes)
+        self.linear_abnormal = nn.Linear(2*out_dim, num_classes)
+        self.linear_cartilage = nn.Linear(2*out_dim, num_classes)
 
     def _make_layer(self, block, activation_function, planes, num_blocks, stride):
         strides = [stride] + [1] * (num_blocks - 1)
@@ -190,12 +190,12 @@ class ComplexPreActResNetFFTKnee(nn.Module):
         # print("shape out 3 {}".format(out.shape))
 
         # if magnitude and phase
-        #out = torch.stack((out.abs(), out.angle()), axis=1).float()
+        out = torch.stack((out.abs(), out.angle()), axis=1).float()
         # print("shape out 4 {}".format(out.shape))
-        # out = out.view(out.size(0), -1)
+        out = out.view(out.size(0), -1)
 
         # if magnitude only
-        out = out.abs()
+        # out = out.abs()
         # print("shape out 5 {}".format(out.shape))
 
         out_mtear = self.linear_mtear(out)
@@ -203,6 +203,7 @@ class ComplexPreActResNetFFTKnee(nn.Module):
         out_cartilage = self.linear_cartilage(out)
         out_abnormal = self.linear_abnormal(out)
         # print("shape out 5 {}".format(out_abnormal.shape))
+
         # out_mtear = self.Clinear_mtear(out)
         # out_acl = self.Clinear_acl(out)
         # out_cartilage = self.Clinear_cartilage(out)
