@@ -247,7 +247,7 @@ def get_args():
     # training parameters
     parser.add_argument("--n_devices", type=int, default=1)
     parser.add_argument("--strategy", type=str, default="dp")
-    parser.add_argument("--accelerator", type=str, default='gpu')
+    parser.add_argument("--accelerator", type=str, default='cpu')
     parser.add_argument("--n_epochs", type=int, default=100)
     parser.add_argument("--n_seed", type=int, default=1)
     parser.add_argument("--batch_size", type=int, default=8)
