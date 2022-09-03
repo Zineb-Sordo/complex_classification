@@ -138,15 +138,15 @@ class ComplexPreActResNetFFTKnee(nn.Module):
         self.Clinear = ComplexLinear(in_dim, out_dim)
 
         self.bn1d = ComplexBatchNorm1d(out_dim)
-        # self.linear_mtear = nn.Linear(out_dim, num_classes)
-        # self.linear_acl = nn.Linear(out_dim, num_classes)
-        # self.linear_abnormal = nn.Linear(out_dim, num_classes)
-        # self.linear_cartilage = nn.Linear(out_dim, num_classes)
+        self.linear_mtear = nn.Linear(out_dim, num_classes)
+        self.linear_acl = nn.Linear(out_dim, num_classes)
+        self.linear_abnormal = nn.Linear(out_dim, num_classes)
+        self.linear_cartilage = nn.Linear(out_dim, num_classes)
 
-        self.linear_mtear = nn.Linear(2*out_dim, num_classes)
-        self.linear_acl = nn.Linear(2*out_dim, num_classes)
-        self.linear_abnormal = nn.Linear(2*out_dim, num_classes)
-        self.linear_cartilage = nn.Linear(2*out_dim, num_classes)
+        # self.linear_mtear = nn.Linear(2*out_dim, num_classes)
+        # self.linear_acl = nn.Linear(2*out_dim, num_classes)
+        # self.linear_abnormal = nn.Linear(2*out_dim, num_classes)
+        # self.linear_cartilage = nn.Linear(2*out_dim, num_classes)
 
     def _make_layer(self, block, activation_function, planes, num_blocks, stride):
         strides = [stride] + [1] * (num_blocks - 1)
@@ -165,7 +165,6 @@ class ComplexPreActResNetFFTKnee(nn.Module):
             else:
                 out = torch.complex(kspace.real, kspace.imag).type(torch.complex64)
             out = self.conv_comp(out)
-
         out = self.dropout(out)
 
         layer_1_out = self.layer1(out) # [8,64,320,320]
@@ -175,47 +174,47 @@ class ComplexPreActResNetFFTKnee(nn.Module):
         out = complex_avg_pool2d(layer_4_out, 4) # [8,512,10,10]
         out = out.view(out.size(0), -1)  # [8,51200]
         # print("shape out 1 {}".format(out.shape))
-        out = self.Clinear(out)
+        # out = self.Clinear(out)
         # print("shape out 2 {}".format(out.shape))
 
-        if self.activation_function == "complex_relu":
-            out = complex_relu(self.bn1d(out))
-        elif self.activation_function == "modReLU":
-            out = modReLU(self.bn1d(out))
-        elif self.activation_function == "zReLU":
-            out = zReLU(self.bn1d(out))
-        elif self.activation_function == "cardioid":
-            out = zReLU(self.bn1d(out))
-        out = self.dropout(out)
+        # if self.activation_function == "complex_relu":
+        #     out = complex_relu(self.bn1d(out))
+        # elif self.activation_function == "modReLU":
+        #     out = modReLU(self.bn1d(out))
+        # elif self.activation_function == "zReLU":
+        #     out = zReLU(self.bn1d(out))
+        # elif self.activation_function == "cardioid":
+        #     out = zReLU(self.bn1d(out))
+        # out = self.dropout(out)
         # print("shape out 3 {}".format(out.shape))
 
         # if magnitude and phase
-        out = torch.stack((out.abs(), out.angle()), axis=1).float()
+        # out = torch.stack((out.abs(), out.angle()), axis=1).float()
         # print("shape out 4 {}".format(out.shape))
-        out = out.view(out.size(0), -1)
+        # out = out.view(out.size(0), -1)
 
         # if magnitude only
         # out = out.abs()
         # print("shape out 5 {}".format(out.shape))
 
-        out_mtear = self.linear_mtear(out)
-        out_acl = self.linear_acl(out)
-        out_cartilage = self.linear_cartilage(out)
-        out_abnormal = self.linear_abnormal(out)
+        # out_mtear = self.linear_mtear(out)
+        # out_acl = self.linear_acl(out)
+        # out_cartilage = self.linear_cartilage(out)
+        # out_abnormal = self.linear_abnormal(out)
         # print("shape out 5 {}".format(out_abnormal.shape))
 
-        # out_mtear = self.Clinear_mtear(out)
-        # out_acl = self.Clinear_acl(out)
-        # out_cartilage = self.Clinear_cartilage(out)
-        # out_abnormal = self.Clinear_abnormal(out)
+        out_mtear = self.Clinear_mtear(out)
+        out_acl = self.Clinear_acl(out)
+        out_cartilage = self.Clinear_cartilage(out)
+        out_abnormal = self.Clinear_abnormal(out)
 
         # print("out_mtear.Clinear_mtear shape is {}".format(out_mtear.shape))
 
         # First approach: output is magnitude
-        # out_mtear = out_mtear.abs()
-        # out_acl = out_acl.abs()
-        # out_cartilage = out_cartilage.abs()
-        # out_abnormal = out_abnormal.abs()
+        out_mtear = out_mtear.abs()
+        out_acl = out_acl.abs()
+        out_cartilage = out_cartilage.abs()
+        out_abnormal = out_abnormal.abs()
 
 
         #print("outputs = {}, {}, {}, {}".format(out_abnormal, out_mtear, out_acl, out_cartilage))
