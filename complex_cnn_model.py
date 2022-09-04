@@ -185,7 +185,7 @@ class ComplexPreActResNetFFTKnee(nn.Module):
         #     out = zReLU(self.bn1d(out))
         # elif self.activation_function == "cardioid":
         #     out = zReLU(self.bn1d(out))
-        # out = self.dropout(out)
+        out = self.dropout(out)
         # print("shape out 3 {}".format(out.shape))
 
         # if magnitude and phase
