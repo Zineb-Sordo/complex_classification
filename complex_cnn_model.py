@@ -174,14 +174,14 @@ class ComplexPreActResNetFFTKnee(nn.Module):
         out = out.view(out.size(0), -1)  # [8,51200]
         out = self.Clinear(out)
 
-        # if self.activation_function == "complex_relu":
-        #     out = complex_relu(self.bn1d(out))
-        # elif self.activation_function == "modReLU":
-        #     out = modReLU(self.bn1d(out))
-        # elif self.activation_function == "zReLU":
-        #     out = zReLU(self.bn1d(out))
-        # elif self.activation_function == "cardioid":
-        #     out = zReLU(self.bn1d(out))
+        if self.activation_function == "complex_relu":
+            out = complex_relu(self.bn1d(out))
+        elif self.activation_function == "modReLU":
+            out = modReLU(self.bn1d(out))
+        elif self.activation_function == "zReLU":
+            out = zReLU(self.bn1d(out))
+        elif self.activation_function == "cardioid":
+            out = zReLU(self.bn1d(out))
         out = self.dropout(out)
 
         # if magnitude and phase
