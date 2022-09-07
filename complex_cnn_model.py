@@ -135,17 +135,17 @@ class ComplexPreActResNetFFTKnee(nn.Module):
         self.Clinear_cartilage = ComplexLinear(in_dim, num_classes)
 
         self.Clinear = ComplexLinear(in_dim, out_dim)
-
         self.bn1d = ComplexBatchNorm1d(out_dim)
-        self.linear_mtear = nn.Linear(out_dim, num_classes)
-        self.linear_acl = nn.Linear(out_dim, num_classes)
-        self.linear_abnormal = nn.Linear(out_dim, num_classes)
-        self.linear_cartilage = nn.Linear(out_dim, num_classes)
+        #
+        # self.linear_mtear = nn.Linear(out_dim2, num_classes)
+        # self.linear_acl = nn.Linear(out_dim2, num_classes)
+        # self.linear_abnormal = nn.Linear(out_dim2, num_classes)
+        # self.linear_cartilage = nn.Linear(out_dim2, num_classes)
 
-        # self.linear_mtear = nn.Linear(2*out_dim, num_classes)
-        # self.linear_acl = nn.Linear(2*out_dim, num_classes)
-        # self.linear_abnormal = nn.Linear(2*out_dim, num_classes)
-        # self.linear_cartilage = nn.Linear(2*out_dim, num_classes)
+        self.linear_mtear = nn.Linear(2*out_dim, num_classes)
+        self.linear_acl = nn.Linear(2*out_dim, num_classes)
+        self.linear_abnormal = nn.Linear(2*out_dim, num_classes)
+        self.linear_cartilage = nn.Linear(2*out_dim, num_classes)
 
     def _make_layer(self, block, activation_function, planes, num_blocks, stride):
         strides = [stride] + [1] * (num_blocks - 1)
@@ -184,13 +184,14 @@ class ComplexPreActResNetFFTKnee(nn.Module):
             out = zReLU(self.bn1d(out))
         out = self.dropout(out)
 
-        # if magnitude and phase
 
-        # out = torch.stack((out.abs(), out.angle()), axis=1).float()
-        # out = out.view(out.size(0), -1)
+        # If we select the magnitude and phase of the output
+
+        out = torch.stack((out.abs(), out.angle()), axis=1).float()
+        out = out.view(out.size(0), -1)
 
         # if magnitude only
-        out = out.abs()
+        # out = out.abs()
 
         out_mtear = self.linear_mtear(out)
         out_acl = self.linear_acl(out)

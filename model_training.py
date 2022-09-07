@@ -122,12 +122,11 @@ def train_model(
             auto_scale_batch_size=False,
             precision=args.precision,
         )
-    # Runs a learning rate finder algorithm when calling trainer.tune() to find optimate lr
 
     trainer.tune(model, datamodule)
 
     print("In train_model fit and {}".format(str(device).startswith("cuda")))
-
+    # Either use data paralleling or 1 GPU
     if (args.n_devices != 1) and (args.accelerator == "gpu"):
 
         trainer: pl.Trainer = pl.Trainer(
