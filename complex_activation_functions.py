@@ -12,10 +12,8 @@ def zReLU(input):
     return result
 
 
-def modReLU(input, image_shape):
+def modReLU(input, bias):
 
-    bias_shape = (1, 1, image_shape)
-    bias = torch.tensor
     a, b = input.real, input.imag
     input_mag = input.abs()
     mask = ((input_mag + bias) >= 0).float() * (1 + bias / input_mag)

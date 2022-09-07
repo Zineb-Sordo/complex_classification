@@ -54,11 +54,11 @@ class ComplexPreActBlock(pl.LightningModule):
         if self.activation_function == "complex_relu":
             out = complex_relu(self.Cbn1(x))
         elif self.activation_function == "modReLU":
-            out = modReLU(self.Cbn1(x))
+            out = modReLU(self.bn1d(x), nn.Parameter(torch(x.size)))
         elif self.activation_function == "zReLU":
             out = zReLU(self.Cbn1(x))
         elif self.activation_function == "cardioid":
-            out = zReLU(self.Cbn1(x))
+            out = cardioid(self.Cbn1(x))
 
         shortcut = self.shortcut(out) if hasattr(self, "shortcut") else x
         out = self.Cconv1(out)
@@ -70,7 +70,7 @@ class ComplexPreActBlock(pl.LightningModule):
             out = self.Cconv2(cardioid(self.Cbn2(out)))
 
         elif self.activation_function == "modReLU":
-            out = self.Cconv2(modReLU(self.Cbn2(out)))
+            out = modReLU(self.bn1d(out), nn.Parameter(torch(out.size)))
 
         out += shortcut
         return out
@@ -177,11 +177,11 @@ class ComplexPreActResNetFFTKnee(nn.Module):
         if self.activation_function == "complex_relu":
             out = complex_relu(self.bn1d(out))
         elif self.activation_function == "modReLU":
-            out = modReLU(self.bn1d(out))
+            out = modReLU(self.bn1d(out), nn.Parameter(torch(out.size)))
         elif self.activation_function == "zReLU":
             out = zReLU(self.bn1d(out))
         elif self.activation_function == "cardioid":
-            out = zReLU(self.bn1d(out))
+            out = cardioid(self.bn1d(out))
         out = self.dropout(out)
 
 
