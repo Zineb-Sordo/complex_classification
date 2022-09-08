@@ -55,7 +55,7 @@ class ComplexPreActBlock(pl.LightningModule):
             out = complex_relu(self.Cbn1(x))
         elif self.activation_function == "modReLU":
 
-            out = modReLU(self.Cbn1(x), nn.Parameter(data=torch.Tensor(x.shape)).cuda())
+            out = modReLU(self.Cbn1(x), nn.Parameter(torch.Tensor(x.shape)).cuda())
         elif self.activation_function == "zReLU":
             out = zReLU(self.Cbn1(x))
         elif self.activation_function == "cardioid":
@@ -128,7 +128,7 @@ class ComplexPreActResNetFFTKnee(nn.Module):
         self.data_space = data_space
 
         in_dim = 512 * block.expansion * 100
-        out_dim = 2048
+        out_dim = 1024
 
         self.Clinear_mtear = ComplexLinear(in_dim, num_classes)
         self.Clinear_acl = ComplexLinear(in_dim, num_classes)
@@ -137,7 +137,6 @@ class ComplexPreActResNetFFTKnee(nn.Module):
 
         self.Clinear = ComplexLinear(in_dim, out_dim)
         self.bn1d = ComplexBatchNorm1d(out_dim)
-
         #
         # self.linear_mtear = nn.Linear(out_dim2, num_classes)
         # self.linear_acl = nn.Linear(out_dim2, num_classes)
