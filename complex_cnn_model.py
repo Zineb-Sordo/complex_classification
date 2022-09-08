@@ -55,7 +55,7 @@ class ComplexPreActBlock(pl.LightningModule):
             out = complex_relu(self.Cbn1(x))
         elif self.activation_function == "modReLU":
 
-            out = modReLU(self.Cbn1(x), nn.Parameter(data=torch.Tensor(x.shape)).cuda(), requires_grad=True)
+            out = modReLU(self.Cbn1(x), nn.Parameter(data=torch.Tensor(x.shape)).cuda())
         elif self.activation_function == "zReLU":
             out = zReLU(self.Cbn1(x))
         elif self.activation_function == "cardioid":
@@ -71,7 +71,7 @@ class ComplexPreActBlock(pl.LightningModule):
             out = self.Cconv2(cardioid(self.Cbn2(out)))
 
         elif self.activation_function == "modReLU":
-            out = modReLU(self.Cbn2(out), nn.Parameter(torch.Tensor(out.shape)).cuda(), requires_grad=True)
+            out = modReLU(self.Cbn2(out), nn.Parameter(torch.Tensor(out.shape)).cuda())
 
         out += shortcut
         return out
@@ -178,7 +178,7 @@ class ComplexPreActResNetFFTKnee(nn.Module):
         if self.activation_function == "complex_relu":
             out = complex_relu(self.bn1d(out))
         elif self.activation_function == "modReLU":
-            out = modReLU(self.bn1d(out), nn.Parameter(torch.Tensor(out.shape)).cuda(), requires_grad=True)
+            out = modReLU(self.bn1d(out), nn.Parameter(torch.Tensor(out.shape)).cuda())
         elif self.activation_function == "zReLU":
             out = zReLU(self.bn1d(out))
         elif self.activation_function == "cardioid":
