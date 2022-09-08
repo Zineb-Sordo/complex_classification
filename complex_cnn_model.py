@@ -129,6 +129,7 @@ class ComplexPreActResNetFFTKnee(nn.Module):
 
         in_dim = 512 * block.expansion * 100
         out_dim = 1024
+        out_dim2 = 512
 
         self.Clinear_mtear = ComplexLinear(in_dim, num_classes)
         self.Clinear_acl = ComplexLinear(in_dim, num_classes)
@@ -137,16 +138,24 @@ class ComplexPreActResNetFFTKnee(nn.Module):
 
         self.Clinear = ComplexLinear(in_dim, out_dim)
         self.bn1d = ComplexBatchNorm1d(out_dim)
+
+        self.Clinear2 = ComplexLinear(out_dim, out_dim2)
+        self.bn1d2 = ComplexBatchNorm1d(out_dim2)
         #
         # self.linear_mtear = nn.Linear(out_dim2, num_classes)
         # self.linear_acl = nn.Linear(out_dim2, num_classes)
         # self.linear_abnormal = nn.Linear(out_dim2, num_classes)
         # self.linear_cartilage = nn.Linear(out_dim2, num_classes)
 
-        self.linear_mtear = nn.Linear(2*out_dim, num_classes)
-        self.linear_acl = nn.Linear(2*out_dim, num_classes)
-        self.linear_abnormal = nn.Linear(2*out_dim, num_classes)
-        self.linear_cartilage = nn.Linear(2*out_dim, num_classes)
+        # self.linear_mtear = nn.Linear(2*out_dim, num_classes)
+        # self.linear_acl = nn.Linear(2*out_dim, num_classes)
+        # self.linear_abnormal = nn.Linear(2*out_dim, num_classes)
+        # self.linear_cartilage = nn.Linear(2*out_dim, num_classes)
+
+        self.linear_mtear = nn.Linear(2 * out_dim2, num_classes)
+        self.linear_acl = nn.Linear(2 * out_dim2, num_classes)
+        self.linear_abnormal = nn.Linear(2 * out_dim2, num_classes)
+        self.linear_cartilage = nn.Linear(2 * out_dim2, num_classes)
 
     def _make_layer(self, block, activation_function, planes, num_blocks, stride):
         strides = [stride] + [1] * (num_blocks - 1)
@@ -183,6 +192,18 @@ class ComplexPreActResNetFFTKnee(nn.Module):
             out = zReLU(self.bn1d(out))
         elif self.activation_function == "cardioid":
             out = cardioid(self.bn1d(out))
+        out = self.dropout(out)
+
+        out = self.Clinear2(out)
+
+        if self.activation_function == "complex_relu":
+            out = complex_relu(self.bn1d2(out))
+        elif self.activation_function == "modReLU":
+            out = modReLU(self.bn1d2(out), nn.Parameter(torch.Tensor(out.shape)).cuda())
+        elif self.activation_function == "zReLU":
+            out = zReLU(self.bn1d2(out))
+        elif self.activation_function == "cardioid":
+            out = cardioid(self.bn1d2(out))
         out = self.dropout(out)
 
 
