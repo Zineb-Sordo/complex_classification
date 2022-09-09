@@ -12,14 +12,14 @@ import pytorch_lightning as pl
 from complex_activation_functions import zReLU, modReLU, cardioid
 
 
-# def center_crop(data, shape: Tuple[int, int]):
-#
-#     w_from = (data.shape[-2] - shape[0]) // 2
-#     h_from = (data.shape[-1] - shape[1]) // 2
-#     w_to = w_from + shape[0]
-#     h_to = h_from + shape[1]
-#
-#     return data[..., w_from:w_to, h_from:h_to]
+def center_crop(data, shape: Tuple[int, int]):
+
+    w_from = (data.shape[-2] - shape[0]) // 2
+    h_from = (data.shape[-1] - shape[1]) // 2
+    w_to = w_from + shape[0]
+    h_to = h_from + shape[1]
+
+    return data[..., w_from:w_to, h_from:h_to]
 
 
 class ComplexPreActBlock(pl.LightningModule):
@@ -116,7 +116,8 @@ class ComplexPreActResNetFFTKnee(nn.Module):
         self.activation_function = activation_function
 
         self.conv_comp = ComplexConv2d(1, 64, kernel_size=3, stride=1, padding=1, bias=False)
-        # self.conv1_p = nn.Conv2d(2, 1, kernel_size=3, stride=1, padding=1, bias=False)
+        self.bn1d_2 = ComplexBatchNorm1d(64)
+
 
         self.layer1 = self._make_layer(block, activation_function, 64, num_blocks[0], stride=1)
         self.layer2 = self._make_layer(block, activation_function, 128, num_blocks[1], stride=2)
@@ -137,12 +138,14 @@ class ComplexPreActResNetFFTKnee(nn.Module):
 
         self.Clinear = ComplexLinear(in_dim, out_dim)
         self.bn1d = ComplexBatchNorm1d(out_dim)
-        #
-        # self.linear_mtear = nn.Linear(out_dim2, num_classes)
-        # self.linear_acl = nn.Linear(out_dim2, num_classes)
-        # self.linear_abnormal = nn.Linear(out_dim2, num_classes)
-        # self.linear_cartilage = nn.Linear(out_dim2, num_classes)
 
+        # Linear layers for mag only
+        # self.linear_mtear = nn.Linear(out_dim, num_classes)
+        # self.linear_acl = nn.Linear(out_dim, num_classes)
+        # self.linear_abnormal = nn.Linear(out_dim, num_classes)
+        # self.linear_cartilage = nn.Linear(out_dim, num_classes)
+
+        # Linear layers for mag + phase
         self.linear_mtear = nn.Linear(2*out_dim, num_classes)
         self.linear_acl = nn.Linear(2*out_dim, num_classes)
         self.linear_abnormal = nn.Linear(2*out_dim, num_classes)
@@ -165,6 +168,15 @@ class ComplexPreActResNetFFTKnee(nn.Module):
             else:
                 out = torch.complex(kspace.real, kspace.imag).type(torch.complex64)
             out = self.conv_comp(out)
+
+        if self.activation_function == "complex_relu":
+            out = complex_relu(self.bn1d_2(out))
+        elif self.activation_function == "modReLU":
+            out = modReLU(self.bn1d_2(out), nn.Parameter(torch.Tensor(out.shape)).cuda())
+        elif self.activation_function == "zReLU":
+            out = zReLU(self.bn1d_2(out))
+        elif self.activation_function == "cardioid":
+            out = cardioid(self.bn1d_2(out))
         out = self.dropout(out)
 
         layer_1_out = self.layer1(out) # [8,64,320,320]
@@ -173,7 +185,7 @@ class ComplexPreActResNetFFTKnee(nn.Module):
         layer_4_out = self.layer4(layer_3_out) # [8,512,320,320]
         out = complex_avg_pool2d(layer_4_out, 4) # [8,512,10,10]
         out = out.view(out.size(0), -1)  # [8,51200]
-        out = self.Clinear(out)
+        out = self.Clinear(out) # [8,1024]
 
         if self.activation_function == "complex_relu":
             out = complex_relu(self.bn1d(out))
@@ -185,21 +197,20 @@ class ComplexPreActResNetFFTKnee(nn.Module):
             out = cardioid(self.bn1d(out))
         out = self.dropout(out)
 
-
         # If we select the magnitude and phase of the output
 
-        out = torch.stack((out.abs(), out.angle()), axis=1).float()
-        out = out.view(out.size(0), -1)
+        out = torch.stack((out.abs(), out.angle()), axis=1).float() # [8,2,2048]
+        out = out.view(out.size(0), -1) # [8,2048]
 
-        # if magnitude only
+        out_mtear = self.linear_mtear(out) # [8, 2]
+        out_acl = self.linear_acl(out) # [8, 2]
+        out_cartilage = self.linear_cartilage(out) # [8, 2]
+        out_abnormal = self.linear_abnormal(out) # [8, 2]
+
+        # If magnitude only is selected
+
         # out = out.abs()
 
-        out_mtear = self.linear_mtear(out)
-        out_acl = self.linear_acl(out)
-        out_cartilage = self.linear_cartilage(out)
-        out_abnormal = self.linear_abnormal(out)
-
-        # First approach: output is magnitude
         # out_mtear = self.Clinear_mtear(out)
         # out_acl = self.Clinear_acl(out)
         # out_cartilage = self.Clinear_cartilage(out)
@@ -210,8 +221,6 @@ class ComplexPreActResNetFFTKnee(nn.Module):
         # out_cartilage = out_cartilage.abs()
         # out_abnormal = out_abnormal.abs()
 
-
-        #print("outputs = {}, {}, {}, {}".format(out_abnormal, out_mtear, out_acl, out_cartilage))
         return out_abnormal, out_mtear, out_acl, out_cartilage
 
 
