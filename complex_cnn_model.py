@@ -116,7 +116,7 @@ class ComplexPreActResNetFFTKnee(nn.Module):
         self.activation_function = activation_function
 
         self.conv_comp = ComplexConv2d(1, 64, kernel_size=3, stride=1, padding=1, bias=False)
-        self.bn1d_2 = ComplexBatchNorm1d(64)
+        self.bn1d_2 = ComplexBatchNorm2d(64)
 
 
         self.layer1 = self._make_layer(block, activation_function, 64, num_blocks[0], stride=1)
