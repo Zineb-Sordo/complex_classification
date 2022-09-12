@@ -28,13 +28,13 @@ $ python generate_knee_metadata.py
 
 To standardize the data on the full training set, after the data generation process, run the following: 
 ```
-
+$ cd data_generation
 $ python scale_complex_data.py
 ```
 
 To train the model, run the script (after adding the appropriate argparse arguments): 
 ```
-
+$ cd src
 $ python model_training.py
 ```
 
