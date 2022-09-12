@@ -196,7 +196,7 @@ class ComplexPreActResNetFFTKnee(nn.Module):
             out_cartilage = self.linear_cartilage_2(out) # [8, 2]
             out_abnormal = self.linear_abnormal_2(out) # [8, 2]
 
-        elif self.output_type == "magnitude":
+        elif self.output_type == "mag":
             out = out.abs()
 
             out_mtear = self.linear_mtear(out)  # [8, 2]

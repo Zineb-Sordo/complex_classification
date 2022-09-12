@@ -72,8 +72,10 @@ def train_model(
     model_dir = str(args.model_dir) + '/' + args.data_space + '/' + str(args.n_seed)
 
     if not os.path.isdir(str(log_dir)):
+        print(str(log_dir))
         os.makedirs(str(log_dir))
     if not os.path.isdir(str(model_dir)):
+        print(str(model_dir))
         os.makedirs(str(model_dir))
 
     csv_logger = CSVLogger(save_dir=log_dir, name=f"train-{args.n_seed}", version=f"{args.n_seed}")
@@ -205,8 +207,8 @@ def get_args():
     parser = argparse.ArgumentParser(description="Indirect MR Screener training")
 
     # logging parameters
-    parser.add_argument("--model_dir", type=str, default="./trained_models_ddp")
-    parser.add_argument("--log_dir", type=str, default="./trained_logs_ddp")
+    parser.add_argument("--model_dir", type=str, default="./trained_models")
+    parser.add_argument("--log_dir", type=str, default="./trained_logs")
     parser.add_argument("--mode", type=str, default="train")
     parser.add_argument("--dev_mode", action="store_true")
 
