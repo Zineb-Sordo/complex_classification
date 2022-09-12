@@ -17,12 +17,12 @@ For data generation and processing, start by following the same steps as in pape
 
 The fastMRI can be downloaded from [this link](https://fastmri.med.nyu.edu) and the annotations can be found at [this link](https://github.com/microsoft/fastmri-plus/tree/main/Annotations). The original fastMRI data contains volume level slices so generate the Slice level processed data after updating the required paths in the file:
  ```
-$ cd data_processing/knee/
+$ cd data_generation
 $ python knee_singlecoil.py
 ```
 * Generate the train, validation, and test splits
 ```
-$ cd data_processing/knee/
+$ cd data_generation
 $ python generate_knee_metadata.py
 ```
 

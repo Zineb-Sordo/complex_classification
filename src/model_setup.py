@@ -6,10 +6,10 @@ from typing import Optional, Tuple
 import pytorch_lightning as pl
 import torch
 import numpy as np
-from complex_cnn_model import complex_resnet18_knee
+from src.complex_cnn_model import complex_resnet18_knee
 from torchsummary import summary
 
-from metrics import compute_accuracy, evaluate_classifier
+from utils.metrics import compute_accuracy, evaluate_classifier
 
 
 def get_model(

@@ -4,10 +4,10 @@ import sys
 
 from complexPyTorch.complexLayers import ComplexBatchNorm2d, ComplexConv2d, ComplexLinear
 from complexPyTorch.complexLayers import ComplexBatchNorm1d
-from complexPyTorch.complexFunctions import complex_relu, complex_normalize, complex_avg_pool2d
+from complexPyTorch.complexFunctions import complex_relu, complex_avg_pool2d
 from torch.nn.functional import dropout2d
 import pytorch_lightning as pl
-from complex_activation_functions import zReLU, modReLU, cardioid
+from utils.complex_activation_functions import zReLU, modReLU, cardioid
 
 
 class ComplexPreActBlock(pl.LightningModule):

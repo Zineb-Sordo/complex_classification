@@ -243,7 +243,7 @@ torchmetrics
 torchtext
 
 torchvision==0.11.2
-
+torchsummary
 tornado 
 tqdm 
 traceback2==1.4.0

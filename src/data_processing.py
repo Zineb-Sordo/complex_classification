@@ -263,9 +263,10 @@ class KneeDataModule(pl.LightningDataModule):
 
         if self.sampler_filename is None:
             print("Creating sampler weights...")
-            self.sampler_filename = "./sampler_knee_tr.p"
+            self.sampler_filename = "sampler_knee_tr.p"
             get_sampler_weights(self.train_dataset, self.sampler_filename)
         elif not os.path.exists(self.sampler_filename):
+            print(self.sampler_filename, os.getcwd())
             raise ValueError("Weighted sampler does not exist")
         assert Path(self.sampler_filename).is_file()
         # load the sampler

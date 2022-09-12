@@ -7,8 +7,8 @@ from pytorch_lightning.loggers import CSVLogger#, WandbLogger
 from pathlib import Path
 import fire
 
-from model_setup import RSS
-from data_processing import KneeDataModule
+from src.model_setup import RSS
+from src.data_processing import KneeDataModule
 
 # from ray.tune.integration.pytorch_lightning import TuneReportCallback
 
@@ -230,7 +230,7 @@ def get_args():
     parser.add_argument("--center_fraction", type=float, default=0.08)
     parser.add_argument("--coil_type", type=str, default="sc_scaled", choices=["sc", "mc", "sc_scaled"])
     parser.add_argument("--activation_function", type=str, default="complex_relu", choices=["complex_relu", "modReLU", "zReLU", "cardioid"])
-    parser.add_argument("--sampler_filename", type=str, default="./sampler_knee_tr.p")
+    parser.add_argument("--sampler_filename", type=str, default="./src/sampler_knee_tr.p")
     parser.add_argument(
         "--model_type",
         type=str,
