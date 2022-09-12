@@ -91,7 +91,6 @@ def train_model(
     #     "activation_function": tune.choix(["complex_relu", "modReLU", "zReLU", "cardioid"])
     # }
 
-
     if (args.n_devices != 1) and (args.accelerator == "gpu"):
         trainer: pl.Trainer = pl.Trainer(
             max_epochs=args.n_epochs,
