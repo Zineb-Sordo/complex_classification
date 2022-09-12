@@ -2,11 +2,6 @@ import argparse
 import os
 import pytorch_lightning as pl
 import torch
-
-import argparse
-import os
-import pytorch_lightning as pl
-import torch
 from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint, LearningRateMonitor
 from pytorch_lightning.loggers import CSVLogger#, WandbLogger
 from pathlib import Path
@@ -14,9 +9,8 @@ import fire
 
 from model_setup import RSS
 from data_processing import KneeDataModule
-from complex_activation_functions import zReLU, modReLU
 
-#from ray.tune.integration.pytorch_lightning import TuneReportCallback
+# from ray.tune.integration.pytorch_lightning import TuneReportCallback
 
 
 # get the data
@@ -45,6 +39,7 @@ def get_model(
         # get spatial domain model
         model = RSS(
             model_type=args.model_type,
+            output_type=args.output_type,
             activation_function=args.activation_function,
             data_type=args.data_type,
             image_shape=[320, 320],
@@ -93,7 +88,7 @@ def train_model(
     # callbacks_ray = [model_checkpoint, early_stop_callback, lr_monitor, TuneReportCallback(metrics, on="validation_end")]
     # config = {
     #     "dropout": tune.choice([0.3, 0.5]),
-    #     "activation_function": tune.choix(["complex_relu", "modReLU", "zReLU"])
+    #     "activation_function": tune.choix(["complex_relu", "modReLU", "zReLU", "cardioid"])
     # }
 
 
@@ -126,6 +121,7 @@ def train_model(
     trainer.tune(model, datamodule)
 
     print("In train_model fit and {}".format(str(device).startswith("cuda")))
+
     # Either use data paralleling or 1 GPU
     if (args.n_devices != 1) and (args.accelerator == "gpu"):
 
@@ -221,8 +217,8 @@ def get_args():
     # parser.add_argument("--task", type=str, default="classification")
     parser.add_argument("--image_shape", type=int, default=[320, 320], nargs=2, required=False)
     parser.add_argument("--image_type", type=str, default='orig', required=False, choices=["orig"])
+    parser.add_argument("--output_type", type=str, default="mag_phase", choices=["mag_phase", "mag"])
 
-    # parser.add_argument("--split_csv_file", type=str, default='..//metadata_knee.csv', required=False)
     parser.add_argument("--split_csv_file",
                         type=str,
                         default='./knee/metadata_knee.csv')

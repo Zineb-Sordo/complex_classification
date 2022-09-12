@@ -1,25 +1,13 @@
-from typing import Tuple
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
+import sys
 
 from complexPyTorch.complexLayers import ComplexBatchNorm2d, ComplexConv2d, ComplexLinear
 from complexPyTorch.complexLayers import ComplexBatchNorm1d
 from complexPyTorch.complexFunctions import complex_relu, complex_normalize, complex_avg_pool2d
 from torch.nn.functional import dropout2d
-import numpy as np
 import pytorch_lightning as pl
 from complex_activation_functions import zReLU, modReLU, cardioid
-
-
-def center_crop(data, shape: Tuple[int, int]):
-
-    w_from = (data.shape[-2] - shape[0]) // 2
-    h_from = (data.shape[-1] - shape[1]) // 2
-    w_to = w_from + shape[0]
-    h_to = h_from + shape[1]
-
-    return data[..., w_from:w_to, h_from:h_to]
 
 
 class ComplexPreActBlock(pl.LightningModule):
@@ -107,6 +95,7 @@ class ComplexPreActResNetFFTKnee(nn.Module):
             image_shape,
             activation_function,
             data_space,
+            output_type,
             num_classes=2,
             drop_prob=0.5,
             return_features=False,
@@ -127,6 +116,7 @@ class ComplexPreActResNetFFTKnee(nn.Module):
         self.dropout = ComplexDropout2d(p=drop_prob)
         self.image_shape = image_shape
         self.data_space = data_space
+        self.output_type = output_type
 
         in_dim = 512 * block.expansion * 100
         out_dim = 1024
@@ -140,16 +130,16 @@ class ComplexPreActResNetFFTKnee(nn.Module):
         self.bn1d = ComplexBatchNorm1d(out_dim)
 
         # Linear layers for mag only
-        # self.linear_mtear = nn.Linear(out_dim, num_classes)
-        # self.linear_acl = nn.Linear(out_dim, num_classes)
-        # self.linear_abnormal = nn.Linear(out_dim, num_classes)
-        # self.linear_cartilage = nn.Linear(out_dim, num_classes)
+        self.linear_mtear = nn.Linear(out_dim, num_classes)
+        self.linear_acl = nn.Linear(out_dim, num_classes)
+        self.linear_abnormal = nn.Linear(out_dim, num_classes)
+        self.linear_cartilage = nn.Linear(out_dim, num_classes)
 
         # Linear layers for mag + phase
-        self.linear_mtear = nn.Linear(2*out_dim, num_classes)
-        self.linear_acl = nn.Linear(2*out_dim, num_classes)
-        self.linear_abnormal = nn.Linear(2*out_dim, num_classes)
-        self.linear_cartilage = nn.Linear(2*out_dim, num_classes)
+        self.linear_mtear_2 = nn.Linear(2*out_dim, num_classes)
+        self.linear_acl_2 = nn.Linear(2*out_dim, num_classes)
+        self.linear_abnormal_2 = nn.Linear(2*out_dim, num_classes)
+        self.linear_cartilage_2 = nn.Linear(2*out_dim, num_classes)
 
     def _make_layer(self, block, activation_function, planes, num_blocks, stride):
         strides = [stride] + [1] * (num_blocks - 1)
@@ -161,13 +151,12 @@ class ComplexPreActResNetFFTKnee(nn.Module):
 
     def forward(self, kspace):
 
-        #print("the kspace shape is {} and dtype is {}".format(kspace.shape, kspace.dtype)) # torch.size([8, 1, 640, 400])
-        if self.data_space == 'complex_input':
-            if torch.cuda.is_available():
-                out = torch.complex(kspace.real, kspace.imag).cuda().type(torch.complex64)
-            else:
-                out = torch.complex(kspace.real, kspace.imag).type(torch.complex64)
-            out = self.conv_comp(out)
+        # print("the kspace shape is {} and dtype is {}".format(kspace.shape, kspace.dtype)) # torch.size([8, 1, 640, 400])
+        if torch.cuda.is_available():
+            out = torch.complex(kspace.real, kspace.imag).cuda().type(torch.complex64)
+        else:
+            out = torch.complex(kspace.real, kspace.imag).type(torch.complex64)
+        out = self.conv_comp(out)
 
         if self.activation_function == "complex_relu":
             out = complex_relu(self.bn1d_2(out))
@@ -197,40 +186,38 @@ class ComplexPreActResNetFFTKnee(nn.Module):
             out = cardioid(self.bn1d(out))
         out = self.dropout(out)
 
-        # If we select the magnitude and phase of the output
+        if self.output_type == "mag_phase":
 
-        out = torch.stack((out.abs(), out.angle()), axis=1).float() # [8,2,2048]
-        out = out.view(out.size(0), -1) # [8,2048]
+            out = torch.stack((out.abs(), out.angle()), axis=1).float() # [8,2,2048]
+            out = out.view(out.size(0), -1) # [8,2048]
 
-        out_mtear = self.linear_mtear(out) # [8, 2]
-        out_acl = self.linear_acl(out) # [8, 2]
-        out_cartilage = self.linear_cartilage(out) # [8, 2]
-        out_abnormal = self.linear_abnormal(out) # [8, 2]
+            out_mtear = self.linear_mtear_2(out) # [8, 2]
+            out_acl = self.linear_acl_2(out) # [8, 2]
+            out_cartilage = self.linear_cartilage_2(out) # [8, 2]
+            out_abnormal = self.linear_abnormal_2(out) # [8, 2]
 
-        # If magnitude only is selected
+        elif self.output_type == "magnitude":
+            out = out.abs()
 
-        # out = out.abs()
-
-        # out_mtear = self.Clinear_mtear(out)
-        # out_acl = self.Clinear_acl(out)
-        # out_cartilage = self.Clinear_cartilage(out)
-        # out_abnormal = self.Clinear_abnormal(out)
-        #
-        # out_mtear = out_mtear.abs()
-        # out_acl = out_acl.abs()
-        # out_cartilage = out_cartilage.abs()
-        # out_abnormal = out_abnormal.abs()
+            out_mtear = self.linear_mtear(out)  # [8, 2]
+            out_acl = self.linear_acl(out)  # [8, 2]
+            out_cartilage = self.linear_cartilage(out)  # [8, 2]
+            out_abnormal = self.linear_abnormal(out)  # [8, 2]
+        else:
+            print("Error in type of output selected")
+            sys.exit()
 
         return out_abnormal, out_mtear, out_acl, out_cartilage
 
 
-def complex_resnet18_knee(activation_function, image_shape, data_space, drop_prob=0.5, return_features=False):
+def complex_resnet18_knee(activation_function, image_shape, data_space, output_type, drop_prob=0.5, return_features=False):
     return ComplexPreActResNetFFTKnee(
         ComplexPreActBlock,
         [2, 2, 2, 2],
         drop_prob=drop_prob,
         image_shape=image_shape,
         data_space=data_space,
+        output_type=output_type,
         activation_function=activation_function,
         return_features=return_features
     )

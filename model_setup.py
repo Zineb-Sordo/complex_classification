@@ -1,168 +1,15 @@
 
-import pandas as pd
-import numpy as np 
-import matplotlib.pyplot as plt 
-import h5py
-#get_ipython().run_line_magic('matplotlib', 'inline')
-
 import torch.nn as nn
 from torch import optim
-from typing import Dict, Optional, Tuple
+from typing import Optional, Tuple
 
 import pytorch_lightning as pl
-from typing import Dict
-from sklearn import metrics
 import torch
-from torchmetrics import functional
 import numpy as np
 from complex_cnn_model import complex_resnet18_knee
 from torchsummary import summary
 
-
-def compute_auc(preds, labels):
-    return functional.auroc(preds=preds, target=labels, num_classes=2)
-
-
-def compute_accuracy(preds, labels):
-    return functional.accuracy(preds=preds, target=labels)
-
-
-def get_operating_point(preds, labels, operating_point=None, threshold=0.1):
-    preds = preds.cpu()
-    preds_positive = preds[:, 1].numpy()
-
-    labels = labels.cpu()
-
-    if operating_point is None:
-        fpr, tpr, thresholds = metrics.roc_curve(labels.numpy(), preds_positive)
-        operating_point = thresholds[fpr > 0.25][0]
-
-        try:
-            fnr = 1 - tpr
-            operating_point = thresholds[fnr < threshold][0]
-        except IndexError:
-            operating_point = thresholds[fpr > 0.25][0]
-
-    test_predictions = (preds_positive > operating_point).astype(int)
-
-    sensitivity = metrics.recall_score(labels, test_predictions)
-    specificity = metrics.recall_score(
-        np.abs(1 - labels.numpy()), np.abs(1 - test_predictions)
-    )
-    balanced_acc = metrics.balanced_accuracy_score(labels.numpy(), test_predictions)
-
-    # print(f"b acc = {balanced_acc}, specificity = {specificity}, sensitivity = {sensitivity}")
-    return balanced_acc, specificity, sensitivity, operating_point
-
-
-def evaluate_classifier(
-    preds: torch.Tensor, labels: torch.Tensor, operating_point: float = None
-) -> Dict:
-    try:
-        auc = compute_auc(preds=preds[:, 1], labels=labels).item()
-        balanced_acc, specificity, sensitivity, operating_point = get_operating_point(
-            preds, labels, operating_point=operating_point
-        )
-    except ValueError:
-        auc = np.nan
-        specificity = np.nan
-        sensitivity = np.nan
-        balanced_acc = np.nan
-        operating_point = np.nan
-        print(
-            "No negative samples in targets, false positive value should be meaningless"
-        )
-
-    return dict(
-        auc=auc,
-        sensitivity=sensitivity,
-        specificity=specificity,
-        balanced_accuracy=balanced_acc,
-        operating_point=operating_point,
-    )
-
-
-def get_bootstrap_estimates(
-    preds: torch.Tensor,
-    labels: torch.Tensor,
-    operating_point: float,
-    n_bootstrap_samples: int,
-) -> Dict:
-    N = len(preds)
-
-    arr_auc = []
-    arr_sensitivity = []
-    arr_specificity = []
-    arr_balanced_accuracy = []
-
-    metrics = evaluate_classifier(
-        preds=preds, labels=labels, operating_point=operating_point,
-    )
-    auc = metrics["auc"]
-    sensitivity = metrics["sensitivity"]
-    specificity = metrics["specificity"]
-    balanced_accuracy = metrics["balanced_accuracy"]
-
-    for i in range(n_bootstrap_samples):
-        bootstrap_index = np.random.choice(
-            np.arange(N), size=N, replace=True, p=np.ones(N) / N
-        )
-        bootstrap_preds = preds[bootstrap_index]
-        bootstrap_labels = labels[bootstrap_index]
-
-        if bootstrap_labels.sum() == 0:
-            bootstrap_index = np.random.choice(
-                np.arange(N), size=N, replace=True, p=np.ones(N) / N
-            )
-
-        bootstrap_metrics = evaluate_classifier(
-            preds=bootstrap_preds,
-            labels=bootstrap_labels,
-            operating_point=operating_point,
-        )
-        arr_auc.append(bootstrap_metrics["auc"])
-        arr_sensitivity.append(bootstrap_metrics["sensitivity"])
-        arr_specificity.append(bootstrap_metrics["specificity"])
-        arr_balanced_accuracy.append(bootstrap_metrics["balanced_accuracy"])
-
-    std_auc = np.array(arr_auc).std()
-    std_sensitivity = np.array(arr_sensitivity).std()
-    std_specificity = np.array(arr_specificity).std()
-    std_balanced_accuracy = np.array(arr_balanced_accuracy).std()
-
-    print("operating point {}".format(operating_point))
-
-    return dict(
-        auc=auc,
-        std_auc=std_auc,
-        sensitivity=sensitivity,
-        std_sensitivity=std_sensitivity,
-        specificity=specificity,
-        std_specificity=std_specificity,
-        balanced_accuracy=balanced_accuracy,
-        std_balanced_accuracy=std_balanced_accuracy,
-        operating_point=operating_point,
-    )
-
-
-def classifier_metrics(
-    val_preds: torch.Tensor,
-    val_labels: torch.Tensor,
-    test_preds: torch.Tensor,
-    test_labels: torch.Tensor,
-    threshold: float,
-    n_bootstrap_samples: int,
-):
-    _, _, _, operating_point = get_operating_point(
-        preds=val_preds, labels=val_labels, operating_point=None, threshold=threshold
-    )
-
-    return (
-        operating_point,
-        get_bootstrap_estimates(
-            preds=test_preds, labels=test_labels, operating_point=operating_point
-        ),
-    )
+from metrics import compute_accuracy, evaluate_classifier
 
 
 def get_model(
@@ -170,6 +17,7 @@ def get_model(
     model_type: str,
     drop_prob: float,
     data_space: str,
+    output_type: str,
     activation_function: str,
     image_shape: Tuple[int, int],
     sequences: Optional[Tuple[str, str, str]] = None,
@@ -178,7 +26,7 @@ def get_model(
 ) -> nn.Module:
     if data_type == "knee":
         if model_type == "complex_preact_resnet18":
-            model18 = complex_resnet18_knee(activation_function=activation_function, image_shape=image_shape, drop_prob=drop_prob, data_space=data_space, return_features=return_features)
+            model18 = complex_resnet18_knee(activation_function=activation_function, output_type=output_type, image_shape=image_shape, drop_prob=drop_prob, data_space=data_space, return_features=return_features)
             print(summary(model18))
             return model18
     else:
@@ -193,15 +41,14 @@ class RSS(pl.LightningModule):
                  activation_function: str,
                  kspace_shape: Tuple[int, int],
                  image_shape: Tuple[int, int],
+                 output_type: str,
                  device: torch.device,
                  data_space: str,
-                 #label_names: str,
                  coil_type: str,
                  lr: float = 1e-5,
                  weight_decay: float = 1e-5,
                  lr_gamma: float = 0.1,
                  lr_step_size: int = 20,
-                 # dwi_kspace_shape: Optional[Tuple[int, int]] = None,
                  num_labels=4,
                  n_bootstrap_samples: int = 50,
                  sequences: Optional[Tuple[str, str, str]] = ["t2", "b50"],
@@ -217,7 +64,6 @@ class RSS(pl.LightningModule):
         # model type and parameters
         self.model_type = model_type
         self.drop_prob = drop_prob
-        #self.label_names = label_names
         self.num_labels = num_labels
 
         # optimizer parameters
@@ -235,6 +81,7 @@ class RSS(pl.LightningModule):
         self.return_features = return_features
         self.coil_type = coil_type
         self.activation_function = activation_function
+        self.output_type = output_type
 
         # get model depending on data and model type
         self.model = get_model(
@@ -242,6 +89,7 @@ class RSS(pl.LightningModule):
             activation_function=self.activation_function,
             model_type=self.model_type,
             drop_prob=self.drop_prob,
+            output_type=self.output_type,
             image_shape=self.image_shape,
             sequences=self.sequences,
             data_space=self.data_space,
@@ -258,7 +106,6 @@ class RSS(pl.LightningModule):
         elif self.coil_type == "sc_scaled":
             kspace = batch.sc_kspace_scaled
         kspace = kspace.to(device=self.device).type(torch.complex64)
-        # print("the kspace shape given to network is {} and dtype is {}".format(kspace.shape, kspace.dtype)) # torch.size([8, 1, 640, 400])
         return self.model(kspace.unsqueeze(1))
 
     def loss_fn(self, preds: torch.Tensor, labels: torch.Tensor) -> torch.Tensor:
