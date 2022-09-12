@@ -1,0 +1,349 @@
+,index,volume_id,slice_id,labels,shape,dataset,data_type,data_split,location
+0,knee_knee_singlecoil_file1000631_1,file1000631,1,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000631/knee_singlecoil_file1000631_1.h5
+1,knee_knee_singlecoil_file1000631_27,file1000631,27,"['Periarticular cysts', 'Meniscus Tear']","(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000631/knee_singlecoil_file1000631_27.h5
+2,knee_knee_singlecoil_file1000631_13,file1000631,13,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000631/knee_singlecoil_file1000631_13.h5
+3,knee_knee_singlecoil_file1000631_37,file1000631,37,['Periarticular cysts'],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000631/knee_singlecoil_file1000631_37.h5
+4,knee_knee_singlecoil_file1000631_17,file1000631,17,"['Bone-Fracture/Contusion/dislocation', 'Patellar Retinaculum - High grade sprain']","(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000631/knee_singlecoil_file1000631_17.h5
+5,knee_knee_singlecoil_file1000631_23,file1000631,23,['Meniscus Tear'],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000631/knee_singlecoil_file1000631_23.h5
+6,knee_knee_singlecoil_file1000631_5,file1000631,5,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000631/knee_singlecoil_file1000631_5.h5
+7,knee_knee_singlecoil_file1000631_33,file1000631,33,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000631/knee_singlecoil_file1000631_33.h5
+8,knee_knee_singlecoil_file1000631_16,file1000631,16,"['Bone-Fracture/Contusion/dislocation', 'Patellar Retinaculum - High grade sprain']","(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000631/knee_singlecoil_file1000631_16.h5
+9,knee_knee_singlecoil_file1000631_4,file1000631,4,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000631/knee_singlecoil_file1000631_4.h5
+10,knee_knee_singlecoil_file1000631_22,file1000631,22,['Meniscus Tear'],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000631/knee_singlecoil_file1000631_22.h5
+11,knee_knee_singlecoil_file1000631_32,file1000631,32,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000631/knee_singlecoil_file1000631_32.h5
+12,knee_knee_singlecoil_file1000631_26,file1000631,26,"['Periarticular cysts', 'Meniscus Tear']","(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000631/knee_singlecoil_file1000631_26.h5
+13,knee_knee_singlecoil_file1000631_0,file1000631,0,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000631/knee_singlecoil_file1000631_0.h5
+14,knee_knee_singlecoil_file1000631_12,file1000631,12,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000631/knee_singlecoil_file1000631_12.h5
+15,knee_knee_singlecoil_file1000631_36,file1000631,36,['Periarticular cysts'],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000631/knee_singlecoil_file1000631_36.h5
+16,knee_knee_singlecoil_file1000631_19,file1000631,19,"['Bone-Fracture/Contusion/dislocation', 'Patellar Retinaculum - High grade sprain']","(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000631/knee_singlecoil_file1000631_19.h5
+17,knee_knee_singlecoil_file1000631_29,file1000631,29,['Meniscus Tear'],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000631/knee_singlecoil_file1000631_29.h5
+18,knee_knee_singlecoil_file1000631_39,file1000631,39,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000631/knee_singlecoil_file1000631_39.h5
+19,knee_knee_singlecoil_file1000631_28,file1000631,28,['Meniscus Tear'],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000631/knee_singlecoil_file1000631_28.h5
+20,knee_knee_singlecoil_file1000631_38,file1000631,38,['Periarticular cysts'],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000631/knee_singlecoil_file1000631_38.h5
+21,knee_knee_singlecoil_file1000631_18,file1000631,18,"['Bone-Fracture/Contusion/dislocation', 'Patellar Retinaculum - High grade sprain']","(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000631/knee_singlecoil_file1000631_18.h5
+22,knee_knee_singlecoil_file1000631_9,file1000631,9,['Bone-Fracture/Contusion/dislocation'],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000631/knee_singlecoil_file1000631_9.h5
+23,knee_knee_singlecoil_file1000631_8,file1000631,8,['Bone-Fracture/Contusion/dislocation'],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000631/knee_singlecoil_file1000631_8.h5
+24,knee_knee_singlecoil_file1000631_15,file1000631,15,"['Bone-Fracture/Contusion/dislocation', 'Patellar Retinaculum - High grade sprain']","(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000631/knee_singlecoil_file1000631_15.h5
+25,knee_knee_singlecoil_file1000631_7,file1000631,7,['Bone-Fracture/Contusion/dislocation'],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000631/knee_singlecoil_file1000631_7.h5
+26,knee_knee_singlecoil_file1000631_21,file1000631,21,"['Patellar Retinaculum - High grade sprain', 'Bone-Fracture/Contusion/dislocation', 'Meniscus Tear']","(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000631/knee_singlecoil_file1000631_21.h5
+27,knee_knee_singlecoil_file1000631_31,file1000631,31,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000631/knee_singlecoil_file1000631_31.h5
+28,knee_knee_singlecoil_file1000631_25,file1000631,25,['Meniscus Tear'],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000631/knee_singlecoil_file1000631_25.h5
+29,knee_knee_singlecoil_file1000631_3,file1000631,3,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000631/knee_singlecoil_file1000631_3.h5
+30,knee_knee_singlecoil_file1000631_11,file1000631,11,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000631/knee_singlecoil_file1000631_11.h5
+31,knee_knee_singlecoil_file1000631_35,file1000631,35,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000631/knee_singlecoil_file1000631_35.h5
+32,knee_knee_singlecoil_file1000631_2,file1000631,2,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000631/knee_singlecoil_file1000631_2.h5
+33,knee_knee_singlecoil_file1000631_24,file1000631,24,"['Bone-Fracture/Contusion/dislocation', 'Meniscus Tear']","(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000631/knee_singlecoil_file1000631_24.h5
+34,knee_knee_singlecoil_file1000631_10,file1000631,10,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000631/knee_singlecoil_file1000631_10.h5
+35,knee_knee_singlecoil_file1000631_34,file1000631,34,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000631/knee_singlecoil_file1000631_34.h5
+36,knee_knee_singlecoil_file1000631_14,file1000631,14,['Patellar Retinaculum - High grade sprain'],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000631/knee_singlecoil_file1000631_14.h5
+37,knee_knee_singlecoil_file1000631_20,file1000631,20,"['Patellar Retinaculum - High grade sprain', 'Bone-Fracture/Contusion/dislocation', 'Meniscus Tear']","(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000631/knee_singlecoil_file1000631_20.h5
+38,knee_knee_singlecoil_file1000631_6,file1000631,6,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000631/knee_singlecoil_file1000631_6.h5
+39,knee_knee_singlecoil_file1000631_30,file1000631,30,['Meniscus Tear'],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000631/knee_singlecoil_file1000631_30.h5
+40,knee_knee_singlecoil_file1000899_23,file1000899,23,"['Bone- Subchondral edema', 'Meniscus Tear']","(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000899/knee_singlecoil_file1000899_23.h5
+41,knee_knee_singlecoil_file1000899_17,file1000899,17,"['Bone- Subchondral edema', 'Cartilage - Full Thickness loss/defect', 'Cartilage - Partial Thickness loss/defect', 'Meniscus Tear']","(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000899/knee_singlecoil_file1000899_17.h5
+42,knee_knee_singlecoil_file1000899_13,file1000899,13,"['Cartilage - Partial Thickness loss/defect', 'Meniscus Tear']","(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000899/knee_singlecoil_file1000899_13.h5
+43,knee_knee_singlecoil_file1000899_27,file1000899,27,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000899/knee_singlecoil_file1000899_27.h5
+44,knee_knee_singlecoil_file1000899_12,file1000899,12,['Meniscus Tear'],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000899/knee_singlecoil_file1000899_12.h5
+45,knee_knee_singlecoil_file1000899_26,file1000899,26,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000899/knee_singlecoil_file1000899_26.h5
+46,knee_knee_singlecoil_file1000899_22,file1000899,22,"['Bone- Subchondral edema', 'Cartilage - Partial Thickness loss/defect', 'Meniscus Tear']","(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000899/knee_singlecoil_file1000899_22.h5
+47,knee_knee_singlecoil_file1000899_16,file1000899,16,"['Bone- Subchondral edema', 'Cartilage - Full Thickness loss/defect', 'Cartilage - Partial Thickness loss/defect', 'Meniscus Tear']","(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000899/knee_singlecoil_file1000899_16.h5
+48,knee_knee_singlecoil_file1000899_32,file1000899,32,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000899/knee_singlecoil_file1000899_32.h5
+49,knee_knee_singlecoil_file1000899_29,file1000899,29,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000899/knee_singlecoil_file1000899_29.h5
+50,knee_knee_singlecoil_file1000899_4,file1000899,4,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000899/knee_singlecoil_file1000899_4.h5
+51,knee_knee_singlecoil_file1000899_19,file1000899,19,"['Bone- Subchondral edema', 'Cartilage - Full Thickness loss/defect', 'Cartilage - Partial Thickness loss/defect', 'Meniscus Tear']","(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000899/knee_singlecoil_file1000899_19.h5
+52,knee_knee_singlecoil_file1000899_0,file1000899,0,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000899/knee_singlecoil_file1000899_0.h5
+53,knee_knee_singlecoil_file1000899_18,file1000899,18,"['Bone- Subchondral edema', 'Cartilage - Full Thickness loss/defect', 'Cartilage - Partial Thickness loss/defect', 'Meniscus Tear']","(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000899/knee_singlecoil_file1000899_18.h5
+54,knee_knee_singlecoil_file1000899_1,file1000899,1,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000899/knee_singlecoil_file1000899_1.h5
+55,knee_knee_singlecoil_file1000899_28,file1000899,28,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000899/knee_singlecoil_file1000899_28.h5
+56,knee_knee_singlecoil_file1000899_5,file1000899,5,['Bone- Subchondral edema'],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000899/knee_singlecoil_file1000899_5.h5
+57,knee_knee_singlecoil_file1000899_2,file1000899,2,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000899/knee_singlecoil_file1000899_2.h5
+58,knee_knee_singlecoil_file1000899_6,file1000899,6,['Bone- Subchondral edema'],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000899/knee_singlecoil_file1000899_6.h5
+59,knee_knee_singlecoil_file1000899_7,file1000899,7,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000899/knee_singlecoil_file1000899_7.h5
+60,knee_knee_singlecoil_file1000899_3,file1000899,3,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000899/knee_singlecoil_file1000899_3.h5
+61,knee_knee_singlecoil_file1000899_11,file1000899,11,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000899/knee_singlecoil_file1000899_11.h5
+62,knee_knee_singlecoil_file1000899_8,file1000899,8,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000899/knee_singlecoil_file1000899_8.h5
+63,knee_knee_singlecoil_file1000899_25,file1000899,25,['Bone- Subchondral edema'],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000899/knee_singlecoil_file1000899_25.h5
+64,knee_knee_singlecoil_file1000899_21,file1000899,21,"['Bone- Subchondral edema', 'Cartilage - Full Thickness loss/defect', 'Cartilage - Partial Thickness loss/defect', 'Meniscus Tear']","(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000899/knee_singlecoil_file1000899_21.h5
+65,knee_knee_singlecoil_file1000899_15,file1000899,15,"['Bone- Subchondral edema', 'Cartilage - Full Thickness loss/defect', 'Cartilage - Partial Thickness loss/defect', 'Meniscus Tear']","(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000899/knee_singlecoil_file1000899_15.h5
+66,knee_knee_singlecoil_file1000899_31,file1000899,31,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000899/knee_singlecoil_file1000899_31.h5
+67,knee_knee_singlecoil_file1000899_20,file1000899,20,"['Bone- Subchondral edema', 'Cartilage - Full Thickness loss/defect', 'Cartilage - Partial Thickness loss/defect', 'Meniscus Tear']","(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000899/knee_singlecoil_file1000899_20.h5
+68,knee_knee_singlecoil_file1000899_14,file1000899,14,"['Bone- Subchondral edema', 'Cartilage - Partial Thickness loss/defect', 'Meniscus Tear']","(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000899/knee_singlecoil_file1000899_14.h5
+69,knee_knee_singlecoil_file1000899_30,file1000899,30,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000899/knee_singlecoil_file1000899_30.h5
+70,knee_knee_singlecoil_file1000899_10,file1000899,10,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000899/knee_singlecoil_file1000899_10.h5
+71,knee_knee_singlecoil_file1000899_9,file1000899,9,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000899/knee_singlecoil_file1000899_9.h5
+72,knee_knee_singlecoil_file1000899_24,file1000899,24,"['Bone- Subchondral edema', 'Meniscus Tear']","(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000899/knee_singlecoil_file1000899_24.h5
+73,knee_knee_singlecoil_file1001523_1,file1001523,1,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1001523/knee_singlecoil_file1001523_1.h5
+74,knee_knee_singlecoil_file1001523_25,file1001523,25,"['Cartilage - Partial Thickness loss/defect', 'Meniscus Tear']","(640, 400)",knee,orignial,val_class,./knee/generated_files/file1001523/knee_singlecoil_file1001523_25.h5
+75,knee_knee_singlecoil_file1001523_11,file1001523,11,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1001523/knee_singlecoil_file1001523_11.h5
+76,knee_knee_singlecoil_file1001523_5,file1001523,5,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1001523/knee_singlecoil_file1001523_5.h5
+77,knee_knee_singlecoil_file1001523_15,file1001523,15,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1001523/knee_singlecoil_file1001523_15.h5
+78,knee_knee_singlecoil_file1001523_21,file1001523,21,"['Cartilage - Partial Thickness loss/defect', 'Meniscus Tear']","(640, 400)",knee,orignial,val_class,./knee/generated_files/file1001523/knee_singlecoil_file1001523_21.h5
+79,knee_knee_singlecoil_file1001523_31,file1001523,31,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1001523/knee_singlecoil_file1001523_31.h5
+80,knee_knee_singlecoil_file1001523_4,file1001523,4,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1001523/knee_singlecoil_file1001523_4.h5
+81,knee_knee_singlecoil_file1001523_14,file1001523,14,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1001523/knee_singlecoil_file1001523_14.h5
+82,knee_knee_singlecoil_file1001523_20,file1001523,20,['Meniscus Tear'],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1001523/knee_singlecoil_file1001523_20.h5
+83,knee_knee_singlecoil_file1001523_30,file1001523,30,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1001523/knee_singlecoil_file1001523_30.h5
+84,knee_knee_singlecoil_file1001523_0,file1001523,0,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1001523/knee_singlecoil_file1001523_0.h5
+85,knee_knee_singlecoil_file1001523_24,file1001523,24,['Meniscus Tear'],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1001523/knee_singlecoil_file1001523_24.h5
+86,knee_knee_singlecoil_file1001523_10,file1001523,10,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1001523/knee_singlecoil_file1001523_10.h5
+87,knee_knee_singlecoil_file1001523_29,file1001523,29,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1001523/knee_singlecoil_file1001523_29.h5
+88,knee_knee_singlecoil_file1001523_19,file1001523,19,['Meniscus Tear'],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1001523/knee_singlecoil_file1001523_19.h5
+89,knee_knee_singlecoil_file1001523_9,file1001523,9,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1001523/knee_singlecoil_file1001523_9.h5
+90,knee_knee_singlecoil_file1001523_18,file1001523,18,"['Cartilage - Partial Thickness loss/defect', 'Meniscus Tear']","(640, 400)",knee,orignial,val_class,./knee/generated_files/file1001523/knee_singlecoil_file1001523_18.h5
+91,knee_knee_singlecoil_file1001523_8,file1001523,8,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1001523/knee_singlecoil_file1001523_8.h5
+92,knee_knee_singlecoil_file1001523_28,file1001523,28,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1001523/knee_singlecoil_file1001523_28.h5
+93,knee_knee_singlecoil_file1001523_7,file1001523,7,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1001523/knee_singlecoil_file1001523_7.h5
+94,knee_knee_singlecoil_file1001523_17,file1001523,17,"['Cartilage - Partial Thickness loss/defect', 'Meniscus Tear']","(640, 400)",knee,orignial,val_class,./knee/generated_files/file1001523/knee_singlecoil_file1001523_17.h5
+95,knee_knee_singlecoil_file1001523_23,file1001523,23,"['Cartilage - Partial Thickness loss/defect', 'Meniscus Tear']","(640, 400)",knee,orignial,val_class,./knee/generated_files/file1001523/knee_singlecoil_file1001523_23.h5
+96,knee_knee_singlecoil_file1001523_3,file1001523,3,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1001523/knee_singlecoil_file1001523_3.h5
+97,knee_knee_singlecoil_file1001523_27,file1001523,27,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1001523/knee_singlecoil_file1001523_27.h5
+98,knee_knee_singlecoil_file1001523_13,file1001523,13,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1001523/knee_singlecoil_file1001523_13.h5
+99,knee_knee_singlecoil_file1001523_2,file1001523,2,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1001523/knee_singlecoil_file1001523_2.h5
+100,knee_knee_singlecoil_file1001523_26,file1001523,26,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1001523/knee_singlecoil_file1001523_26.h5
+101,knee_knee_singlecoil_file1001523_12,file1001523,12,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1001523/knee_singlecoil_file1001523_12.h5
+102,knee_knee_singlecoil_file1001523_6,file1001523,6,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1001523/knee_singlecoil_file1001523_6.h5
+103,knee_knee_singlecoil_file1001523_16,file1001523,16,['Cartilage - Partial Thickness loss/defect'],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1001523/knee_singlecoil_file1001523_16.h5
+104,knee_knee_singlecoil_file1001523_22,file1001523,22,"['Cartilage - Partial Thickness loss/defect', 'Meniscus Tear']","(640, 400)",knee,orignial,val_class,./knee/generated_files/file1001523/knee_singlecoil_file1001523_22.h5
+105,knee_knee_singlecoil_file1001523_32,file1001523,32,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1001523/knee_singlecoil_file1001523_32.h5
+106,knee_knee_singlecoil_file1002517_20,file1002517,20,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002517/knee_singlecoil_file1002517_20.h5
+107,knee_knee_singlecoil_file1002517_14,file1002517,14,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002517/knee_singlecoil_file1002517_14.h5
+108,knee_knee_singlecoil_file1002517_30,file1002517,30,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002517/knee_singlecoil_file1002517_30.h5
+109,knee_knee_singlecoil_file1002517_10,file1002517,10,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002517/knee_singlecoil_file1002517_10.h5
+110,knee_knee_singlecoil_file1002517_24,file1002517,24,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002517/knee_singlecoil_file1002517_24.h5
+111,knee_knee_singlecoil_file1002517_9,file1002517,9,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002517/knee_singlecoil_file1002517_9.h5
+112,knee_knee_singlecoil_file1002517_11,file1002517,11,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002517/knee_singlecoil_file1002517_11.h5
+113,knee_knee_singlecoil_file1002517_25,file1002517,25,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002517/knee_singlecoil_file1002517_25.h5
+114,knee_knee_singlecoil_file1002517_8,file1002517,8,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002517/knee_singlecoil_file1002517_8.h5
+115,knee_knee_singlecoil_file1002517_21,file1002517,21,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002517/knee_singlecoil_file1002517_21.h5
+116,knee_knee_singlecoil_file1002517_15,file1002517,15,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002517/knee_singlecoil_file1002517_15.h5
+117,knee_knee_singlecoil_file1002517_31,file1002517,31,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002517/knee_singlecoil_file1002517_31.h5
+118,knee_knee_singlecoil_file1002517_7,file1002517,7,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002517/knee_singlecoil_file1002517_7.h5
+119,knee_knee_singlecoil_file1002517_3,file1002517,3,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002517/knee_singlecoil_file1002517_3.h5
+120,knee_knee_singlecoil_file1002517_2,file1002517,2,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002517/knee_singlecoil_file1002517_2.h5
+121,knee_knee_singlecoil_file1002517_6,file1002517,6,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002517/knee_singlecoil_file1002517_6.h5
+122,knee_knee_singlecoil_file1002517_1,file1002517,1,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002517/knee_singlecoil_file1002517_1.h5
+123,knee_knee_singlecoil_file1002517_18,file1002517,18,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002517/knee_singlecoil_file1002517_18.h5
+124,knee_knee_singlecoil_file1002517_5,file1002517,5,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002517/knee_singlecoil_file1002517_5.h5
+125,knee_knee_singlecoil_file1002517_28,file1002517,28,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002517/knee_singlecoil_file1002517_28.h5
+126,knee_knee_singlecoil_file1002517_4,file1002517,4,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002517/knee_singlecoil_file1002517_4.h5
+127,knee_knee_singlecoil_file1002517_29,file1002517,29,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002517/knee_singlecoil_file1002517_29.h5
+128,knee_knee_singlecoil_file1002517_0,file1002517,0,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002517/knee_singlecoil_file1002517_0.h5
+129,knee_knee_singlecoil_file1002517_19,file1002517,19,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002517/knee_singlecoil_file1002517_19.h5
+130,knee_knee_singlecoil_file1002517_12,file1002517,12,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002517/knee_singlecoil_file1002517_12.h5
+131,knee_knee_singlecoil_file1002517_26,file1002517,26,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002517/knee_singlecoil_file1002517_26.h5
+132,knee_knee_singlecoil_file1002517_22,file1002517,22,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002517/knee_singlecoil_file1002517_22.h5
+133,knee_knee_singlecoil_file1002517_16,file1002517,16,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002517/knee_singlecoil_file1002517_16.h5
+134,knee_knee_singlecoil_file1002517_32,file1002517,32,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002517/knee_singlecoil_file1002517_32.h5
+135,knee_knee_singlecoil_file1002517_23,file1002517,23,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002517/knee_singlecoil_file1002517_23.h5
+136,knee_knee_singlecoil_file1002517_17,file1002517,17,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002517/knee_singlecoil_file1002517_17.h5
+137,knee_knee_singlecoil_file1002517_13,file1002517,13,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002517/knee_singlecoil_file1002517_13.h5
+138,knee_knee_singlecoil_file1002517_27,file1002517,27,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002517/knee_singlecoil_file1002517_27.h5
+139,knee_knee_singlecoil_file1000031_34,file1000031,34,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000031/knee_singlecoil_file1000031_34.h5
+140,knee_knee_singlecoil_file1000031_10,file1000031,10,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000031/knee_singlecoil_file1000031_10.h5
+141,knee_knee_singlecoil_file1000031_24,file1000031,24,['Cartilage - Partial Thickness loss/defect'],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000031/knee_singlecoil_file1000031_24.h5
+142,knee_knee_singlecoil_file1000031_5,file1000031,5,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000031/knee_singlecoil_file1000031_5.h5
+143,knee_knee_singlecoil_file1000031_30,file1000031,30,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000031/knee_singlecoil_file1000031_30.h5
+144,knee_knee_singlecoil_file1000031_20,file1000031,20,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000031/knee_singlecoil_file1000031_20.h5
+145,knee_knee_singlecoil_file1000031_14,file1000031,14,"['Cartilage - Full Thickness loss/defect', 'Cartilage - Partial Thickness loss/defect', 'Bone- Subchondral edema']","(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000031/knee_singlecoil_file1000031_14.h5
+146,knee_knee_singlecoil_file1000031_1,file1000031,1,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000031/knee_singlecoil_file1000031_1.h5
+147,knee_knee_singlecoil_file1000031_31,file1000031,31,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000031/knee_singlecoil_file1000031_31.h5
+148,knee_knee_singlecoil_file1000031_21,file1000031,21,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000031/knee_singlecoil_file1000031_21.h5
+149,knee_knee_singlecoil_file1000031_15,file1000031,15,"['Cartilage - Full Thickness loss/defect', 'Bone- Subchondral edema']","(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000031/knee_singlecoil_file1000031_15.h5
+150,knee_knee_singlecoil_file1000031_0,file1000031,0,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000031/knee_singlecoil_file1000031_0.h5
+151,knee_knee_singlecoil_file1000031_35,file1000031,35,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000031/knee_singlecoil_file1000031_35.h5
+152,knee_knee_singlecoil_file1000031_11,file1000031,11,['Bone- Subchondral edema'],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000031/knee_singlecoil_file1000031_11.h5
+153,knee_knee_singlecoil_file1000031_25,file1000031,25,"['Cartilage - Partial Thickness loss/defect', 'Meniscus Tear']","(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000031/knee_singlecoil_file1000031_25.h5
+154,knee_knee_singlecoil_file1000031_4,file1000031,4,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000031/knee_singlecoil_file1000031_4.h5
+155,knee_knee_singlecoil_file1000031_32,file1000031,32,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000031/knee_singlecoil_file1000031_32.h5
+156,knee_knee_singlecoil_file1000031_22,file1000031,22,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000031/knee_singlecoil_file1000031_22.h5
+157,knee_knee_singlecoil_file1000031_16,file1000031,16,['Bone- Subchondral edema'],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000031/knee_singlecoil_file1000031_16.h5
+158,knee_knee_singlecoil_file1000031_3,file1000031,3,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000031/knee_singlecoil_file1000031_3.h5
+159,knee_knee_singlecoil_file1000031_36,file1000031,36,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000031/knee_singlecoil_file1000031_36.h5
+160,knee_knee_singlecoil_file1000031_12,file1000031,12,['Bone- Subchondral edema'],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000031/knee_singlecoil_file1000031_12.h5
+161,knee_knee_singlecoil_file1000031_26,file1000031,26,['Cartilage - Partial Thickness loss/defect'],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000031/knee_singlecoil_file1000031_26.h5
+162,knee_knee_singlecoil_file1000031_7,file1000031,7,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000031/knee_singlecoil_file1000031_7.h5
+163,knee_knee_singlecoil_file1000031_37,file1000031,37,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000031/knee_singlecoil_file1000031_37.h5
+164,knee_knee_singlecoil_file1000031_13,file1000031,13,"['Cartilage - Full Thickness loss/defect', 'Bone- Subchondral edema']","(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000031/knee_singlecoil_file1000031_13.h5
+165,knee_knee_singlecoil_file1000031_27,file1000031,27,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000031/knee_singlecoil_file1000031_27.h5
+166,knee_knee_singlecoil_file1000031_6,file1000031,6,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000031/knee_singlecoil_file1000031_6.h5
+167,knee_knee_singlecoil_file1000031_33,file1000031,33,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000031/knee_singlecoil_file1000031_33.h5
+168,knee_knee_singlecoil_file1000031_23,file1000031,23,['Cartilage - Partial Thickness loss/defect'],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000031/knee_singlecoil_file1000031_23.h5
+169,knee_knee_singlecoil_file1000031_17,file1000031,17,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000031/knee_singlecoil_file1000031_17.h5
+170,knee_knee_singlecoil_file1000031_2,file1000031,2,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000031/knee_singlecoil_file1000031_2.h5
+171,knee_knee_singlecoil_file1000031_38,file1000031,38,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000031/knee_singlecoil_file1000031_38.h5
+172,knee_knee_singlecoil_file1000031_9,file1000031,9,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000031/knee_singlecoil_file1000031_9.h5
+173,knee_knee_singlecoil_file1000031_28,file1000031,28,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000031/knee_singlecoil_file1000031_28.h5
+174,knee_knee_singlecoil_file1000031_18,file1000031,18,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000031/knee_singlecoil_file1000031_18.h5
+175,knee_knee_singlecoil_file1000031_19,file1000031,19,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000031/knee_singlecoil_file1000031_19.h5
+176,knee_knee_singlecoil_file1000031_39,file1000031,39,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000031/knee_singlecoil_file1000031_39.h5
+177,knee_knee_singlecoil_file1000031_8,file1000031,8,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000031/knee_singlecoil_file1000031_8.h5
+178,knee_knee_singlecoil_file1000031_29,file1000031,29,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1000031/knee_singlecoil_file1000031_29.h5
+179,knee_knee_singlecoil_file1001437_19,file1001437,19,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001437/knee_singlecoil_file1001437_19.h5
+180,knee_knee_singlecoil_file1001437_29,file1001437,29,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001437/knee_singlecoil_file1001437_29.h5
+181,knee_knee_singlecoil_file1001437_28,file1001437,28,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001437/knee_singlecoil_file1001437_28.h5
+182,knee_knee_singlecoil_file1001437_18,file1001437,18,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001437/knee_singlecoil_file1001437_18.h5
+183,knee_knee_singlecoil_file1001437_5,file1001437,5,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001437/knee_singlecoil_file1001437_5.h5
+184,knee_knee_singlecoil_file1001437_13,file1001437,13,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001437/knee_singlecoil_file1001437_13.h5
+185,knee_knee_singlecoil_file1001437_27,file1001437,27,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001437/knee_singlecoil_file1001437_27.h5
+186,knee_knee_singlecoil_file1001437_1,file1001437,1,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001437/knee_singlecoil_file1001437_1.h5
+187,knee_knee_singlecoil_file1001437_23,file1001437,23,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001437/knee_singlecoil_file1001437_23.h5
+188,knee_knee_singlecoil_file1001437_17,file1001437,17,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001437/knee_singlecoil_file1001437_17.h5
+189,knee_knee_singlecoil_file1001437_0,file1001437,0,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001437/knee_singlecoil_file1001437_0.h5
+190,knee_knee_singlecoil_file1001437_22,file1001437,22,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001437/knee_singlecoil_file1001437_22.h5
+191,knee_knee_singlecoil_file1001437_16,file1001437,16,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001437/knee_singlecoil_file1001437_16.h5
+192,knee_knee_singlecoil_file1001437_4,file1001437,4,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001437/knee_singlecoil_file1001437_4.h5
+193,knee_knee_singlecoil_file1001437_12,file1001437,12,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001437/knee_singlecoil_file1001437_12.h5
+194,knee_knee_singlecoil_file1001437_26,file1001437,26,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001437/knee_singlecoil_file1001437_26.h5
+195,knee_knee_singlecoil_file1001437_3,file1001437,3,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001437/knee_singlecoil_file1001437_3.h5
+196,knee_knee_singlecoil_file1001437_21,file1001437,21,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001437/knee_singlecoil_file1001437_21.h5
+197,knee_knee_singlecoil_file1001437_15,file1001437,15,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001437/knee_singlecoil_file1001437_15.h5
+198,knee_knee_singlecoil_file1001437_7,file1001437,7,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001437/knee_singlecoil_file1001437_7.h5
+199,knee_knee_singlecoil_file1001437_11,file1001437,11,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001437/knee_singlecoil_file1001437_11.h5
+200,knee_knee_singlecoil_file1001437_25,file1001437,25,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001437/knee_singlecoil_file1001437_25.h5
+201,knee_knee_singlecoil_file1001437_6,file1001437,6,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001437/knee_singlecoil_file1001437_6.h5
+202,knee_knee_singlecoil_file1001437_10,file1001437,10,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001437/knee_singlecoil_file1001437_10.h5
+203,knee_knee_singlecoil_file1001437_24,file1001437,24,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001437/knee_singlecoil_file1001437_24.h5
+204,knee_knee_singlecoil_file1001437_2,file1001437,2,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001437/knee_singlecoil_file1001437_2.h5
+205,knee_knee_singlecoil_file1001437_20,file1001437,20,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001437/knee_singlecoil_file1001437_20.h5
+206,knee_knee_singlecoil_file1001437_14,file1001437,14,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001437/knee_singlecoil_file1001437_14.h5
+207,knee_knee_singlecoil_file1001437_9,file1001437,9,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001437/knee_singlecoil_file1001437_9.h5
+208,knee_knee_singlecoil_file1001437_8,file1001437,8,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001437/knee_singlecoil_file1001437_8.h5
+209,knee_knee_singlecoil_file1000477_32,file1000477,32,[None],"(640, 400)",knee,orignial,test_class,./knee/generated_files/file1000477/knee_singlecoil_file1000477_32.h5
+210,knee_knee_singlecoil_file1000477_22,file1000477,22,['Cartilage - Partial Thickness loss/defect'],"(640, 400)",knee,orignial,test_class,./knee/generated_files/file1000477/knee_singlecoil_file1000477_22.h5
+211,knee_knee_singlecoil_file1000477_16,file1000477,16,[None],"(640, 400)",knee,orignial,test_class,./knee/generated_files/file1000477/knee_singlecoil_file1000477_16.h5
+212,knee_knee_singlecoil_file1000477_12,file1000477,12,[None],"(640, 400)",knee,orignial,test_class,./knee/generated_files/file1000477/knee_singlecoil_file1000477_12.h5
+213,knee_knee_singlecoil_file1000477_26,file1000477,26,[None],"(640, 400)",knee,orignial,test_class,./knee/generated_files/file1000477/knee_singlecoil_file1000477_26.h5
+214,knee_knee_singlecoil_file1000477_13,file1000477,13,[None],"(640, 400)",knee,orignial,test_class,./knee/generated_files/file1000477/knee_singlecoil_file1000477_13.h5
+215,knee_knee_singlecoil_file1000477_27,file1000477,27,[None],"(640, 400)",knee,orignial,test_class,./knee/generated_files/file1000477/knee_singlecoil_file1000477_27.h5
+216,knee_knee_singlecoil_file1000477_23,file1000477,23,[None],"(640, 400)",knee,orignial,test_class,./knee/generated_files/file1000477/knee_singlecoil_file1000477_23.h5
+217,knee_knee_singlecoil_file1000477_17,file1000477,17,[None],"(640, 400)",knee,orignial,test_class,./knee/generated_files/file1000477/knee_singlecoil_file1000477_17.h5
+218,knee_knee_singlecoil_file1000477_5,file1000477,5,[None],"(640, 400)",knee,orignial,test_class,./knee/generated_files/file1000477/knee_singlecoil_file1000477_5.h5
+219,knee_knee_singlecoil_file1000477_28,file1000477,28,[None],"(640, 400)",knee,orignial,test_class,./knee/generated_files/file1000477/knee_singlecoil_file1000477_28.h5
+220,knee_knee_singlecoil_file1000477_1,file1000477,1,[None],"(640, 400)",knee,orignial,test_class,./knee/generated_files/file1000477/knee_singlecoil_file1000477_1.h5
+221,knee_knee_singlecoil_file1000477_18,file1000477,18,['Meniscus Tear'],"(640, 400)",knee,orignial,test_class,./knee/generated_files/file1000477/knee_singlecoil_file1000477_18.h5
+222,knee_knee_singlecoil_file1000477_0,file1000477,0,[None],"(640, 400)",knee,orignial,test_class,./knee/generated_files/file1000477/knee_singlecoil_file1000477_0.h5
+223,knee_knee_singlecoil_file1000477_19,file1000477,19,['Meniscus Tear'],"(640, 400)",knee,orignial,test_class,./knee/generated_files/file1000477/knee_singlecoil_file1000477_19.h5
+224,knee_knee_singlecoil_file1000477_4,file1000477,4,[None],"(640, 400)",knee,orignial,test_class,./knee/generated_files/file1000477/knee_singlecoil_file1000477_4.h5
+225,knee_knee_singlecoil_file1000477_29,file1000477,29,[None],"(640, 400)",knee,orignial,test_class,./knee/generated_files/file1000477/knee_singlecoil_file1000477_29.h5
+226,knee_knee_singlecoil_file1000477_3,file1000477,3,[None],"(640, 400)",knee,orignial,test_class,./knee/generated_files/file1000477/knee_singlecoil_file1000477_3.h5
+227,knee_knee_singlecoil_file1000477_7,file1000477,7,[None],"(640, 400)",knee,orignial,test_class,./knee/generated_files/file1000477/knee_singlecoil_file1000477_7.h5
+228,knee_knee_singlecoil_file1000477_6,file1000477,6,[None],"(640, 400)",knee,orignial,test_class,./knee/generated_files/file1000477/knee_singlecoil_file1000477_6.h5
+229,knee_knee_singlecoil_file1000477_2,file1000477,2,[None],"(640, 400)",knee,orignial,test_class,./knee/generated_files/file1000477/knee_singlecoil_file1000477_2.h5
+230,knee_knee_singlecoil_file1000477_10,file1000477,10,[None],"(640, 400)",knee,orignial,test_class,./knee/generated_files/file1000477/knee_singlecoil_file1000477_10.h5
+231,knee_knee_singlecoil_file1000477_24,file1000477,24,[None],"(640, 400)",knee,orignial,test_class,./knee/generated_files/file1000477/knee_singlecoil_file1000477_24.h5
+232,knee_knee_singlecoil_file1000477_9,file1000477,9,[None],"(640, 400)",knee,orignial,test_class,./knee/generated_files/file1000477/knee_singlecoil_file1000477_9.h5
+233,knee_knee_singlecoil_file1000477_30,file1000477,30,[None],"(640, 400)",knee,orignial,test_class,./knee/generated_files/file1000477/knee_singlecoil_file1000477_30.h5
+234,knee_knee_singlecoil_file1000477_20,file1000477,20,['Meniscus Tear'],"(640, 400)",knee,orignial,test_class,./knee/generated_files/file1000477/knee_singlecoil_file1000477_20.h5
+235,knee_knee_singlecoil_file1000477_14,file1000477,14,[None],"(640, 400)",knee,orignial,test_class,./knee/generated_files/file1000477/knee_singlecoil_file1000477_14.h5
+236,knee_knee_singlecoil_file1000477_31,file1000477,31,[None],"(640, 400)",knee,orignial,test_class,./knee/generated_files/file1000477/knee_singlecoil_file1000477_31.h5
+237,knee_knee_singlecoil_file1000477_21,file1000477,21,"['Cartilage - Partial Thickness loss/defect', 'Meniscus Tear']","(640, 400)",knee,orignial,test_class,./knee/generated_files/file1000477/knee_singlecoil_file1000477_21.h5
+238,knee_knee_singlecoil_file1000477_15,file1000477,15,[None],"(640, 400)",knee,orignial,test_class,./knee/generated_files/file1000477/knee_singlecoil_file1000477_15.h5
+239,knee_knee_singlecoil_file1000477_11,file1000477,11,[None],"(640, 400)",knee,orignial,test_class,./knee/generated_files/file1000477/knee_singlecoil_file1000477_11.h5
+240,knee_knee_singlecoil_file1000477_25,file1000477,25,[None],"(640, 400)",knee,orignial,test_class,./knee/generated_files/file1000477/knee_singlecoil_file1000477_25.h5
+241,knee_knee_singlecoil_file1000477_8,file1000477,8,[None],"(640, 400)",knee,orignial,test_class,./knee/generated_files/file1000477/knee_singlecoil_file1000477_8.h5
+242,knee_knee_singlecoil_file1002388_33,file1002388,33,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002388/knee_singlecoil_file1002388_33.h5
+243,knee_knee_singlecoil_file1002388_23,file1002388,23,['Meniscus Tear'],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002388/knee_singlecoil_file1002388_23.h5
+244,knee_knee_singlecoil_file1002388_17,file1002388,17,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002388/knee_singlecoil_file1002388_17.h5
+245,knee_knee_singlecoil_file1002388_8,file1002388,8,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002388/knee_singlecoil_file1002388_8.h5
+246,knee_knee_singlecoil_file1002388_37,file1002388,37,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002388/knee_singlecoil_file1002388_37.h5
+247,knee_knee_singlecoil_file1002388_13,file1002388,13,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002388/knee_singlecoil_file1002388_13.h5
+248,knee_knee_singlecoil_file1002388_27,file1002388,27,['Meniscus Tear'],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002388/knee_singlecoil_file1002388_27.h5
+249,knee_knee_singlecoil_file1002388_36,file1002388,36,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002388/knee_singlecoil_file1002388_36.h5
+250,knee_knee_singlecoil_file1002388_12,file1002388,12,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002388/knee_singlecoil_file1002388_12.h5
+251,knee_knee_singlecoil_file1002388_26,file1002388,26,['Meniscus Tear'],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002388/knee_singlecoil_file1002388_26.h5
+252,knee_knee_singlecoil_file1002388_32,file1002388,32,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002388/knee_singlecoil_file1002388_32.h5
+253,knee_knee_singlecoil_file1002388_22,file1002388,22,['Meniscus Tear'],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002388/knee_singlecoil_file1002388_22.h5
+254,knee_knee_singlecoil_file1002388_16,file1002388,16,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002388/knee_singlecoil_file1002388_16.h5
+255,knee_knee_singlecoil_file1002388_9,file1002388,9,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002388/knee_singlecoil_file1002388_9.h5
+256,knee_knee_singlecoil_file1002388_2,file1002388,2,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002388/knee_singlecoil_file1002388_2.h5
+257,knee_knee_singlecoil_file1002388_29,file1002388,29,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002388/knee_singlecoil_file1002388_29.h5
+258,knee_knee_singlecoil_file1002388_6,file1002388,6,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002388/knee_singlecoil_file1002388_6.h5
+259,knee_knee_singlecoil_file1002388_19,file1002388,19,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002388/knee_singlecoil_file1002388_19.h5
+260,knee_knee_singlecoil_file1002388_7,file1002388,7,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002388/knee_singlecoil_file1002388_7.h5
+261,knee_knee_singlecoil_file1002388_18,file1002388,18,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002388/knee_singlecoil_file1002388_18.h5
+262,knee_knee_singlecoil_file1002388_3,file1002388,3,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002388/knee_singlecoil_file1002388_3.h5
+263,knee_knee_singlecoil_file1002388_28,file1002388,28,['Meniscus Tear'],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002388/knee_singlecoil_file1002388_28.h5
+264,knee_knee_singlecoil_file1002388_4,file1002388,4,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002388/knee_singlecoil_file1002388_4.h5
+265,knee_knee_singlecoil_file1002388_0,file1002388,0,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002388/knee_singlecoil_file1002388_0.h5
+266,knee_knee_singlecoil_file1002388_1,file1002388,1,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002388/knee_singlecoil_file1002388_1.h5
+267,knee_knee_singlecoil_file1002388_5,file1002388,5,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002388/knee_singlecoil_file1002388_5.h5
+268,knee_knee_singlecoil_file1002388_35,file1002388,35,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002388/knee_singlecoil_file1002388_35.h5
+269,knee_knee_singlecoil_file1002388_11,file1002388,11,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002388/knee_singlecoil_file1002388_11.h5
+270,knee_knee_singlecoil_file1002388_25,file1002388,25,['Meniscus Tear'],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002388/knee_singlecoil_file1002388_25.h5
+271,knee_knee_singlecoil_file1002388_31,file1002388,31,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002388/knee_singlecoil_file1002388_31.h5
+272,knee_knee_singlecoil_file1002388_21,file1002388,21,['Meniscus Tear'],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002388/knee_singlecoil_file1002388_21.h5
+273,knee_knee_singlecoil_file1002388_15,file1002388,15,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002388/knee_singlecoil_file1002388_15.h5
+274,knee_knee_singlecoil_file1002388_30,file1002388,30,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002388/knee_singlecoil_file1002388_30.h5
+275,knee_knee_singlecoil_file1002388_20,file1002388,20,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002388/knee_singlecoil_file1002388_20.h5
+276,knee_knee_singlecoil_file1002388_14,file1002388,14,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002388/knee_singlecoil_file1002388_14.h5
+277,knee_knee_singlecoil_file1002388_34,file1002388,34,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002388/knee_singlecoil_file1002388_34.h5
+278,knee_knee_singlecoil_file1002388_10,file1002388,10,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002388/knee_singlecoil_file1002388_10.h5
+279,knee_knee_singlecoil_file1002388_24,file1002388,24,['Meniscus Tear'],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1002388/knee_singlecoil_file1002388_24.h5
+280,knee_knee_singlecoil_file1000041_28,file1000041,28,['Meniscus Tear'],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1000041/knee_singlecoil_file1000041_28.h5
+281,knee_knee_singlecoil_file1000041_4,file1000041,4,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1000041/knee_singlecoil_file1000041_4.h5
+282,knee_knee_singlecoil_file1000041_18,file1000041,18,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1000041/knee_singlecoil_file1000041_18.h5
+283,knee_knee_singlecoil_file1000041_0,file1000041,0,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1000041/knee_singlecoil_file1000041_0.h5
+284,knee_knee_singlecoil_file1000041_19,file1000041,19,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1000041/knee_singlecoil_file1000041_19.h5
+285,knee_knee_singlecoil_file1000041_1,file1000041,1,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1000041/knee_singlecoil_file1000041_1.h5
+286,knee_knee_singlecoil_file1000041_29,file1000041,29,['Meniscus Tear'],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1000041/knee_singlecoil_file1000041_29.h5
+287,knee_knee_singlecoil_file1000041_5,file1000041,5,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1000041/knee_singlecoil_file1000041_5.h5
+288,knee_knee_singlecoil_file1000041_32,file1000041,32,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1000041/knee_singlecoil_file1000041_32.h5
+289,knee_knee_singlecoil_file1000041_22,file1000041,22,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1000041/knee_singlecoil_file1000041_22.h5
+290,knee_knee_singlecoil_file1000041_16,file1000041,16,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1000041/knee_singlecoil_file1000041_16.h5
+291,knee_knee_singlecoil_file1000041_36,file1000041,36,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1000041/knee_singlecoil_file1000041_36.h5
+292,knee_knee_singlecoil_file1000041_12,file1000041,12,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1000041/knee_singlecoil_file1000041_12.h5
+293,knee_knee_singlecoil_file1000041_26,file1000041,26,['Cartilage - Partial Thickness loss/defect'],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1000041/knee_singlecoil_file1000041_26.h5
+294,knee_knee_singlecoil_file1000041_37,file1000041,37,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1000041/knee_singlecoil_file1000041_37.h5
+295,knee_knee_singlecoil_file1000041_13,file1000041,13,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1000041/knee_singlecoil_file1000041_13.h5
+296,knee_knee_singlecoil_file1000041_27,file1000041,27,"['Cartilage - Partial Thickness loss/defect', 'Meniscus Tear']","(640, 400)",knee,orignial,val_class,./knee/generated_files/file1000041/knee_singlecoil_file1000041_27.h5
+297,knee_knee_singlecoil_file1000041_33,file1000041,33,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1000041/knee_singlecoil_file1000041_33.h5
+298,knee_knee_singlecoil_file1000041_23,file1000041,23,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1000041/knee_singlecoil_file1000041_23.h5
+299,knee_knee_singlecoil_file1000041_17,file1000041,17,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1000041/knee_singlecoil_file1000041_17.h5
+300,knee_knee_singlecoil_file1000041_34,file1000041,34,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1000041/knee_singlecoil_file1000041_34.h5
+301,knee_knee_singlecoil_file1000041_10,file1000041,10,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1000041/knee_singlecoil_file1000041_10.h5
+302,knee_knee_singlecoil_file1000041_24,file1000041,24,['Cartilage - Partial Thickness loss/defect'],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1000041/knee_singlecoil_file1000041_24.h5
+303,knee_knee_singlecoil_file1000041_8,file1000041,8,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1000041/knee_singlecoil_file1000041_8.h5
+304,knee_knee_singlecoil_file1000041_30,file1000041,30,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1000041/knee_singlecoil_file1000041_30.h5
+305,knee_knee_singlecoil_file1000041_20,file1000041,20,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1000041/knee_singlecoil_file1000041_20.h5
+306,knee_knee_singlecoil_file1000041_14,file1000041,14,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1000041/knee_singlecoil_file1000041_14.h5
+307,knee_knee_singlecoil_file1000041_31,file1000041,31,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1000041/knee_singlecoil_file1000041_31.h5
+308,knee_knee_singlecoil_file1000041_21,file1000041,21,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1000041/knee_singlecoil_file1000041_21.h5
+309,knee_knee_singlecoil_file1000041_15,file1000041,15,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1000041/knee_singlecoil_file1000041_15.h5
+310,knee_knee_singlecoil_file1000041_35,file1000041,35,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1000041/knee_singlecoil_file1000041_35.h5
+311,knee_knee_singlecoil_file1000041_11,file1000041,11,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1000041/knee_singlecoil_file1000041_11.h5
+312,knee_knee_singlecoil_file1000041_25,file1000041,25,['Cartilage - Partial Thickness loss/defect'],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1000041/knee_singlecoil_file1000041_25.h5
+313,knee_knee_singlecoil_file1000041_9,file1000041,9,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1000041/knee_singlecoil_file1000041_9.h5
+314,knee_knee_singlecoil_file1000041_2,file1000041,2,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1000041/knee_singlecoil_file1000041_2.h5
+315,knee_knee_singlecoil_file1000041_6,file1000041,6,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1000041/knee_singlecoil_file1000041_6.h5
+316,knee_knee_singlecoil_file1000041_7,file1000041,7,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1000041/knee_singlecoil_file1000041_7.h5
+317,knee_knee_singlecoil_file1000041_3,file1000041,3,[None],"(640, 400)",knee,orignial,val_class,./knee/generated_files/file1000041/knee_singlecoil_file1000041_3.h5
+318,knee_knee_singlecoil_file1001568_26,file1001568,26,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001568/knee_singlecoil_file1001568_26.h5
+319,knee_knee_singlecoil_file1001568_12,file1001568,12,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001568/knee_singlecoil_file1001568_12.h5
+320,knee_knee_singlecoil_file1001568_16,file1001568,16,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001568/knee_singlecoil_file1001568_16.h5
+321,knee_knee_singlecoil_file1001568_22,file1001568,22,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001568/knee_singlecoil_file1001568_22.h5
+322,knee_knee_singlecoil_file1001568_17,file1001568,17,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001568/knee_singlecoil_file1001568_17.h5
+323,knee_knee_singlecoil_file1001568_23,file1001568,23,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001568/knee_singlecoil_file1001568_23.h5
+324,knee_knee_singlecoil_file1001568_27,file1001568,27,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001568/knee_singlecoil_file1001568_27.h5
+325,knee_knee_singlecoil_file1001568_13,file1001568,13,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001568/knee_singlecoil_file1001568_13.h5
+326,knee_knee_singlecoil_file1001568_18,file1001568,18,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001568/knee_singlecoil_file1001568_18.h5
+327,knee_knee_singlecoil_file1001568_1,file1001568,1,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001568/knee_singlecoil_file1001568_1.h5
+328,knee_knee_singlecoil_file1001568_28,file1001568,28,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001568/knee_singlecoil_file1001568_28.h5
+329,knee_knee_singlecoil_file1001568_5,file1001568,5,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001568/knee_singlecoil_file1001568_5.h5
+330,knee_knee_singlecoil_file1001568_29,file1001568,29,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001568/knee_singlecoil_file1001568_29.h5
+331,knee_knee_singlecoil_file1001568_4,file1001568,4,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001568/knee_singlecoil_file1001568_4.h5
+332,knee_knee_singlecoil_file1001568_19,file1001568,19,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001568/knee_singlecoil_file1001568_19.h5
+333,knee_knee_singlecoil_file1001568_0,file1001568,0,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001568/knee_singlecoil_file1001568_0.h5
+334,knee_knee_singlecoil_file1001568_7,file1001568,7,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001568/knee_singlecoil_file1001568_7.h5
+335,knee_knee_singlecoil_file1001568_3,file1001568,3,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001568/knee_singlecoil_file1001568_3.h5
+336,knee_knee_singlecoil_file1001568_2,file1001568,2,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001568/knee_singlecoil_file1001568_2.h5
+337,knee_knee_singlecoil_file1001568_6,file1001568,6,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001568/knee_singlecoil_file1001568_6.h5
+338,knee_knee_singlecoil_file1001568_14,file1001568,14,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001568/knee_singlecoil_file1001568_14.h5
+339,knee_knee_singlecoil_file1001568_20,file1001568,20,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001568/knee_singlecoil_file1001568_20.h5
+340,knee_knee_singlecoil_file1001568_9,file1001568,9,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001568/knee_singlecoil_file1001568_9.h5
+341,knee_knee_singlecoil_file1001568_24,file1001568,24,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001568/knee_singlecoil_file1001568_24.h5
+342,knee_knee_singlecoil_file1001568_10,file1001568,10,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001568/knee_singlecoil_file1001568_10.h5
+343,knee_knee_singlecoil_file1001568_8,file1001568,8,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001568/knee_singlecoil_file1001568_8.h5
+344,knee_knee_singlecoil_file1001568_25,file1001568,25,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001568/knee_singlecoil_file1001568_25.h5
+345,knee_knee_singlecoil_file1001568_11,file1001568,11,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001568/knee_singlecoil_file1001568_11.h5
+346,knee_knee_singlecoil_file1001568_15,file1001568,15,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001568/knee_singlecoil_file1001568_15.h5
+347,knee_knee_singlecoil_file1001568_21,file1001568,21,[None],"(640, 400)",knee,orignial,train_class,./knee/generated_files/file1001568/knee_singlecoil_file1001568_21.h5
