@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7fc608fd-d44d-459b-bdd6-d3037814067a" name="Changes" comment="code refactoring">
-      <change beforePath="$PROJECT_DIR$/src/complex_cnn_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/complex_cnn_model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model_setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/model_setup.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/complex_activation_functions.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/metrics.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model_training.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/model_training.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -184,20 +182,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1660742211743</updated>
-    </task>
-    <task id="LOCAL-00158" summary="modified scale_complex_data.py to correct the missing data">
-      <created>1662067797138</created>
-      <option name="number" value="00158" />
-      <option name="presentableId" value="LOCAL-00158" />
-      <option name="project" value="LOCAL" />
-      <updated>1662067797138</updated>
-    </task>
-    <task id="LOCAL-00159" summary="removed unnecessary logs">
-      <created>1662069461507</created>
-      <option name="number" value="00159" />
-      <option name="presentableId" value="LOCAL-00159" />
-      <option name="project" value="LOCAL" />
-      <updated>1662069461507</updated>
     </task>
     <task id="LOCAL-00160" summary="modified modReLU to support adam optimizer">
       <created>1662069984106</created>
@@ -528,7 +512,21 @@
       <option name="project" value="LOCAL" />
       <updated>1663091294195</updated>
     </task>
-    <option name="localTasksCounter" value="207" />
+    <task id="LOCAL-00207" summary="code refactoring">
+      <created>1663091661095</created>
+      <option name="number" value="00207" />
+      <option name="presentableId" value="LOCAL-00207" />
+      <option name="project" value="LOCAL" />
+      <updated>1663091661095</updated>
+    </task>
+    <task id="LOCAL-00208" summary="code refactoring">
+      <created>1663092105231</created>
+      <option name="number" value="00208" />
+      <option name="presentableId" value="LOCAL-00208" />
+      <option name="project" value="LOCAL" />
+      <updated>1663092105231</updated>
+    </task>
+    <option name="localTasksCounter" value="209" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
