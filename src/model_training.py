@@ -7,8 +7,8 @@ from pytorch_lightning.loggers import CSVLogger#, WandbLogger
 from pathlib import Path
 import fire
 
-from src.model_setup import RSS
-from src.data_processing import KneeDataModule
+from model_setup import RSS
+from data_processing import KneeDataModule
 
 # from ray.tune.integration.pytorch_lightning import TuneReportCallback
 
@@ -72,10 +72,8 @@ def train_model(
     model_dir = str(args.model_dir) + '/' + args.data_space + '/' + str(args.n_seed)
 
     if not os.path.isdir(str(log_dir)):
-        print(str(log_dir))
         os.makedirs(str(log_dir))
     if not os.path.isdir(str(model_dir)):
-        print(str(model_dir))
         os.makedirs(str(model_dir))
 
     csv_logger = CSVLogger(save_dir=log_dir, name=f"train-{args.n_seed}", version=f"{args.n_seed}")

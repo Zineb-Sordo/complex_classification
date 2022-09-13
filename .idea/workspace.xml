@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="7fc608fd-d44d-459b-bdd6-d3037814067a" name="Changes" comment="git cleaning">
+    <list default="true" id="7fc608fd-d44d-459b-bdd6-d3037814067a" name="Changes" comment="removed non linearity">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/complex_cnn_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/complex_cnn_model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model_training.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/model_training.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -183,13 +183,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1660742211743</updated>
-    </task>
-    <task id="LOCAL-00153" summary="added logs for h5 path unknow sc_kspace_scaled">
-      <created>1662059956348</created>
-      <option name="number" value="00153" />
-      <option name="presentableId" value="LOCAL-00153" />
-      <option name="project" value="LOCAL" />
-      <updated>1662059956348</updated>
     </task>
     <task id="LOCAL-00154" summary="added logs for h5 path unknow sc_kspace_scaled">
       <created>1662063273922</created>
@@ -527,7 +520,14 @@
       <option name="project" value="LOCAL" />
       <updated>1663063847626</updated>
     </task>
-    <option name="localTasksCounter" value="202" />
+    <task id="LOCAL-00202" summary="removed non linearity">
+      <created>1663085793070</created>
+      <option name="number" value="00202" />
+      <option name="presentableId" value="LOCAL-00202" />
+      <option name="project" value="LOCAL" />
+      <updated>1663085793071</updated>
+    </task>
+    <option name="localTasksCounter" value="203" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -542,7 +542,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="added tqdm" />
     <MESSAGE value="modified scale_complex_data.py to correct the missing data" />
     <MESSAGE value="removed unnecessary logs" />
     <MESSAGE value="modified modReLU to support adam optimizer" />
@@ -567,7 +566,8 @@
     <MESSAGE value="Code cleaning" />
     <MESSAGE value="Readme updates" />
     <MESSAGE value="git cleaning" />
-    <option name="LAST_COMMIT_MESSAGE" value="git cleaning" />
+    <MESSAGE value="removed non linearity" />
+    <option name="LAST_COMMIT_MESSAGE" value="removed non linearity" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -584,7 +584,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/src/model_training.py</url>
-          <line>188</line>
+          <line>186</line>
           <option name="timeStamp" value="47" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
