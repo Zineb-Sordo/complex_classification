@@ -4,6 +4,8 @@
     <list default="true" id="7fc608fd-d44d-459b-bdd6-d3037814067a" name="Changes" comment="code refactoring">
       <change beforePath="$PROJECT_DIR$/src/complex_cnn_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/complex_cnn_model.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/model_setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/model_setup.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/complex_activation_functions.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/metrics.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,7 +33,6 @@
     <setting file="file://$PROJECT_DIR$/src/data_processing.py" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/model_setup.py" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/model_training.py" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/utils/metrics.py" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -183,13 +184,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1660742211743</updated>
-    </task>
-    <task id="LOCAL-00157" summary="added tqdm">
-      <created>1662066020148</created>
-      <option name="number" value="00157" />
-      <option name="presentableId" value="LOCAL-00157" />
-      <option name="project" value="LOCAL" />
-      <updated>1662066020149</updated>
     </task>
     <task id="LOCAL-00158" summary="modified scale_complex_data.py to correct the missing data">
       <created>1662067797138</created>
@@ -527,7 +521,14 @@
       <option name="project" value="LOCAL" />
       <updated>1663090719123</updated>
     </task>
-    <option name="localTasksCounter" value="206" />
+    <task id="LOCAL-00206" summary="code refactoring">
+      <created>1663091294195</created>
+      <option name="number" value="00206" />
+      <option name="presentableId" value="LOCAL-00206" />
+      <option name="project" value="LOCAL" />
+      <updated>1663091294195</updated>
+    </task>
+    <option name="localTasksCounter" value="207" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

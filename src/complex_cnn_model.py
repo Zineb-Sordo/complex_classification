@@ -7,7 +7,7 @@ from complexPyTorch.complexLayers import ComplexBatchNorm1d
 from complexPyTorch.complexFunctions import complex_relu, complex_avg_pool2d
 from torch.nn.functional import dropout2d
 import pytorch_lightning as pl
-from ..utils.complex_activation_functions import zReLU, modReLU, cardioid
+from complex_activation_functions import zReLU, modReLU, cardioid
 
 
 class ComplexPreActBlock(pl.LightningModule):
