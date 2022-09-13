@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="7fc608fd-d44d-459b-bdd6-d3037814067a" name="Changes" comment="removed non linearity">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model_training.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/model_training.py" afterDir="false" />
-    </list>
+    <list default="true" id="7fc608fd-d44d-459b-bdd6-d3037814067a" name="Changes" comment="code refactoring" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -183,13 +180,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1660742211743</updated>
-    </task>
-    <task id="LOCAL-00154" summary="added logs for h5 path unknow sc_kspace_scaled">
-      <created>1662063273922</created>
-      <option name="number" value="00154" />
-      <option name="presentableId" value="LOCAL-00154" />
-      <option name="project" value="LOCAL" />
-      <updated>1662063273922</updated>
     </task>
     <task id="LOCAL-00155" summary="added logs for h5 path unknow sc_kspace_scaled">
       <created>1662064129242</created>
@@ -527,7 +517,14 @@
       <option name="project" value="LOCAL" />
       <updated>1663085793071</updated>
     </task>
-    <option name="localTasksCounter" value="203" />
+    <task id="LOCAL-00203" summary="code refactoring">
+      <created>1663090030193</created>
+      <option name="number" value="00203" />
+      <option name="presentableId" value="LOCAL-00203" />
+      <option name="project" value="LOCAL" />
+      <updated>1663090030193</updated>
+    </task>
+    <option name="localTasksCounter" value="204" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -542,7 +539,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="modified scale_complex_data.py to correct the missing data" />
     <MESSAGE value="removed unnecessary logs" />
     <MESSAGE value="modified modReLU to support adam optimizer" />
     <MESSAGE value="added phase and magnitude ouputs of cnn" />
@@ -567,7 +563,8 @@
     <MESSAGE value="Readme updates" />
     <MESSAGE value="git cleaning" />
     <MESSAGE value="removed non linearity" />
-    <option name="LAST_COMMIT_MESSAGE" value="removed non linearity" />
+    <MESSAGE value="code refactoring" />
+    <option name="LAST_COMMIT_MESSAGE" value="code refactoring" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
