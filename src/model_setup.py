@@ -6,7 +6,7 @@ from typing import Optional, Tuple
 import pytorch_lightning as pl
 import torch
 import numpy as np
-from src.complex_cnn_model import complex_resnet18_knee
+from complex_cnn_model import complex_resnet18_knee
 from torchsummary import summary
 
 from utils.metrics import compute_accuracy, evaluate_classifier
