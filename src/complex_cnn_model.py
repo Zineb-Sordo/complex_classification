@@ -158,14 +158,14 @@ class ComplexPreActResNetFFTKnee(nn.Module):
             out = torch.complex(kspace.real, kspace.imag).type(torch.complex64)
         out = self.conv_comp(out)
 
-        if self.activation_function == "complex_relu":
-            out = complex_relu(self.bn1d_2(out))
-        elif self.activation_function == "modReLU":
-            out = modReLU(self.bn1d_2(out), nn.Parameter(torch.Tensor(out.shape)).cuda())
-        elif self.activation_function == "zReLU":
-            out = zReLU(self.bn1d_2(out))
-        elif self.activation_function == "cardioid":
-            out = cardioid(self.bn1d_2(out))
+        # if self.activation_function == "complex_relu":
+        #     out = complex_relu(self.bn1d_2(out))
+        # elif self.activation_function == "modReLU":
+        #     out = modReLU(self.bn1d_2(out), nn.Parameter(torch.Tensor(out.shape)).cuda())
+        # elif self.activation_function == "zReLU":
+        #     out = zReLU(self.bn1d_2(out))
+        # elif self.activation_function == "cardioid":
+        #     out = cardioid(self.bn1d_2(out))
         out = self.dropout(out)
 
         layer_1_out = self.layer1(out) # [8,64,320,320]
