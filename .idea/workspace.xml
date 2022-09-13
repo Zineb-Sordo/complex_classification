@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="7fc608fd-d44d-459b-bdd6-d3037814067a" name="Changes" comment="code refactoring" />
+    <list default="true" id="7fc608fd-d44d-459b-bdd6-d3037814067a" name="Changes" comment="code refactoring">
+      <change beforePath="$PROJECT_DIR$/src/complex_cnn_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/complex_cnn_model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model_setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/model_setup.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -180,20 +183,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1660742211743</updated>
-    </task>
-    <task id="LOCAL-00155" summary="added logs for h5 path unknow sc_kspace_scaled">
-      <created>1662064129242</created>
-      <option name="number" value="00155" />
-      <option name="presentableId" value="LOCAL-00155" />
-      <option name="project" value="LOCAL" />
-      <updated>1662064129242</updated>
-    </task>
-    <task id="LOCAL-00156" summary="created file to verify sc_scaled key in h5 files">
-      <created>1662065948549</created>
-      <option name="number" value="00156" />
-      <option name="presentableId" value="LOCAL-00156" />
-      <option name="project" value="LOCAL" />
-      <updated>1662065948549</updated>
     </task>
     <task id="LOCAL-00157" summary="added tqdm">
       <created>1662066020148</created>
@@ -524,7 +513,21 @@
       <option name="project" value="LOCAL" />
       <updated>1663090030193</updated>
     </task>
-    <option name="localTasksCounter" value="204" />
+    <task id="LOCAL-00204" summary="code refactoring">
+      <created>1663090555081</created>
+      <option name="number" value="00204" />
+      <option name="presentableId" value="LOCAL-00204" />
+      <option name="project" value="LOCAL" />
+      <updated>1663090555081</updated>
+    </task>
+    <task id="LOCAL-00205" summary="code refactoring">
+      <created>1663090719123</created>
+      <option name="number" value="00205" />
+      <option name="presentableId" value="LOCAL-00205" />
+      <option name="project" value="LOCAL" />
+      <updated>1663090719123</updated>
+    </task>
+    <option name="localTasksCounter" value="206" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

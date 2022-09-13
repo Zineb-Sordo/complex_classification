@@ -9,7 +9,7 @@ import numpy as np
 from complex_cnn_model import complex_resnet18_knee
 from torchsummary import summary
 
-from utils.metrics import compute_accuracy, evaluate_classifier
+from ..utils.metrics import compute_accuracy, evaluate_classifier
 
 
 def get_model(
